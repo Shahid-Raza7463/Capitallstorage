@@ -1,0 +1,41 @@
+2222222222222222222222
+Basic command start
+
+go to folder and open hare command prompt
+git configration gloably
+
+$ git config --global user.name "Shahid Raza"
+$ git config --global user.email shahidraza7463@gmail.com
+$ git config --list
+
+222222222222222222222
+git init
+git add .
+$ git commit -m "first commit" or $ git commit -a -m "add git command"
+$ git remote add origin https://github.com/Shahid-Raza7463/practice_at_capitall.git
+$ git push origin master
+$ git branch  // all branch name
+$ git branch -d main
+
+Basic command end hare 
+2222222222222222
+advance command 
+1.git checkout -b main
+2 C:\Shahid Raza\Demo>git remote -v
+origin  https://github.com/Shahid-Raza7463/Demo.git (fetch)
+origin  https://github.com/Shahid-Raza7463/Demo.git (push)
+git branch main
+git checkout main
+git checkout -b main
+git pull origin main
+git fetch origin main
+git merge origin/main
+
+
+
+
+
+
+
+
+
