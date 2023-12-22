@@ -3,7 +3,134 @@
 class ZipController extends Controller
 {
 //*
+//* array to object convert
+public function timesheet_teamlist()
+  {
+    if (auth()->user()->role_id == 13) {
+      // get all partner
+      $partner = Teammember::where('role_id', '=', 13)->where('status', '=', 1)->with('title')
+        ->orderBy('team_member', 'asc')->get();
+
+      $get_date = DB::table('timesheetreport')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+        ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+        ->where('timesheetreport.partnerid', auth()->user()->teammember_id)
+        ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+        ->latest()->get();
+    } else {
+      $partner = Teammember::where('role_id', '=', 13)->where('status', '=', 1)->with('title')
+        ->orderBy('team_member', 'asc')->get();
+      $get_datess = DB::table('timesheetreport')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+        ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+        ->where('timesheetreport.teamid', auth()->user()->teammember_id)
+        ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+        ->latest()->get();
+    }
+
+    // dd($get_datess);
+
+
+    $groupedData = $get_datess->groupBy('week')->map(function ($group) {
+      $firstItem = $group->first();
+//* array to object convert
+      return [
+        'id' => $firstItem->id,
+        'teamid' => $firstItem->teamid,
+        'week' => $firstItem->week,
+        'totaldays' => $group->sum('totaldays'),
+        'totaltime' => $group->sum('totaltime'),
+        'startdate' => $firstItem->startdate,
+        'enddate' => $firstItem->enddate,
+        'partnername' => $firstItem->partnername,
+        'created_at' => $firstItem->created_at,
+        'team_member' => $firstItem->team_member,
+        'partnerid' => $firstItem->partnerid,
+      ];
+    });
+
+    $get_date = collect($groupedData->values());
+
+
+
+    $groupedData = $get_datess->groupBy('week')->map(function ($group) {
+      $firstItem = $group->first();
+//* array to object convert
+      return (object)[
+        'id' => $firstItem->id,
+        'teamid' => $firstItem->teamid,
+        'week' => $firstItem->week,
+        'totaldays' => $group->sum('totaldays'),
+        'totaltime' => $group->sum('totaltime'),
+        'startdate' => $firstItem->startdate,
+        'enddate' => $firstItem->enddate,
+        'partnername' => $firstItem->partnername,
+        'created_at' => $firstItem->created_at,
+        'team_member' => $firstItem->team_member,
+        'partnerid' => $firstItem->partnerid,
+      ];
+    });
+
+    $get_date = collect($groupedData->values());
+
+
+    // dd($get_date);
+
+    return view('backEnd.timesheet.myteamindex', compact('get_date', 'partner'));
+  }
+//* previus days find 
+$getsixdata->date
+// 2023-11-13
+if (date('l', strtotime(date('d-m-Y', strtotime($getsixdata->date)))) == 'Monday') {
+
+  $previousMonday = $requestedDate->copy()->previous(Carbon::MONDAY);
+  // date: 2023-11-06 00:00:00.0 Asia/Kolkata (+05:30)
+  // dd($previousMonday);
+  // Find the nearest next Saturday to the requested date
+  $nextSaturday = $requestedDate->copy()->next(Carbon::SATURDAY);
+  // date: 2023-11-18 00:00:00.0 Asia/Kolkata (+05:30)
+  dd($nextSaturday);
+//* date as a string
+if (!empty($missingDates)) {
+  $missingDatesString = implode(', ', $missingDates);
+  // "2023-11-13, 2023-11-14"
+  dd($missingDatesString);
+
+  $output = array('msg' => "Timesheet Submit Failed Missing dates: $missingDatesString");
+  return back()->with('success', $output);
+}
+//* add one date in date /add on date 
+$currentDate = clone $firstDate;
+// date: 2023-11-13 00:00:00.0 Asia/Kolkata (+05:30)
+
+while ($currentDate->format('Y-m-d') < $upcomingSundayDate->format('Y-m-d')) {  //excluding sunday
+    $expectedDates[] = $currentDate->format('Y-m-d');
+
+    // 0 => "2023-11-13"
+    $currentDate->modify("+1 day");
+    // date: 2023-11-14 00:00:00.0 Asia/Kolkata (+05:30)
+    dd($currentDate);
+}
+
+//* get last date of timesheet
+
+$get_six_Data = DB::table('timesheets')
+->where('status', '0')
+->where('created_by', auth()->user()->teammember_id)
+->whereBetween('date', [$firstDate->format('Y-m-d'), $upcomingSunday])
+->orderBy('date', 'ASC')
+->get();
+
+$lastdate = $get_six_Data->max('date');
+//* all data for users
+
+dd(auth()->user());
 //*
+
+//------------------- Shahid's code start---------------------
+//*
+
+// applyleave controller update function 
 if ($request->status == 1) {
   $team = DB::table('leaverequest')
     ->leftjoin('applyleaves', 'applyleaves.id', 'leaverequest.applyleaveid')
@@ -595,10 +722,11 @@ Output:
           ]);
 
           // count days 
-
+    // Convert the requested date to a Carbon instance
           $to = Carbon::createFromFormat('Y-m-d', $team->to ?? '');
             // date: 2023-11-16 15:42:44.0 Asia/Kolkata (+05:30)
             // dd($to);
+                // Convert the requested date to a Carbon instance
             $from = Carbon::createFromFormat('Y-m-d', $team->from);
 
             // date: 2023-09-16 15:43:42.0 Asia/Kolkata (+05:30)
@@ -682,6 +810,18 @@ Output:
       // 10 days only in table then
       <td>{{ date('F d,Y', strtotime($applyleaveDatas->from)) ?? '' }} -
       {{ date('F d,Y', strtotime($applyleaveDatas->to)) ?? '' }}</td>
+// 18-12-23 then / basically add date in date
+      $lastdate = Carbon::createFromFormat('Y-m-d', $usertimesheetfirstdate->date ?? '')->addDays(6);
+// it will give result 24-12-23
+
+             // Convert the retrieved date to a DateTime object
+             $firstDate = new DateTime($usertimesheetfirstdate->date);
+             // date: 2023-11-18 00:00:00.0 Asia/Kolkata (+05:30)
+
+             // Find the day of the week for the first date (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+             $dayOfWeek = $firstDate->format('w');
+
+
 
     // Sunday=1
     // Monday=2

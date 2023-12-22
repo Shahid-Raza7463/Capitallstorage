@@ -1,4 +1,345 @@
 {{-- *   --}}
+{{-- *   --}}
+{{-- * filtering functionality   --}}
+
+
+{{-- filtering functionality --}}
+
+{{-- ! runnig for patner --}}
+{{-- <div class="row row-sm">
+                          <div class="col-2">
+                              <div class="form-group">
+                                  <label class="font-weight-600">All Partner</label>
+                                  <select class="language form-control" id="category1" name="partnersearch">
+                                      <option value="">Please Select One</option>
+                                      @foreach ($partner as $teammemberData)
+                                          <option value="{{ $teammemberData->id }}">
+                                              {{ $teammemberData->team_member }}
+                                          </option>
+                                      @endforeach
+                                  </select>
+
+                              </div>
+                          </div>
+
+                          <div class="col-2">
+                              <div class="form-group">
+                                  <label class="font-weight-600">Start Date</label>
+                                  <input type="date" class="form-control" id="start" name="start">
+
+                              </div>
+                          </div>
+                          <div class="col-2">
+                              <div class="form-group">
+                                  <label class="font-weight-600">End Date</label>
+                                  <input type="date" class="form-control" name="end" id="end">
+                              </div>
+                          </div>
+                          <div class="col-3">
+                              <div class="form-group">
+                                  <label class="font-weight-600">Total Timesheet Filled Day</label>
+                                  <select class="language form-control" id="category3" name="totaldays">
+                                      <option value="">Please Select One</option>
+                                      @php
+                                          $displayedValues = [];
+                                      @endphp
+                                      @foreach ($get_date as $jobDatas)
+                                          @if (!in_array($jobDatas->totaldays, $displayedValues))
+                                              <option value="{{ $jobDatas->totaldays }}">
+                                                  {{ $jobDatas->totaldays }}
+                                              </option>
+                                              @php
+                                                  $displayedValues[] = $jobDatas->totaldays;
+                                              @endphp
+                                          @endif
+                                      @endforeach
+                                  </select>
+                              </div>
+                          </div>
+
+                          <div class="col-3">
+                              <div class="form-group">
+                                  <label class="font-weight-600">Total Hour</label>
+                                  <select class="language form-control" id="category4" name="totalhours">
+                                      <option value="">Please Select One</option>
+                                      @php
+                                          $displayedValues = [];
+                                      @endphp
+                                      @foreach ($get_date as $jobData)
+                                          @if (!in_array($jobData->totaltime, $displayedValues))
+                                              <option value="{{ $jobData->totaltime }}">
+                                                  {{ $jobData->totaltime }}
+                                              </option>
+                                              @php
+                                                  $displayedValues[] = $jobData->totaltime;
+                                              @endphp
+                                          @endif
+                                      @endforeach
+                                  </select>
+                              </div>
+                          </div>
+                      </div> --}}
+<div class="row row-sm">
+    <div class="col-3">
+        <div class="form-group">
+            <label class="font-weight-600">Team Name</label>
+            <select class="language form-control" id="category7" name="teamname">
+                <option value="">Please Select One</option>
+                @php
+
+                    $displayedValues = [];
+                @endphp
+                @foreach ($get_date as $jobDatas)
+                    @if (!in_array($jobDatas->team_member, $displayedValues))
+                        <option value="{{ $jobDatas->teamid }}">
+                            {{ $jobDatas->team_member }}
+                        </option>
+                        @php
+                            $displayedValues[] = $jobDatas->team_member;
+                        @endphp
+                    @endif
+                @endforeach
+            </select>
+        </div>
+    </div>
+
+
+    <div class="col-3">
+        <div class="form-group">
+            <label class="font-weight-600">Start Date</label>
+            <input type="date" class="form-control" id="start" name="start">
+
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="form-group">
+            <label class="font-weight-600">End Date</label>
+            <input type="date" class="form-control" name="end" id="end">
+        </div>
+    </div>
+    {{-- <div class="col-3">
+                            <div class="form-group">
+                                <label class="font-weight-600">Total Timesheet Filled Day</label>
+                                <select class="language form-control" id="category3" name="totaldays">
+                                    <option value="">Please Select One</option>
+                                    @php
+                                        $displayedValues = [];
+                                    @endphp
+                                    @foreach ($get_date as $jobDatas)
+                                        @if (!in_array($jobDatas->totaldays, $displayedValues))
+                                            <option value="{{ $jobDatas->totaldays }}">
+                                                {{ $jobDatas->totaldays }}
+                                            </option>
+                                            @php
+                                                $displayedValues[] = $jobDatas->totaldays;
+                                            @endphp
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div> --}}
+
+    <div class="col-3">
+        <div class="form-group">
+            <label class="font-weight-600">Total Hour</label>
+            <select class="language form-control" id="category4" name="totalhours">
+                <option value="">Please Select One</option>
+                @php
+                    $displayedValues = [];
+                @endphp
+                @foreach ($get_date as $jobData)
+                    @if (!in_array($jobData->totaltime, $displayedValues))
+                        <option value="{{ $jobData->totaltime }}">
+                            {{ $jobData->totaltime }}
+                        </option>
+                        @php
+                            $displayedValues[] = $jobData->totaltime;
+                        @endphp
+                    @endif
+                @endforeach
+            </select>
+        </div>
+    </div>
+    {{-- <div class="col-2">
+                            <div class="form-group">
+                                <label class="font-weight-600">Partner</label>
+                                <select class="language form-control" id="category1" name="partnersearch">
+                                    <option value="">Please Select One</option>
+                                    @php
+                                        $displayedValues = [];
+                                    @endphp
+                                    @foreach ($get_date as $jobDatas)
+                                        @if (!in_array($jobDatas->partnername, $displayedValues))
+                                            <option value="{{ $jobDatas->partnerid }}">
+                                                {{ $jobDatas->partnername }}
+                                            </option>
+                                            @php
+                                                $displayedValues[] = $jobDatas->partnername;
+                                            @endphp
+                                        @endif
+                                    @endforeach
+                                </select> --}}
+
+    {{-- <select class="language form-control" id="category1" name="partnersearch">
+                                  <option value="">Please Select One</option>
+                                  @foreach ($partner as $teammemberData)
+                                      <option value="{{ $teammemberData->id }}">
+                                          {{ $teammemberData->team_member }}
+                                      </option>
+                                  @endforeach
+                              </select> --}}
+    {{-- 
+                            </div>
+                        </div> --}}
+</div>
+{{-- * condition on foreach loop / outside of foreach loop / notification / message   --}}
+
+@php
+    $hasUnreadNotification = false;
+    foreach ($clientnotification as $clientnotificationdata) {
+        if ($clientnotificationdata->readstatus == 0) {
+            $hasUnreadNotification = true;
+            break;
+        }
+    }
+@endphp
+
+<li class="nav-item dropdown notification">
+    <a class="nav-link dropdown-toggle {{ $hasUnreadNotification ? 'badge-dot' : '' }}" href="#"
+        data-toggle="dropdown">
+        <i class="typcn typcn-bell"></i>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right">
+        <h6 class="notification-title">Notifications</h6>
+        <p class="notification-text">You have {{ count($clientnotification) }} unread notification</p>
+        <div class="notification-list">
+            @foreach ($clientnotification as $clientnotificationdata)
+                <div class="media new">
+                    <a href="{{ url('notification/' . $clientnotificationdata->id) }}"
+                        style="color: {{ $clientnotificationdata->readstatus == 1 ? 'Black' : 'red' }}">
+                    </a>
+                </div>
+                <!--/.media -->
+            @endforeach
+
+</li>
+
+
+{{-- * table heading hide / action hide / any column hide according condition    --}}
+
+<thead>
+    <tr>
+        <th>Date of Request</th>
+        <th>Employee</th>
+        <th>Leave Type</th>
+        <th>Approver</th>
+        <th>Reason for Leave</th>
+        <th> Leave Period</th>
+        <th>Days</th>
+        <th>Status</th>
+        @foreach ($myapplyleaveDatas as $applyleaveDatas)
+            @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
+                <th>Action</th>
+            @endif
+        @endforeach
+    </tr>
+</thead>
+@foreach ($myapplyleaveDatas as $applyleaveDatas)
+    <td>
+        @if ($applyleaveDatas->status == 0)
+            <span class="badge badge-pill badge-warning">Created</span>
+        @elseif($applyleaveDatas->status == 1)
+            <span class="badge badge-success">Approved</span>
+        @elseif($applyleaveDatas->status == 2)
+            <span class="badge badge-danger">Rejected</span>
+        @endif
+    </td>
+    <td>
+        @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
+            <button class="btn btn-danger" data-toggle="modal"
+                style="height: 16px; width: auto; border-radius: 7px; display: flex; align-items: center; justify-content: center;font-size: 11px;"
+                data-target="#requestModal{{ $applyleaveDatas->id }}">Request</button>
+        @endif
+    </td>
+@endforeach
+
+
+
+{{-- * excell and pdf download / table asc and desc order   --}}
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            "pageLength": 30,
+            dom: 'Bfrtip',
+            "order": [
+                [1, "asc"]
+            ],
+
+            buttons: [
+
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, ':visible']
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 5]
+                    }
+                },
+                'colvis'
+            ]
+        });
+    });
+</script>
+{{-- hide excell button ya othser button --}}
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            "pageLength": 10,
+            "dom": 'Bfrtip',
+            "order": [
+                [1, "desc"]
+            ],
+
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                text: 'Export to Excel',
+                className: 'btn-excel',
+            }, ]
+        });
+
+        $('.btn-excel').hide();
+    });
+</script>
+{{-- * first element   --}}
+<td>
+    @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
+        <button class="btn btn-danger" data-toggle="modal"
+            style="height: 16px; width: auto; border-radius: 7px; display: flex; align-items: center; justify-content: center;font-size: 11px;"
+            data-target="#requestModal{{ $applyleaveDatas->id }}">Request</button>
+    @endif
+</td>
 {{-- * 2 column in one row  --}}
 
 <tr>
@@ -205,7 +546,8 @@ Route::resource('form', RegisterController::class)->names([
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     {{-- modal-body --}}
                     <div class="modal-body">

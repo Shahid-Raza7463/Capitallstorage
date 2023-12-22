@@ -9,6 +9,7 @@ $ git config --global user.email shahidraza7463@gmail.com
 $ git config --list
 
 222222222222222222222
+it is first way in this way , your code pushed master instead main branch
 git init
 git add .
 $ git commit -m "first commit" or $ git commit -a -m "add git command"
@@ -18,7 +19,28 @@ $ git branch  // all branch name
 $ git branch -d main
 
 Basic command end hare 
+222222222222222222222
+it is second way in this way , your code pushed main instead master branch 
+create a new repository on the command line
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Shahid-Raza7463/Capitalldemo.git
+git push -u origin main
+
+
+push an existing repository from the command line
+git remote add origin https://github.com/Shahid-Raza7463/Capitalldemo.git
+git branch -M main
+git push -u origin main
+
+
 2222222222222222
+
+
+
+
 advance command 
 1.git checkout -b main
 2 C:\Shahid Raza\Demo>git remote -v
@@ -31,7 +53,7 @@ git pull origin main
 git fetch origin main
 git merge origin/main
 
-
+222222222222222222222222222222222222222
 
 
 
