@@ -40,4 +40,7 @@ DROP TABLE timesheetusers;
 {{-- * database error --}}
 performanceevaluationforms
 {{-- * count in database --}}
+SELECT COUNT(*) FROM assignmentbudgetings WHERE status = 0;
+
+{{-- * count in database --}}
 SELECT COUNT(*) as count FROM `assignmentbudgetings` WHERE `closedby` = 844;

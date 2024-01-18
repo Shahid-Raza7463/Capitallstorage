@@ -4,6 +4,174 @@ class ZipController extends Controller
 {
 //*
 // 22222222222222222222222222222222222222222222222222222222222222222222222222
+// app\Http\Controllers\TimesheetController.php
+// } else {  only understand else part in this 
+  // !old code 20-12-23
+  public function timesheet_mylist()
+  {
+    if (auth()->user()->role_id == 13) {
+      // die;
+      $client = Client::select('id', 'client_name')->get();
+      $getauth =  DB::table('timesheetusers')
+        ->where('createdby', auth()->user()->teammember_id)
+        ->where('status', '0')
+        ->orderby('id', 'desc')->first();
+
+      $dropdownYears = DB::table('timesheets')
+        ->where('created_by', auth()->user()->teammember_id)
+        ->select(DB::raw('YEAR(date) as year'))
+        ->distinct()->orderBy('year', 'DESC')->pluck('year');
+      $dropdownYears = DB::table('timesheets')
+        ->where('created_by', auth()->user()->teammember_id)
+        ->select(DB::raw('YEAR(date) as year'))
+        ->distinct()->orderBy('year', 'DESC')->pluck('year');
+
+
+      $dropdownMonths = DB::table('timesheets')
+        ->where('created_by', auth()->user()->teammember_id)
+        ->distinct()
+        ->pluck('month');
+
+      $partner = Teammember::where('role_id', '=', 11)->where('status', '=', 1)->with('title')->get();
+
+      $currentDate = now();
+
+
+      $month = $currentDate->format('F');
+      $year = $currentDate->format('Y');
+
+      $time =  DB::table('timesheets')->get();
+      foreach ($time as $value) {
+        //dd(date('F', strtotime($value->date)));
+        DB::table('timesheets')->where('id', $value->id)->update([
+          'month'         =>     date('F', strtotime($value->date)),
+        ]);
+      }
+      $teammember = DB::table('timesheets')
+        ->leftjoin('timesheetusers', 'timesheetusers.timesheetid', 'timesheets.id')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheets.created_by')
+        ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        ->where('timesheetusers.partner', auth()->user()->teammember_id)
+        ->select('teammembers.id', 'teammembers.team_member', 'roles.rolename')->distinct()->get();
+      //  dd($teammember);
+      $month = DB::table('timesheets')
+        ->select('timesheets.month')->distinct()->get();
+
+      $result = DB::table('timesheetusers')->select(DB::raw('YEAR(date) as year'))
+        ->distinct()->orderBy('year', 'DESC')->limit(5)->get();
+      $years = $result->pluck('year');
+
+      $timesheetData = DB::table('timesheetusers')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+        ->where('timesheetusers.createdby', auth()->user()->teammember_id)
+        ->where('timesheetusers.status', 0)
+        ->select('timesheetusers.*', 'teammembers.team_member')->orderBy('id', 'DESC')->paginate(200);
+      // dd($timesheetData);
+
+      // $timesheetData = DB::table('timesheetusers')
+      //   ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+      //   ->where('timesheetusers.createdby', auth()->user()->teammember_id)
+      //   ->where('timesheetusers.status', 1)
+      //   ->select('timesheetusers.*', 'teammembers.team_member')->orderBy('id', 'DESC')->paginate(200);
+      // // dd($timesheetData);
+      $getauthh =  DB::table('timesheetusers')
+        ->where('createdby', auth()->user()->teammember_id)
+        ->orderby('id', 'desc')->first();
+      $timesheetrequest = DB::table('timesheetrequests')->where('createdby', auth()->user()->teammember_id)->orderBy('id', 'DESC')->first();
+
+      if ($getauthh  == null) {
+        return view('backEnd.timesheet.firstindex', compact('timesheetData', 'getauth', 'client', 'partner'));
+      } else {
+        // shahid
+        return view('backEnd.timesheet.index', compact('timesheetrequest', 'partner', 'client', 'getauth', 'dropdownMonths', 'timesheetData', 'year', 'dropdownYears', 'month', 'teammember', 'month', 'years'));
+      }
+    } else {
+
+      $dropdownYears = DB::table('timesheets')
+        ->where('created_by', auth()->user()->teammember_id)
+        ->select(DB::raw('YEAR(date) as year'))
+        ->distinct()->orderBy('year', 'DESC')->pluck('year');
+
+      // dd($dropdownYears);
+      // 0 => 2024
+      // 1 => 2023
+
+      $dropdownMonths = DB::table('timesheets')
+        ->where('created_by', auth()->user()->teammember_id)
+        ->distinct()
+        ->pluck('month');
+
+      // dd($dropdownMonths);
+      // 0 => "October"
+      // 1 => "December"
+      // 2 => "November"
+      // 3 => "January"
+      // 4 => "February"
+
+      $currentDate = now();
+      // 2024-01-16 00:46:21.610590
+
+      $month = $currentDate->format('F');
+      // "January"
+      $year = $currentDate->format('Y');
+      // "2024"
+
+
+
+      $getauths =  DB::table('timesheetusers')
+        ->where('createdby', auth()->user()->teammember_id)
+        ->where('status', '1')
+        ->orderby('id', 'desc')->first();
+      if ($getauths != null) {
+        $getauth =  DB::table('timesheetusers')
+          ->where('createdby', auth()->user()->teammember_id)
+          ->where('status', '1')
+          ->orderby('id', 'desc')->first();
+        //dd($getauth);
+      } else {
+        $getauth =  DB::table('timesheetusers')
+          ->where('createdby', auth()->user()->teammember_id)
+          ->where('status', '0')
+          ->orderby('id', 'desc')->first();
+        // dd($getauth);
+      }
+
+      $getauthh =  DB::table('timesheetusers')
+        ->where('createdby', auth()->user()->teammember_id)
+        ->orderby('id', 'desc')->first();
+
+      $client = Client::select('id', 'client_name')->get();
+
+      $timesheetData = DB::table('timesheetusers')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+        ->where('timesheetusers.createdby', auth()->user()->teammember_id)
+        ->where('timesheetusers.status', 0)
+        //   ->where('timesheets.month', $month)
+        ->whereRaw('YEAR(timesheetusers.date) = ?', [$year])
+        ->select('timesheetusers.*', 'teammembers.team_member')->orderBy('id', 'DESC')->get();
+
+      $partner = Teammember::where('role_id', '=', 11)->where('status', '=', 1)->with('title')->get();
+      $timesheetrequest = DB::table('timesheetrequests')->where('createdby', auth()->user()->teammember_id)->orderBy('id', 'DESC')->first();
+      // dd($timesheetrequest);
+      // +"validate": "2024-01-09"
+      if ($getauthh  == null) {
+        return view('backEnd.timesheet.firstindex', compact('timesheetData', 'getauth', 'client', 'partner'));
+      } else {
+        return view('backEnd.timesheet.index', compact(
+          'timesheetData',
+          'getauth',
+          'client',
+          'partner',
+          'timesheetrequest',
+          'dropdownYears',
+          'dropdownMonths',
+          'month',
+          'year',
+        ));
+      }
+    }
+  }
+// 22222222222222222222222222222222222222222222222222222222222222222222222222
 // app\Http\Controllers\TimesheetrequestController.php
 public function timesheetsubmission(Request $request)
     {

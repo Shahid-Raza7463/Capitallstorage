@@ -3,6 +3,636 @@
 class ZipController extends Controller
 {
 //*
+//*
+//* regarding file store / store file size / regarding database / regarding table 
+public function store(Request $request)
+{
+    $request->validate([
+        'particular' => 'required',
+        'file' => 'required',
+    ]);
+
+    try {
+        $data = $request->except(['_token']);
+        $files = [];
+
+        if ($request->hasFile('file')) {
+            foreach ($request->file('file') as $file) {
+                $name = $file->getClientOriginalName();
+                // store data here storage\app\public\image\task
+                $path = $file->storeAs('public\image\task', $name);
+                $files[] = [
+                    'name' => $name,
+                    // Get the file size in bytes
+                    'size' => $file->getSize(),
+                    // Get the file size in kb aur blade per kb mb and gb me convert kar le 
+                    // 'size' => round($file->getSize() / 1024, 2),
+                ];
+            }
+        }
+        // dd($files);
+
+        foreach ($files as $file) {
+            $s = DB::table('assignmentfolderfiles')->insert([
+                'particular' => $request->particular,
+                'assignmentgenerateid' => $request->assignmentgenerateid,
+                'assignmentfolder_id' => $request->assignmentfolder_id,
+                'createdby' => auth()->user()->teammember_id,
+                'filesname' => $file['name'],
+                'filesize' => $file['size'], // Save the file size to the database
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        $output = array('msg' => 'Submit Successfully');
+        return back()->with('success', ['message' => $output, 'success' => true]);
+    } catch (Exception $e) {
+        DB::rollBack();
+        Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+        report($e);
+        $output = array('msg' => $e->getMessage());
+        return back()->withErrors($output)->withInput();
+    }
+}
+//* zip download on assignment folder all 
+ // public function zipfolderdownload(Request $request, $assignmentgenerateid)
+    // {
+    //     $assignmentfoldername = DB::table('assignmentfolders')
+    //         ->leftJoin('assignmentfolderfiles', 'assignmentfolderfiles.assignmentfolder_id', 'assignmentfolders.id')
+    //         ->where('assignmentfolders.assignmentgenerateid', $assignmentgenerateid)
+    //         ->select('assignmentfolders.*', 'assignmentfolderfiles.filesname')
+    //         ->get();
+
+    //     $zipFileNames = [];
+
+    //     foreach ($assignmentfoldername as $foldername) {
+    //         $zipFileName = $foldername->assignmentfoldersname . '.zip';
+    //         $zipFileNames[] = $zipFileName;
+
+    //         $zip = new ZipArchive;
+    //         if ($zip->open($zipFileName, ZipArchive::CREATE) === TRUE) {
+    //             // Replace storage_path with the appropriate file path
+    //             $filePath = storage_path('app/public/image/task/' . $foldername->filesname);
+
+    //             if (file_exists($filePath)) {
+    //                 $zip->addFile($filePath, $foldername->filesname);
+    //             } else {
+    //                 return '<h1>File Not Found</h1>';
+    //             }
+
+    //             $zip->close();
+    //         }
+    //     }
+    //     // dd($zipFileNames);
+    //     // Download all zip files
+    //     foreach ($zipFileNames as $zipFileName) {
+    //         return response()->download($zipFileName)->deleteFileAfterSend(true);
+    //     }
+    // }
+
+    public function zipfolderdownload(Request $request, $assignmentgenerateid)
+    {
+        $assignmentfoldername = DB::table('assignmentfolders')
+            ->leftJoin('assignmentfolderfiles', 'assignmentfolderfiles.assignmentfolder_id', 'assignmentfolders.id')
+            ->where('assignmentfolders.assignmentgenerateid', $assignmentgenerateid)
+            ->select('assignmentfolders.*', 'assignmentfolderfiles.filesname')
+            ->get();
+
+        $parentZipFileName = 'report_name.zip';
+        $parentZip = new ZipArchive;
+
+        if ($parentZip->open($parentZipFileName, ZipArchive::CREATE) === TRUE) {
+            foreach ($assignmentfoldername as $foldername) {
+                $folderZipFileName = $foldername->assignmentfoldersname . '.zip';
+                $zip = new ZipArchive;
+
+                if ($zip->open($folderZipFileName, ZipArchive::CREATE) === TRUE) {
+                    // Replace storage_path with the appropriate file path
+                    $filePath = storage_path('app/public/image/task/' . $foldername->filesname);
+
+                    if (file_exists($filePath)) {
+                        $zip->addFile($filePath, $foldername->filesname);
+                    } else {
+                        return '<h1>File Not Found</h1>';
+                    }
+
+                    $zip->close();
+                    $parentZip->addFile($folderZipFileName, $foldername->assignmentfoldersname . '/' . $foldername->filesname);
+                    // No need to delete individual folder zip here
+                }
+            }
+
+            $parentZip->close();
+        }
+
+        // Download the parent zip file
+        return response()->download($parentZipFileName)->deleteFileAfterSend(true);
+    }
+//* count data 
+$totalFiles = count($zipFileNames);
+//* check array data / testing foreeach / regarding foreach
+$zipfoldername1 = [];
+foreach ($assignmentfoldername as $foldername) {
+    $zipfoldername = $foldername->assignmentfoldersname . '.zip';
+    // Add each zip folder name to the array
+    $zipfoldername1[] = $zipfoldername;
+}
+dd($zipfoldername1);
+
+// output
+array:2 [▼
+  0 => "Shahid f.zip"
+  1 => "rahul.zip"
+]
+
+
+//* online excell editing
+https://www.microsoft365.com/launch/excel?auth=1
+//* regarding next week / regarding preious week / regarding week
+ // -----------------------------Shahid coding start------------------------------------------
+            // Get latest submited timesheet end date from timesheetreport table
+            $latesttimesheetreport =  DB::table('timesheetreport')
+                ->where('teamid', auth()->user()->teammember_id)
+                ->orderBy('id', 'desc')
+                ->first();
+            // dd($latesttimesheetreport);
+
+            $timesheetreportenddate = Carbon::parse($latesttimesheetreport->enddate);
+            // find next sturday 
+            $nextSaturday = $timesheetreportenddate->copy()->next(Carbon::SATURDAY);
+            $formattedNextSaturday = $nextSaturday->format('Y-m-d');
+            $formattedNextSaturday1 = $timesheetreportenddate->format('d-m-Y');
+
+            // find next week timesheet filled or not 
+            $nextweektimesheet = DB::table('timesheetusers')
+                ->where('createdby', auth()->user()->teammember_id)
+                ->where('status', '0')
+                ->where('date', $formattedNextSaturday)
+                ->first();
+            // dd($nextweektimesheet);
+
+            // if not filled next week timesheet then 
+            if ($nextweektimesheet == null) {
+                $output = array('msg' => "Fill the Week timesheet After this week : $formattedNextSaturday1");
+                return back()->with('statuss', $output);
+            }
+            // -----------------------------Shahid coding end------------------------------------------
+           
+//* function only for testing / testing function / regarding testing
+
+    //! for testing only 
+    public function timesheetsubmission(Request $request)
+    {
+        try {
+            // Get latest timesheet end date from timesheetreport table
+            $latesttimesheetreport =  DB::table('timesheetreport')
+                ->where('teamid', auth()->user()->teammember_id)
+                ->orderBy('id', 'desc')
+                ->first();
+            // dd($latesttimesheetreport);
+
+            $timesheetreportenddate = Carbon::parse($latesttimesheetreport->enddate);
+            $nextSaturday = $timesheetreportenddate->copy()->next(Carbon::SATURDAY);
+            // dd($nextSaturday);
+            $formattedNextSaturday = $nextSaturday->format('Y-m-d');
+            $formattedNextSaturday1 = $nextSaturday->format('d-m-Y');
+
+
+            $nextweektimesheet = DB::table('timesheetusers')
+                ->where('createdby', auth()->user()->teammember_id)
+                ->where('status', '0')
+                ->where('date', $formattedNextSaturday)
+                ->first();
+            // dd($nextweektimesheet);
+
+            if ($nextweektimesheet == null) {
+                $output = array('msg' => "Fill the timesheet After this week : $formattedNextSaturday1");
+                return back()->with('success', $output);
+            }
+            // dd($latesttimesheetreport);
+            // -------------------------Shahid coding end hare -----------------------------
+            else {
+
+                $output = array('msg' => 'Timesheet Submit Successfully');
+                return back()->with('success', $output);
+            }
+
+            // Check previous week timesheet 
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            report($e);
+            $output = array('msg' => $e->getMessage());
+            return back()->withErrors($output)->withInput();
+        }
+    }
+
+
+//* regarding year / year wise filter
+$currentDate = now();
+$month = $currentDate->format('F');
+$year = $currentDate->format('Y');
+$timesheetData = DB::table('timesheetusers')
+->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+->where('timesheetusers.createdby', auth()->user()->teammember_id)
+->where('timesheetusers.status', 0)
+//   ->where('timesheets.month', $month)
+->whereRaw('YEAR(timesheetusers.date) = ?', [$year])
+->select('timesheetusers.*', 'teammembers.team_member')->orderBy('id', 'DESC')->get();
+//  dd($timesheetData);
+//* redirection in javascript
+if (!shouldContinue) {
+  // Redirect to a specific URL when the user clicks Cancel
+  window.location.href = "{{ url('/teammember') }}";
+  return;
+  }
+//* filter functionality 2
+
+  // it is implemented submitte timesheet tab on admin and patner 
+  public function filterDataAdmin(Request $request)
+  {
+
+    // for patner 
+    if (auth()->user()->role_id == 13) {
+
+      $teamname = $request->input('teamname');
+      $start = $request->input('start');
+      $end = $request->input('end');
+      $totalhours = $request->input('totalhours');
+      $partnerId = $request->input('partnersearch');
+
+      // submitted teamtimesheet tab on patner then use this below query 
+
+      // $query = DB::table('timesheetreport')
+      //   ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+      //   ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+      //   ->where('timesheetreport.partnerid', auth()->user()->teammember_id)
+      //   ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+      //   ->latest();
+
+      // submitted timesheet tab on patner 
+      $query = DB::table('timesheetreport')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+        ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+        ->where('timesheetreport.teamid', auth()->user()->teammember_id)
+        ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+        ->latest();
+
+      // teamname with othser field to  filter
+      if ($teamname) {
+        $query->where('timesheetreport.teamid', $teamname);
+      }
+
+      if ($teamname && $totalhours) {
+        $query->where(function ($q) use ($teamname, $totalhours) {
+          $q->where('timesheetreport.teamid', $teamname)
+            ->where('timesheetreport.totaltime', $totalhours);
+        });
+      }
+      if ($teamname && $partnerId) {
+        $query->where(function ($q) use ($teamname, $partnerId) {
+          $q->where('timesheetreport.teamid', $teamname)
+            ->where('timesheetreport.partnerid', $partnerId);
+        });
+      }
+
+      // patner or othse one data
+      if ($partnerId) {
+        $query->where('timesheetreport.partnerid', $partnerId);
+      }
+
+      if ($partnerId && $totalhours) {
+        $query->where(function ($q) use ($partnerId, $totalhours) {
+          $q->where('timesheetreport.partnerid', $partnerId)
+            ->where('timesheetreport.totaltime', $totalhours);
+        });
+      }
+
+      // total hour wise  wise or othser data
+      if ($totalhours) {
+        $query->where('timesheetreport.totaltime', $totalhours);
+      }
+      //! end date 
+      if ($start && $end) {
+        $query->where(function ($query) use ($start, $end) {
+          $query->whereBetween('timesheetreport.startdate', [$start, $end])
+            ->orWhereBetween('timesheetreport.enddate', [$start, $end])
+            ->orWhere(function ($query) use ($start, $end) {
+              $query->where('timesheetreport.startdate', '<=', $start)
+                ->where('timesheetreport.enddate', '>=', $end);
+            });
+        });
+      }
+    }
+    // for Admin 
+    else {
+      // dd($request);
+
+      $teamname = $request->input('teamname');
+      $start = $request->input('start');
+      $end = $request->input('end');
+      $totalhours = $request->input('totalhours');
+      $partnerId = $request->input('partnersearch');
+
+
+      $query = DB::table('timesheetreport')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+        ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+        ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+        ->latest();
+
+      // teamname with othser field to  filter
+      if ($teamname) {
+        $query->where('timesheetreport.teamid', $teamname);
+      }
+
+      if ($teamname && $totalhours) {
+        $query->where(function ($q) use ($teamname, $totalhours) {
+          $q->where('timesheetreport.teamid', $teamname)
+            ->where('timesheetreport.totaltime', $totalhours);
+        });
+      }
+      if ($teamname && $partnerId) {
+        $query->where(function ($q) use ($teamname, $partnerId) {
+          $q->where('timesheetreport.teamid', $teamname)
+            ->where('timesheetreport.partnerid', $partnerId);
+        });
+      }
+
+      // patner or othse one data
+      if ($partnerId) {
+        $query->where('timesheetreport.partnerid', $partnerId);
+      }
+
+      if ($partnerId && $totalhours) {
+        $query->where(function ($q) use ($partnerId, $totalhours) {
+          $q->where('timesheetreport.partnerid', $partnerId)
+            ->where('timesheetreport.totaltime', $totalhours);
+        });
+      }
+
+      // total hour wise  wise or othser data
+      if ($totalhours) {
+        $query->where('timesheetreport.totaltime', $totalhours);
+      }
+      //! end date 
+      if ($start && $end) {
+        $query->where(function ($query) use ($start, $end) {
+          $query->whereBetween('timesheetreport.startdate', [$start, $end])
+            ->orWhereBetween('timesheetreport.enddate', [$start, $end])
+            ->orWhere(function ($query) use ($start, $end) {
+              $query->where('timesheetreport.startdate', '<=', $start)
+                ->where('timesheetreport.enddate', '>=', $end);
+            });
+        });
+      }
+    }
+    $filteredDataaa = $query->get();
+
+    // maping double date ************
+    $groupedData = $filteredDataaa->groupBy(function ($item) {
+      return $item->team_member . '|' . $item->week;
+    })->map(function ($group) {
+      $firstItem = $group->first();
+
+      return (object)[
+        'id' => $firstItem->id,
+        'teamid' => $firstItem->teamid,
+        'week' => $firstItem->week,
+        'totaldays' => $group->sum('totaldays'),
+        'totaltime' => $group->sum('totaltime'),
+        'startdate' => $firstItem->startdate,
+        'enddate' => $firstItem->enddate,
+        'partnername' => $firstItem->partnername,
+        'created_at' => $firstItem->created_at,
+        'team_member' => $firstItem->team_member,
+        'partnerid' => $firstItem->partnerid,
+      ];
+    });
+
+
+    $filteredData = collect($groupedData->values());
+    // dd($filteredData);
+    return response()->json($filteredData);
+  }
+
+//* filter functionality 1
+
+ // applyleave filter implemented
+ public function filterDataAdmin(Request $request)
+ {
+   if (auth()->user()->role_id == 13) {
+     // apply leave filter on patner 
+     $teamname = $request->input('employee');
+     $leavetype = $request->input('leave');
+     // if ($startdate != null || $endtdate != null) {
+     $startdate = $request->input('start');
+     $startdate1 = date('Y-m-d H:i:s', strtotime($startdate));
+     $endtdate = $request->input('end');
+     $endtdate1 = date('Y-m-d H:i:s', strtotime($endtdate));
+     // }
+     $statusdata = $request->input('status');
+
+     $query  = DB::table('applyleaves')
+       ->leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
+       ->leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
+       ->leftjoin('teammembers as approvername', 'approvername.id', 'applyleaves.approver')
+       ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+       ->where('applyleaves.approver', auth()->user()->teammember_id)
+       ->select('applyleaves.*', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'approvername.team_member as approvernames');
+
+
+     // According employee
+     if ($teamname) {
+       $query->where('applyleaves.createdby', $teamname);
+     }
+     // According leave type
+     if ($leavetype) {
+       $query->where('applyleaves.leavetype', $leavetype);
+     }
+
+     // According Status 
+     if ($statusdata != null) {
+       if ($statusdata == 0) {
+         $query->where('applyleaves.status', 0);
+       } elseif ($statusdata == 1) {
+         $query->where('applyleaves.status', 1);
+       } elseif ($statusdata == 2) {
+         $query->where('applyleaves.status', 2);
+       }
+     }
+
+     // According strat date and end date 
+     if ($teamname == null && $leavetype == null && $statusdata == null) {
+       $query->whereBetween('applyleaves.created_at', [$startdate1, $endtdate1]);
+     }
+     // According stratdate and enddate and employee
+     if ($startdate != null && $endtdate != null && $teamname != null) {
+       $query->whereBetween('applyleaves.created_at', [$startdate1, $endtdate1])
+         ->where('applyleaves.createdby', $teamname);
+     }
+
+     // According employee and leave type
+     if ($teamname && $leavetype) {
+       $query->where(function ($q) use ($teamname, $leavetype) {
+         $q->where('applyleaves.createdby', $teamname)
+           ->where('applyleaves.leavetype', $leavetype);
+       });
+     }
+     // According Status and teamname
+     if ($statusdata != null && $teamname != null) {
+       if ($statusdata == 0 && $teamname != null) {
+         $query->where('applyleaves.status', 0)
+           ->where('applyleaves.createdby', $teamname);
+       } elseif ($statusdata == 1 && $teamname != null) {
+         $query->where('applyleaves.status', 1)
+           ->where('applyleaves.createdby', $teamname);
+       } elseif ($statusdata == 2 && $teamname != null) {
+         $query->where('applyleaves.status', 2)
+           ->where('applyleaves.createdby', $teamname);
+       }
+     }
+
+     // According Status and leave type 
+     if ($statusdata != null && $leavetype != null) {
+       if ($statusdata == 0 && $leavetype != null) {
+         $query->where('applyleaves.status', 0)
+           ->where('applyleaves.leavetype', $leavetype);
+       } elseif ($statusdata == 1 && $leavetype != null) {
+         $query->where('applyleaves.status', 1)
+           ->where('applyleaves.leavetype', $leavetype);
+       } elseif ($statusdata == 2 && $leavetype != null) {
+         $query->where('applyleaves.status', 2)
+           ->where('applyleaves.leavetype', $leavetype);
+       }
+     }
+   } else {
+     // apply leave filter on admin 
+     $teamname = $request->input('employee');
+     // dd($teamname);
+     $leavetype = $request->input('leave');
+     // if ($startdate != null || $endtdate != null) {
+     $startdate = $request->input('start');
+     $startdate1 = date('Y-m-d H:i:s', strtotime($startdate));
+     $endtdate = $request->input('end');
+     $endtdate1 = date('Y-m-d H:i:s', strtotime($endtdate));
+     // }
+     $statusdata = $request->input('status');
+
+     $startperioddata = $request->input('startperiod');
+     $endperioddata = $request->input('endperiod');
+
+     $query  = DB::table('applyleaves')
+       ->leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
+       ->leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
+       ->leftjoin('teammembers as approvername', 'approvername.id', 'applyleaves.approver')
+       ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+       ->select('applyleaves.*', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'approvername.team_member as approvernames');
+
+
+     // According leave periode 
+     if ($startperioddata && $endperioddata) {
+       // $query->where('applyleaves.from', $startperioddata);
+       // $query->whereBetween('applyleaves.from', [$startperioddata, $endperioddata]);
+       $query->where('applyleaves.from', '>=', $startperioddata)
+         ->where('applyleaves.to', '<=', $endperioddata);
+     }
+
+     // According employee
+     if ($teamname) {
+       $query->where('applyleaves.createdby', $teamname);
+     }
+     // According leave type
+     if ($leavetype) {
+       $query->where('applyleaves.leavetype', $leavetype);
+     }
+
+     // According Status 
+     if ($statusdata != null) {
+       if ($statusdata == 0) {
+         $query->where('applyleaves.status', 0);
+       } elseif ($statusdata == 1) {
+         $query->where('applyleaves.status', 1);
+       } elseif ($statusdata == 2) {
+         $query->where('applyleaves.status', 2);
+       }
+     }
+
+     // According strat date and end date 
+     if ($teamname == null && $leavetype == null && $statusdata == null && $startperioddata == null && $endperioddata == null) {
+       $query->whereBetween('applyleaves.created_at', [$startdate1, $endtdate1]);
+     }
+     // According stratdate and enddate and employee
+     if ($startdate != null && $endtdate != null && $teamname != null) {
+       $query->whereBetween('applyleaves.created_at', [$startdate1, $endtdate1])
+         ->where('applyleaves.createdby', $teamname);
+     }
+
+     // According employee and leave type
+     if ($teamname && $leavetype) {
+       $query->where(function ($q) use ($teamname, $leavetype) {
+         $q->where('applyleaves.createdby', $teamname)
+           ->where('applyleaves.leavetype', $leavetype);
+       });
+     }
+     // According Status and teamname
+     if ($statusdata != null && $teamname != null) {
+       if ($statusdata == 0 && $teamname != null) {
+         $query->where('applyleaves.status', 0)
+           ->where('applyleaves.createdby', $teamname);
+       } elseif ($statusdata == 1 && $teamname != null) {
+         $query->where('applyleaves.status', 1)
+           ->where('applyleaves.createdby', $teamname);
+       } elseif ($statusdata == 2 && $teamname != null) {
+         $query->where('applyleaves.status', 2)
+           ->where('applyleaves.createdby', $teamname);
+       }
+     }
+
+     // According Status and leave type 
+     if ($statusdata != null && $leavetype != null) {
+       if ($statusdata == 0 && $leavetype != null) {
+         $query->where('applyleaves.status', 0)
+           ->where('applyleaves.leavetype', $leavetype);
+       } elseif ($statusdata == 1 && $leavetype != null) {
+         $query->where('applyleaves.status', 1)
+           ->where('applyleaves.leavetype', $leavetype);
+       } elseif ($statusdata == 2 && $leavetype != null) {
+         $query->where('applyleaves.status', 2)
+           ->where('applyleaves.leavetype', $leavetype);
+       }
+     }
+   }
+   $filteredData = $query->get();
+   // if holyday days occure error in future then find holiday according blade file and merge data with $filteredData 
+   return response()->json($filteredData);
+ }
+
+//* filter functionality on date / filter created_at column 
+
+<div class="col-3">
+<div class="form-group">
+    <label class="font-weight-600">Start Date and Time</label>
+    <input type="datetime-local" class="form-control" id="start1" name="start">
+</div>
+</div>
+
+<div class="col-3">
+<div class="form-group">
+    <label class="font-weight-600">End Date</label>
+    <input type="datetime-local" class="form-control" id="end1" name="end">
+</div>
+</div>
+
+
+$startdate = $request->input('start');
+$startdate1 = date('Y-m-d H:i:s', strtotime($startdate));
+$endtdate = $request->input('end');
+$endtdate1 = date('Y-m-d H:i:s', strtotime($endtdate));
+
+
 //* array to object convert
 public function timesheet_teamlist()
   {
@@ -458,7 +1088,7 @@ foreach ($period as $date) {
 }
 
 dd($datess);
-//* error get patch ya any route related use it 
+//* error get patch ya any route related use it / regarding route 
 
 Route::any('/examleaverequestapprove/{id}', [ApplyleaveController::class, 'examleaverequest'])->name('examleaveapprove');
 
@@ -469,9 +1099,12 @@ $holidaycount = DB::table('holidays')->where('startdate', '>=', $team->from)
 ->where('enddate', '<=', $team->to)
 ->count();
 dd($holidaycount);
-//* regarding redirect 
+//* regarding redirect / regarding message /success message 
+
+$output = array('msg' => "Fill the timesheet Previous Week: $formattedPreviousSaturday");
 $output = array('msg' => 'Please Approve Latest Timesheet Request');
 return redirect('timesheetrequest/view/' . $id)->with('statuss', $output);
+
 // for rejected message 
 $output = array('msg' => 'Rejected Successfully');
 return back()->with('statuss', $output);
@@ -479,13 +1112,35 @@ return back()->with('statuss', $output);
 // for success message 
 $output = array('msg' => 'You have already submitted a request');
 return back()->with('success', $output);
-//* update one column in table for all 
 
+//* update one column in table for all // update table / regarding update / regarding table 
 use Illuminate\Support\Facades\DB;
 
-// Your update query
+$nextweektimesheet = DB::table('timesheetusers')
+->where('createdby', auth()->user()->teammember_id)
+->whereBetween('date', ['2023-12-25', '2024-01-13'])
+// ->get();
+->update(['status' => 0]);
+
+$nextweektimesheet = DB::table('timesheets')
+->where('created_by', auth()->user()->teammember_id)
+->whereBetween('date', ['2023-12-25', '2024-01-13'])
+// ->get();
+->update(['status' => 0]);
+// // dd($nextweektimesheet);
+
+$nextweektimesheet = DB::table('timesheetusers')
+->where('createdby', auth()->user()->teammember_id)
+->whereBetween('date', ['2023-12-25', '2023-12-31'])
+->delete();
+
 DB::table('assignmentteammappings')
-    ->update(['status' => 0]);
+->update(['status' => 0]);
+
+dd('hi');
+
+
+
 
 //* Ternary operator vs Null coalescing operator in PHP
 // Ternary Operator
@@ -688,7 +1343,15 @@ Output:
           );
 
     //*  week days in numbric/ regarding months / weeks days / regarding date and time  /regarding date 
-        // dd(date('w', strtotime($request->date))); // 4
+
+//* in blade file 
+
+ //     <small class="text-muted">
+//         {{ \Carbon\Carbon::parse($birthday->dateofbirth)->format('d M') }}
+//          {{-- 14 jan output --}}
+//      </small>
+    
+    // dd(date('w', strtotime($request->date))); // 4
 
         $period = CarbonPeriod::create($team->from, $team->to);
         
@@ -771,6 +1434,34 @@ Output:
          $isPast = now()->isPast();         
          // Convert the current date and time to a different timezone
          $userTimeZone = now()->setTimezone('America/New_York'); 
+         $dropdownYears = DB::table('timesheets')
+         ->where('created_by', auth()->user()->teammember_id)
+         ->select(DB::raw('YEAR(date) as year'))
+         ->distinct()->orderBy('year', 'DESC')->pluck('year');
+ 
+       // dd($dropdownYears);
+       // 0 => 2024
+       // 1 => 2023
+ 
+       $dropdownMonths = DB::table('timesheets')
+         ->where('created_by', auth()->user()->teammember_id)
+         ->distinct()
+         ->pluck('month');
+ 
+       // dd($dropdownMonths);
+       // 0 => "October"
+       // 1 => "December"
+       // 2 => "November"
+       // 3 => "January"
+       // 4 => "February"
+ 
+       $currentDate = now();
+       // 2024-01-16 00:46:21.610590
+ 
+       $month = $currentDate->format('F');
+       // "January"
+       $year = $currentDate->format('Y');
+       // "2024"
 
 
       //* date() function 
@@ -808,8 +1499,10 @@ Output:
        date('h-m-s', strtotime($timesheetrequestsData->created_at)) 
       //  11:12:53
       // 10 days only in table then
+      // December 20,2023 - December 20,2023
       <td>{{ date('F d,Y', strtotime($applyleaveDatas->from)) ?? '' }} -
       {{ date('F d,Y', strtotime($applyleaveDatas->to)) ?? '' }}</td>
+      
 // 18-12-23 then / basically add date in date
       $lastdate = Carbon::createFromFormat('Y-m-d', $usertimesheetfirstdate->date ?? '')->addDays(6);
 // it will give result 24-12-23
@@ -861,8 +1554,40 @@ Output:
      $customFormat = now()->format('F j, Y \a\t g:i A'); 
      // Spanish locale
      $formattedDate = now()->locale('es')->isoFormat('dddd, MMMM D, YYYY'); 
+//* find last week / in_array
+if ($savetimesheet) {
+  $savetimesheetdate = Carbon::parse($savetimesheet->date);
+  $previousSaturday = $savetimesheetdate->copy()->previous(Carbon::SATURDAY);
+  dd($previousSaturday);
+} else {
+  // Handle the case where $savetimesheet is null or no records match the conditions
+}
+//* find last week / in_array
+    // find previus sunday 
+    $previewsunday = now()->subWeeks(1)->endOfWeek();
+    $previewsundayformate = $previewsunday->format('d-m-Y');
 
+    // find previus saturday
+    $previewsaturday = now()->subWeeks(1)->endOfWeek();
+    // Subtract one day from sunday
+    $previewsaturdaydate = $previewsaturday->subDay();
+    $previewsaturdaydateformate = $previewsaturdaydate->format('d-m-Y');
 
+    foreach ($teammembers as $teammembermail) {
+        // both date store in an array 
+        $validDates = [$previewsundayformate, $previewsaturdaydateformate];
+        if (!in_array($teammembermail->last_submission_date, $validDates)) {
+            $data = array(
+                'subject' => "Reminder || Timesheet not filled Last Week",
+                'name' =>   $teammembermail->team_member,
+                'email' =>   $teammembermail->emailid,
+            );
+            Mail::send('emails.timesheetnotfilledstafflastweekremidner', $data, function ($msg) use ($data) {
+                $msg->to($data['email']);
+                $msg->subject($data['subject']);
+            });
+        }
+    }
 
 
 
@@ -1483,3 +2208,7 @@ Output:
     }
     //* Download image on click 
 }
+            // ----------------------------- 29 sep 2023 joining date------------------------------------------
+
+
+            // -----------------------------Shahid coding start------------------------------------------
