@@ -4,6 +4,7 @@ class ZipController extends Controller
 {
 //*
 //*
+//*
 //* regarding file store / store file size / regarding database / regarding table 
 public function store(Request $request)
 {
@@ -1115,6 +1116,14 @@ return back()->with('success', $output);
 
 //* update one column in table for all // update table / regarding update / regarding table 
 use Illuminate\Support\Facades\DB;
+
+//? sum total hour / regarding row / row count 
+$co = DB::table('timesheetusers')
+->where('createdby', auth()->user()->teammember_id)
+->whereBetween('date', [$previousMondayFormatted, $nextSaturdayFormatted])
+->select(DB::raw('SUM(hour) as total_hours'), DB::raw('COUNT(DISTINCT timesheetid) as row_count'))
+->get();
+
 
 $nextweektimesheet = DB::table('timesheetusers')
 ->where('createdby', auth()->user()->teammember_id)
