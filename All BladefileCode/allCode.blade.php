@@ -2,6 +2,115 @@
 
 {{-- *   --}}
 {{-- *   --}}
+{{-- *   --}}
+
+{{-- * basic class/ regarding table/ regarding ordering   --}}
+<!--Page Active Scripts(used by this page)-->
+{{-- <script src="{{ url('backEnd/plugins/datatables/dataTables.min.js') }}"></script> --}}
+<script src="{{ url('backEnd/plugins/datatables/data-basic.active.js') }}"></script>
+above code exist in
+resources\views\backEnd\layouts\includes\js.blade.php
+
+<table id="examplee" class="table display table-bordered table-striped table-hover">
+    <thead>
+
+        <tr>
+            <th style="display: none;">id</th>
+
+            <th>Employee Name</th>
+            <th>Date</th>
+            <th>Day</th>
+            <th>Client Name</th>
+            <th>Assignment Name</th>
+
+            <th>Work Item</th>
+            <th>Location</th>
+            <th>Partner</th>
+            {{-- <th>Hour</th> --}}
+            <th> Hour</th>
+            <th>Status</th>
+
+            {{-- @if (Auth::user()->role_id == 11 || Auth::user()->teammember_id != $timesheetData[0]->createdby)
+                <th>Action</th>
+            @endif --}}
+        </tr>
+    </thead>
+</table>
+
+<script>
+    $(document).ready(function() {
+        // Initialize DataTables with default sorting on the "Date" column
+        $('#examplee').DataTable({
+            "order": [
+                [2, "asc"]
+            ], // 2 is the index of the "Date" column, "asc" for ascending order
+            "columnDefs": [{
+                "targets": [0],
+                "orderable": false
+            }, ]
+        });
+    });
+</script>
+
+
+{{-- * Permission / regarding permission / 0 error     --}}
+
+
+
+@if ($permissiontimesheet)
+    <li>
+        <a class="btn btn-info" href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Download</a>
+    </li>
+@endif
+
+@if ($permissiontimesheet && $permissiontimesheet->teamid !== null)
+    <li>
+        <a class="btn btn-info" href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Download</a>
+    </li>
+@endif
+
+
+public function indexlist($id)
+{
+//dd($id);
+$assignmentfolder = Assignmentfolder::where('assignmentgenerateid', $id)->get();
+
+$assignmentfolderpermission = DB::table('assignmentbudgetings')->where('assignmentgenerate_id', $id)->first();
+return view('backEnd.assignmentfolder.index', compact('assignmentfolder', 'id', 'assignmentfolderpermission'));
+}
+
+@if ($assignmentfolderpermission->status == 1)
+    <li style="margin-left: 13px;"><a class="btn btn-success" style="color:white;" data-toggle="modal"
+            data-target="#exampleModal1">Add Folder</a></li>
+@endif
+
+{{-- * empty /regarding empty   --}}
+@if ($assignmentfolder->isNotEmpty())
+    <li style="margin-left: 13px;">
+        <a href="{{ route('zipfolder', ['assignmentgenerateid' => $assignmentfolder[0]->assignmentgenerateid]) }}"
+            class="btn btn-secondary" style="color:white;">Download Folder</a>
+    </li>
+@endif
+
+
+{{-- @if ($assignmentfolder)
+    <li style="margin-left: 13px;">
+        <a href="{{ route('zipfolder', ['assignmentgenerateid' => $assignmentfolder[0]->assignmentgenerateid]) }}"
+            class="btn btn-secondary" style="color:white;">Download Folder</a>
+    </li>
+@endif --}}
+{{-- @forelse ($assignmentfolder as $folder)
+    <li style="margin-left: 13px;">
+        <a href="{{ route('zipfolder', ['assignmentgenerateid' => $folder->assignmentgenerateid]) }}"
+            class="btn btn-secondary" style="color:white;">Download Folder</a>
+    </li>
+@empty
+
+    <p>No folders available.</p>
+@endforelse --}}
+
+
+
 {{-- * regarding heading / regarding table /regarding th tag    --}}
 @foreach ($myapplyleaveDatas as $applyleaveDatas)
     @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
@@ -211,10 +320,39 @@ Client
 </script>
 {{-- * regarding anchor tag   --}}
 
+<a style="margin-left: 10px;color:#7a7a7a;" onclick="return confirm('Are you sure you want to delete this folder?');"
+    href="{{ url('assignmentfolderdelete', $assignmentfolderData->id) }}" class="dropdown-item">Delete</a>
+
+<a href="{{ route('zipfolder', ['assignmentgenerateid' => $assignmentfolder[0]->assignmentgenerateid]) }}"
+    class="btn btn-secondary"
+    onclick="return confirm('Are you sure you want to download all folders totaling {{ $totalFileSizeMB > 1024 ? round($totalFileSizeMB / 1024, 2) . ' GB' : $totalFileSizeMB . ' MB' }}?');"
+    style="color:white;">Download</a>
+
 <tbody>
     @foreach ($assignmentmappingData as $assignmentmappingDatas)
         <tr>
-            <td> <a href="{{ url('/yearwise?' . 'year=' . $assignmentmappingDatas->year . '&&' . 'clientid=' . $id) }}"><i
+            <td> <a
+                    href="{{ url('/yearwise?' . 'year=' . $assignmentmappingDatas->year . '&&' . 'clientid=' . $id) }}"><i
+                        class="far fa-calendar"></i> <b>FY
+                        {{ $assignmentmappingDatas->year }}</b>
+                </a>
+            </td>
+        </tr>
+        <td> <a href="{{ url('holiday/delete', $holidayDatas->id) }}" class="btn btn-info-soft btn-sm"><i
+                    class="fa fa-trash"></i></a>
+        </td>
+        <a href="{{ route('holiday.edit', $holidayDatas->id) }}">
+            {{ $holidayDatas->holidayname }}</a>
+    @endforeach
+</tbody>
+
+
+
+<tbody>
+    @foreach ($assignmentmappingData as $assignmentmappingDatas)
+        <tr>
+            <td> <a
+                    href="{{ url('/yearwise?' . 'year=' . $assignmentmappingDatas->year . '&&' . 'clientid=' . $id) }}"><i
                         class="far fa-calendar"></i> <b>FY
                         {{ $assignmentmappingDatas->year }}</b></a></td>
         </tr>
@@ -242,7 +380,92 @@ return;
             <div style="width: 11rem;">{{ $applyleaveDatas->reasonleave ?? '' }}
             </div>
         </td>
-        {{-- * filtering functionality   --}}
+        {{-- * filtering functionality / regarding filter / filter functionality   --}}
+
+        {{-- filtering functionality using table layout --}}
+        <form method="post" action="{{ url('searchingtimesheet') }}" enctype="multipart/form-data"
+            class="form-inline">
+            @csrf
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Year</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style=" background-color: white;">
+                        <td>
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="start" name="start">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="end" name="end">
+                            </div>
+                        </td>
+                        <td>
+                            {{-- <div class="form-group">
+                                       <input type="date" class="form-control" id="year" name="year">
+                                   </div> --}}
+
+                            {{-- ! get date --}}
+                            {{-- <div class="form-group">
+                                         <select class="language form-control" id="category7" name="teamname">
+                                             <option value="">Please Select One</option>
+                                             @php
+
+                                                 $displayedValues = [];
+                                             @endphp
+                                             @foreach ($timesheetData as $timesheetDatas)
+                                                 @if (!in_array($timesheetDatas->date, $displayedValues))
+                                                     <option value="{{ $timesheetDatas->date }}">
+                                                         {{ $timesheetDatas->date }}
+                                                     </option>
+                                                     @php
+                                                         $displayedValues[] = $timesheetDatas->date;
+                                                     @endphp
+                                                 @endif
+                                             @endforeach
+                                         </select>
+                                     </div> --}}
+
+                            {{-- ! get year digit only  --}}
+                            <div class="form-group">
+                                <select class="language form-control" id="category7" name="year">
+                                    <option value="">Please Select One</option>
+                                    @php
+                                        $displayedYears = [];
+                                    @endphp
+                                    @foreach ($timesheetData as $timesheetDatas)
+                                        @php
+                                            $year = \Carbon\Carbon::parse($timesheetDatas->date)->year;
+                                        @endphp
+                                        @if (!in_array($year, $displayedYears))
+                                            <option value="{{ $year }}">
+                                                {{ $year }}
+                                            </option>
+                                            @php
+                                                $displayedYears[] = $year;
+                                            @endphp
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-success">Search</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+
+
+
 
 
         {{-- filtering functionality --}}
@@ -434,6 +657,10 @@ return;
                             </div>
                         </div> --}}
         </div>
+
+
+
+
         {{-- * condition on foreach loop / outside of foreach loop / notification / message   --}}
 
         @php
@@ -692,24 +919,6 @@ return;
             </tr>
         @endforeach
     </tbody>
-
-    {{-- * regarding anchor tag    --}}
-    <tbody>
-        @foreach ($assignmentmappingData as $assignmentmappingDatas)
-            <tr>
-                <td> <a
-                        href="{{ url('/yearwise?' . 'year=' . $assignmentmappingDatas->year . '&&' . 'clientid=' . $id) }}"><i
-                            class="far fa-calendar"></i> <b>FY
-                            {{ $assignmentmappingDatas->year }}</b></a></td>
-            </tr>
-            <td> <a href="{{ url('holiday/delete', $holidayDatas->id) }}" class="btn btn-info-soft btn-sm"><i
-                        class="fa fa-trash"></i></a>
-            </td>
-            <a href="{{ route('holiday.edit', $holidayDatas->id) }}">
-                {{ $holidayDatas->holidayname }}</a>
-        @endforeach
-    </tbody>
-
 
     {{-- * button in select box/ select box button /   --}}
     <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">

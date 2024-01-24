@@ -4,7 +4,60 @@ class ZipController extends Controller
 {
 //*
 //*
-//*
+//* number / decimal value / regarding decimal
+
+round($file->getSize() / 1024, 2)
+$totalFileSizeMB = round($totalFileSizeKB / 1024, 2);
+//* zip download 
+public function zipfolderdownload(Request $request, $assignmentgenerateid)
+    {
+        // Get All folder data and folder name 
+        $assignmentfoldername = DB::table('assignmentfolders')
+            ->leftJoin('assignmentfolderfiles', 'assignmentfolderfiles.assignmentfolder_id', 'assignmentfolders.id')
+            ->where('assignmentfolders.assignmentgenerateid', $assignmentgenerateid)
+            ->select('assignmentfolders.*', 'assignmentfolderfiles.filesname')
+            ->get();
+
+        // Set Downloaded folder name 
+        $parentZipFileName = $assignmentgenerateid . '.zip';
+        $parentZip = new ZipArchive;
+
+        // Open parent zip
+        if ($parentZip->open($parentZipFileName, ZipArchive::CREATE) === TRUE) {
+            foreach ($assignmentfoldername as $foldername) {
+                $folderZipFileName = $foldername->assignmentfoldersname . '.zip';
+                $zip = new ZipArchive;
+
+                // Open Child zip
+                if ($zip->open($folderZipFileName, ZipArchive::CREATE) === TRUE) {
+                    // Replace server path hare 
+                    // $filePath = storage_path('app/public/image/task/' . $foldername->filesname);
+                    if ($foldername->filesname != null) {
+                        $filePath = storage_path('app/public/image/task/' . $foldername->filesname);
+                    }
+                    // else {
+                    //     $filePath = storage_path('app/public/image/task/' . "Screenshoasast_7.png");
+                    // }
+
+                    if (file_exists($filePath)) {
+                        // Add file in folder 
+                        $zip->addFile($filePath, $foldername->filesname);
+                    }
+                    // else {
+                    //     return '<h1>File Not Found</h1>';
+                    // }
+
+                    $zip->close();
+                    $parentZip->addFile($folderZipFileName, $foldername->assignmentfoldersname . '/' . $foldername->filesname);
+                }
+            }
+
+            $parentZip->close();
+        }
+        // dd($parentZipFileName);
+        // Download the parent zip file
+        return response()->download($parentZipFileName)->deleteFileAfterSend(true);
+    }
 //* regarding file store / store file size / regarding database / regarding table 
 public function store(Request $request)
 {
@@ -1102,6 +1155,8 @@ $holidaycount = DB::table('holidays')->where('startdate', '>=', $team->from)
 dd($holidaycount);
 //* regarding redirect / regarding message /success message 
 
+$output = array('msg' => "Timesheet Submit Successfully till " . Carbon::createFromFormat('Y-m-d', $previousMondayFormatted)->format('d-m-Y') . " to " . Carbon::createFromFormat('Y-m-d', $nextSaturdayFormatted)->format('d-m-Y'));
+$output = array('msg' => "Timesheet Submit Successfully till $previousMondayFormatted to $nextSaturdayFormatted ");
 $output = array('msg' => "Fill the timesheet Previous Week: $formattedPreviousSaturday");
 $output = array('msg' => 'Please Approve Latest Timesheet Request');
 return redirect('timesheetrequest/view/' . $id)->with('statuss', $output);
