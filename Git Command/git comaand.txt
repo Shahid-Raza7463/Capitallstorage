@@ -44,8 +44,9 @@ git push -u origin main
 advance command 
 1.git checkout -b main
 2 C:\Shahid Raza\Demo>git remote -v
-origin  https://github.com/Shahid-Raza7463/Demo.git (fetch)
-origin  https://github.com/Shahid-Raza7463/Demo.git (push)
+output
+        origin  https://github.com/Shahid-Raza7463/Demo.git (fetch)
+        origin  https://github.com/Shahid-Raza7463/Demo.git (push)
 git branch main
 git checkout main
 git checkout -b main

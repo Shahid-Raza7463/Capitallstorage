@@ -4,6 +4,261 @@ class ZipController extends Controller
 {
 //*
 //*
+//*
+//*
+//*
+//* regarding store image/ regarding image store 
+        // this code download any folder from public folder 
+        public function zipfile(Request $request, $assignmentfolder_id) {
+          // dd($assignmentfolder_id);
+
+          // $userId = auth()->user()->id;
+          $articlefiles = DB:: table('assignmentfolderfiles') -> where('assignmentfolder_id', $assignmentfolder_id) -> get();
+
+          $zipFileName = 'mannat.zip';
+          $zip = new ZipArchive;
+
+          if ($zip -> open($zipFileName, ZipArchive:: CREATE) === TRUE) {
+              foreach($articlefiles as $file) {
+                  $filePath = public_path('backEnd/image/articlefiles/'.$file -> filesname);
+                  if (File:: exists($filePath)) {
+                      $zip -> addFile($filePath, $file -> filesname);
+                  }
+              }
+              $zip -> close();
+          }
+
+          return response() -> download($zipFileName) -> deleteFileAfterSend(true);
+      }
+
+      // this code download any folder from storage folder 
+      public function zipfile(Request $request, $assignmentfolder_id) {
+          // dd($assignmentfolder_id);
+
+          // $userId = auth()->user()->id;
+          $fileName = DB:: table('assignmentfolderfiles') -> where('assignmentfolder_id', $assignmentfolder_id) -> get();
+
+          $zipFileName = 'mannat.zip';
+          $zip = new ZipArchive;
+
+          if ($zip -> open($zipFileName, ZipArchive:: CREATE) === TRUE) {
+              foreach($fileName as $file) {
+                  // file path
+                  $filePath = storage_path('image/task/'.$file -> filesname);
+                  if (File:: exists($filePath)) {
+                      $zip -> addFile($filePath, $file -> filesname);
+                  }
+              }
+              $zip -> close();
+          }
+          // public\backEnd\image\articlefiles
+          //  storage\image\task
+          return response() -> download($zipFileName) -> deleteFileAfterSend(true);
+      }
+
+//*
+$latesttimesheetreport = DB::table('timesheetreport')
+    ->where('teamid', auth()->user()->teammember_id)
+    ->max('enddate');
+    // ->max('date');
+
+dd($latesttimesheetreport);
+
+$latesttimesheetreport = DB::table('timesheetreport')
+->where('teamid', auth()->user()->teammember_id)
+->orderBy('enddate', 'desc') // Order by 'enddate' in descending order
+->first(); // Retrieve the first row
+
+dd($latesttimesheetreport);
+
+$nextweektimesheet = DB::table('timesheetusers')
+->where('createdby', auth()->user()->teammember_id)
+->whereIn('status', [0, 1])
+->where('date', $formattedNextSaturday)
+->first();
+
+dd($nextweektimesheet);
+//* regarding where clouse / 
+$data = DB::table('assignmentbudgetings')
+->where('assignmentbudgetings.client_id', 123)
+->leftJoin('assignments', 'assignments.id', 'assignmentbudgetings.assignment_id')
+->leftJoin('assignmentmappings', 'assignmentmappings.assignmentgenerate_id', 'assignmentbudgetings.assignmentgenerate_id')
+->where(function ($query) {
+  $query->where('assignmentmappings.leadpartner', auth()->user()->teammember_id)
+    ->orWhere('assignmentmappings.otherpartner', auth()->user()->teammember_id);
+})
+->where('assignmentbudgetings.status', 1)
+// ->orderBy('assignment_name')->get();
+->select('assignmentbudgetings.*')
+->get();
+
+dd($data);
+
+
+foreach (DB::table('assignmentbudgetings')
+->join('assignmentmappings', 'assignmentmappings.assignmentgenerate_id', 'assignmentbudgetings.assignmentgenerate_id')
+->leftjoin('assignments', 'assignments.id', 'assignmentmappings.assignment_id')
+->leftjoin('assignmentteammappings', 'assignmentteammappings.assignmentmapping_id', 'assignmentmappings.id')
+->where('assignmentbudgetings.client_id', $request->cid)
+->where('assignmentteammappings.teammember_id', auth()->user()->teammember_id)
+//  ->where('assignmentteammappings.status', '!=', 0)
+// ->whereNull('assignmentteammappings.status')
+->where(function ($query) {
+  $query->whereNull('assignmentteammappings.status')
+    ->orWhere('assignmentteammappings.status', '=', 1);
+})
+->orderBy('assignment_name')->get() as $sub) {
+echo "<option value='" . $sub->assignmentgenerate_id . "'>" . $sub->assignment_name . '( ' . $sub->assignmentname . '/' . $sub->assignmentgenerate_id . ' )' . "</option>";
+}
+//* regarding job / job implementation 
+
+// function in controller 
+public function zipfolderdownload(Request $request, $assignmentgenerateid)
+{
+    ZipFolderDownloadJob::dispatch($assignmentgenerateid);
+
+    // return redirect('teammember')->with('status', $output);
+    // $output = array('msg' => 'Download has been initiated please wait some time ');
+    // return back()->with('success', $output);
+}
+
+// job file 
+<?php
+
+namespace App\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
+use ZipArchive;
+
+class ZipFolderDownloadJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $assignmentgenerateid;
+
+    public function __construct($assignmentgenerateid)
+    {
+        $this->assignmentgenerateid = $assignmentgenerateid;
+    }
+
+    public function handle()
+    {
+
+        $assignmentgenerateid = $this->assignmentgenerateid;
+
+
+        $assignmentfoldername = DB::table('assignmentfolders')
+            ->leftJoin('assignmentfolderfiles', 'assignmentfolderfiles.assignmentfolder_id', 'assignmentfolders.id')
+            ->where('assignmentfolders.assignmentgenerateid', $assignmentgenerateid)
+            ->select('assignmentfolders.*', 'assignmentfolderfiles.filesname')
+            ->get();
+
+        // Set Downloaded folder name 
+        $parentZipFileName = $assignmentgenerateid . '.zip';
+        $parentZip = new ZipArchive;
+
+        // Open parent zip
+        if ($parentZip->open($parentZipFileName, ZipArchive::CREATE) === TRUE) {
+            foreach ($assignmentfoldername as $foldername) {
+                $folderZipFileName = $foldername->assignmentfoldersname . '.zip';
+                $zip = new ZipArchive;
+
+                // Open Child zip
+                if ($zip->open($folderZipFileName, ZipArchive::CREATE) === TRUE) {
+                    if ($foldername->filesname != null) {
+                        // Replace server path here 
+                        $filePath = storage_path('app/public/image/task/' . $foldername->filesname);
+                    }
+
+                    if (file_exists($filePath)) {
+                        // Add file in folder 
+                        $zip->addFile($filePath, $foldername->filesname);
+                    }
+
+                    $zip->close();
+                    $parentZip->addFile($folderZipFileName, $foldername->assignmentfoldersname . '/' . $foldername->filesname);
+                }
+            }
+
+            $parentZip->close();
+        }
+
+        // Dispatch another job to delete the temporary files after download
+        DeleteTemporaryFilesJob::dispatch($parentZipFileName);
+        // return response()->download($parentZipFileName)->deleteFileAfterSend(true);
+    }
+}
+// after download delete then use or otherwise not 
+<?php
+
+namespace App\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\File;
+
+class DeleteTemporaryFilesJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $filePath;
+
+    public function __construct($filePath)
+    {
+        $this->filePath = $filePath;
+    }
+
+    public function handle()
+    {
+        // Delete the temporary files
+        File::delete($this->filePath);
+    }
+}
+
+
+
+//* regarding fetch data using take() 
+
+$timesheetData = DB::table('timesheetusers')
+->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+->where('timesheetusers.createdby', $teamid)
+->whereIn('timesheetusers.status', [1, 2, 3])
+->select('timesheetusers.*', 'teammembers.team_member')
+// ->orderBy('date', 'DESC')->get();
+->orderBy('date', 'DESC')
+->take(7)
+->get();
+//* regarding date 
+    // Default show 7 days data 
+    $defaulttimesheetshowdate = DB::table('timesheetusers')
+      ->where('timesheetusers.createdby', $teamid)
+      ->whereIn('timesheetusers.status', [1, 2, 3])
+      ->orderBy('date', 'DESC')
+      ->first();
+    if ($defaulttimesheetshowdate) {
+      $to = $defaulttimesheetshowdate->date;
+      $fromformate = Carbon::createFromFormat('Y-m-d', $to);
+      // Subtract 6 days
+      $from = $fromformate->subDays(6)->toDateString();
+    }
+
+    $timesheetData = DB::table('timesheetusers')
+    ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+    ->where('timesheetusers.createdby', $teamid)
+    ->where('timesheetusers.date', '<=', $to)
+    ->where('timesheetusers.date', '>=', $from)
+    ->whereIn('timesheetusers.status', [1, 2, 3])
+    ->select('timesheetusers.*', 'teammembers.team_member')->orderBy('date', 'DESC')->get();
+    // Default show 7 days data end hare 
 //* number / decimal value / regarding decimal
 
 round($file->getSize() / 1024, 2)
@@ -302,6 +557,78 @@ if (!shouldContinue) {
   window.location.href = "{{ url('/teammember') }}";
   return;
   }
+//* filtering functionality / regarding filter / filter functionality
+
+// timesheet filtering function blade code yes
+public function searchingtimesheet(Request $request)
+{
+  // Get all input from form
+  $startDate = $request->input('startdate', null);
+  $endDate = $request->input('enddate', null);
+  $teamId = $request->input('teamid', null);
+  $year = $request->input('year', null);
+
+  // this is for patner
+  if (auth()->user()->role_id == 13) {
+
+    if (($startDate != null && $endDate != null) || $request->year != null) {
+      $timesheetData = DB::table('timesheetusers')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+        // When startDate and endDate exist then run 'when' clouse
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate, $teamId) {
+          return $query->where('timesheetusers.createdby', $teamId)
+            ->where('timesheetusers.date', '>=', $startDate)
+            ->where('timesheetusers.date', '<=', $endDate);
+        })
+        // When year exist then run 'when' clouse
+        ->when($year, function ($query) use ($year, $teamId) {
+          // convert startyear (2023) in full date like 01-01-2023
+          $startYear = Carbon::createFromFormat('Y', $year)->startOfYear();
+          // convert endYear (2023) in full date like 31-12-2023
+          $endYear = Carbon::createFromFormat('Y', $year)->endOfYear();
+          return $query->where('timesheetusers.createdby', $teamId)
+            ->where('timesheetusers.date', '>=', $startYear)
+            ->where('timesheetusers.date', '<=', $endYear);
+        })
+        ->whereIn('timesheetusers.status', [1, 2, 3])
+        ->select('timesheetusers.*', 'teammembers.team_member')
+        ->orderBy('date', 'DESC')
+        ->get();
+      return view('backEnd.timesheet.timesheetdownload', compact('timesheetData'));
+    }
+  }
+  // this is for staff and manager
+  else {
+    if (($startDate != null && $endDate != null) || $request->year != null) {
+      $timesheetData = DB::table('timesheetusers')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+        // When startDate and endDate exist then run 'when' clouse
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate, $teamId) {
+          return $query->where('timesheetusers.createdby', $teamId)
+            ->where('timesheetusers.date', '>=', $startDate)
+            ->where('timesheetusers.date', '<=', $endDate);
+        })
+        // When year exist then run 'when' clouse
+        ->when($year, function ($query) use ($year, $teamId) {
+          // convert startyear (2023) in full date like 01-01-2023
+          $startYear = Carbon::createFromFormat('Y', $year)->startOfYear();
+          // convert endYear (2023) in full date like 31-12-2023
+          $endYear = Carbon::createFromFormat('Y', $year)->endOfYear();
+          return $query->where('timesheetusers.createdby', $teamId)
+            ->where('timesheetusers.date', '>=', $startYear)
+            ->where('timesheetusers.date', '<=', $endYear);
+        })
+        ->whereIn('timesheetusers.status', [1, 2, 3])
+        ->select('timesheetusers.*', 'teammembers.team_member')
+        ->orderBy('date', 'DESC')
+        ->get();
+      return view('backEnd.timesheet.timesheetdownload', compact('timesheetData'));
+    }
+  }
+  return '<h3>Please Choose Searching Data</h3>';
+}
+
+
 //* filter functionality 2
 
   // it is implemented submitte timesheet tab on admin and patner 
@@ -1167,6 +1494,12 @@ return back()->with('statuss', $output);
 
 // for success message 
 $output = array('msg' => 'You have already submitted a request');
+return back()->with('success', $output);
+
+// return back()->with('statuss', $output);
+return redirect()->to('rejectedlist')->with('statuss', $output);
+// return redirect('teammember')->with('status', $output);
+$output = array('msg' => 'Download has been initiated please wait some time ');
 return back()->with('success', $output);
 
 //* update one column in table for all // update table / regarding update / regarding table 

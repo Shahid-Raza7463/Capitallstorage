@@ -1,0 +1,49 @@
+task name 
+
+10 jan 2024
+
+1.apply leave filter excell download 
+2.Holyday 2024 wla 
+3.sahil ka report wla reminder 
+4.date validation on apply leave filter 
+5.open and close asssignment ka box bnana hai dashboard per
+6.Add filesize on assinmnet folder  
+7.mail wla jo tha ankesh chandra problem request done  and dev khurana timesheet gaping problem  
+
+8.assignment all folder download button add and download all folder 
+9.vandana ka timesheet submitted warning message problem solved
+10.timesheet 9 days problem i have explain it to ajit ji 
+
+11.model box on reject button in leave section 
+12.after timesheet submission user want to date that which week user submitted 
+13. client want to confirm button with total file size on download 
+14.some modification on download button in section assinment like if no any data in folder then that folder also want to download
+
+15 user should be export own timesheet and also fliter 
+16 problem solved 23-01-24 this is in my notebook 
+
+
+
+
+
+
+to do
+
+ 
+
+6. user end = timesheet submitted priode date ke aacording accending order hona chahiye 
+filter should be aprover wize in applyleave on admin 
+everywhere client want to export file name after download
+reject reasion will be show on email 
+reject reason will be display inside rejected information 
+
+
+
+
+to do
+
+apply leave remark column add 
+
+
+
+

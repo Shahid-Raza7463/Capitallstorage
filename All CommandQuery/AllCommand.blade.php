@@ -1,4 +1,14 @@
 22222222222222222
+{{-- * --}}
+{{-- * --}}
+{{-- * --}}
+{{-- * --}}
+{{-- * mysql / database / url  --}}
+http://localhost/phpmyadmin/
+http://localhost/
+
+
+
 column add
 php artisan make:migration add_is_read_to_notifications_table --table=notifications
 

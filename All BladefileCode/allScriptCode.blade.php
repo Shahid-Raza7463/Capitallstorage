@@ -1397,7 +1397,7 @@
     });
 </script> --}}
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
         // Common function to render table rows
@@ -1768,3 +1768,435 @@
 
     });
 </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+
+        //   team name wise
+        $('#employee1').change(function() {
+            var employee1 = $(this).val();
+            var leave1 = $('#leave1').val();
+            var status1 = $('#status1').val();
+
+            $.ajax({
+                type: 'GET',
+                url: '/filtering-applyleve',
+                data: {
+                    status: status1,
+                    employee: employee1,
+                    leave: leave1
+                },
+                success: function(data) {
+                    // Replace the table body with the filtered data
+                    $('table tbody').html("");
+                    //  shoe save excell button 
+                    $('#clickExcell').show();
+                    // Clear the table body
+                    if (data.length === 0) {
+                        // If no data is found, display a "No data found" message
+                        $('table tbody').append(
+                            '<tr><td colspan="8" class="text-center">No data found</td></tr>'
+                        );
+                    } else {
+                        $.each(data, function(index, item) {
+
+                            // Create the URL dynamically
+                            var url = '/applyleave/' + item.id;
+
+                            var createdAt = new Date(item.created_at)
+                                .toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                });
+                            var fromDate = new Date(item.from)
+                                .toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                });
+                            var toDate = new Date(item.to)
+                                .toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                });
+
+                            var holidays = Math.floor((new Date(item.to) -
+                                new Date(item.from)) / (24 * 60 * 60 *
+                                1000)) + 1;
+
+                            // Add the rows to the table
+                            $('table tbody').append('<tr>' +
+                                '<td><a href="' + url + '">' + item
+                                .team_member +
+                                '</a></td>' +
+                                '<td>' + createdAt + '</td>' +
+                                '<td>' + getStatusBadge(item.status) + '</td>' +
+                                '<td>' + item.name + '</td>' +
+                                '<td>' + fromDate + ' to ' + toDate +
+                                '</td>' +
+                                '<td>' + holidays + '</td>' +
+                                '<td>' + item.approvernames + '</td>' +
+                                '<td style="width: 7rem;text-wrap: wrap;">' +
+                                item.reasonleave + '</td>' +
+                                '</tr>');
+                        });
+
+
+
+                        // Function to handle the status badge
+                        function getStatusBadge(status) {
+                            if (status == 0) {
+                                return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
+                            } else if (status == 1) {
+                                return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
+                            } else if (status == 2) {
+                                return '<span class="badge badge-danger">Rejected</span>';
+                            } else {
+                                return '';
+                            }
+                        }
+
+                        //   remove pagination after filter
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+
+                        // Check if data is available
+                        if (data.length > 0) {
+                            function exportToExcel() {
+                                // Exclude unwanted columns (created_at and type)
+                                const filteredData = data.map(item => {
+
+                                    const holidays = Math.floor((new Date(item.to) -
+                                        new Date(item.from)) / (24 * 60 *
+                                        60 *
+                                        1000)) + 1;
+
+                                    const createdAt = new Date(item.created_at)
+                                        .toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric'
+                                        });
+
+                                    const fromDate = new Date(item.from)
+                                        .toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric'
+                                        });
+                                    const toDate = new Date(item.to)
+                                        .toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric'
+                                        });
+
+                                    // Create a copy of the item to avoid modifying the original data
+                                    const newItem = {
+                                        Employee: item.team_member,
+                                        Date_of_Request: createdAt,
+                                        status: item.status === 0 ? 'Created' :
+                                            item.status === 1 ? 'Approved' :
+                                            item.status === 2 ? 'Rejected' : '',
+                                        Leave_Type: item.name,
+                                        from: fromDate,
+                                        to: toDate,
+                                        Days: holidays,
+                                        Approver: item.approvernames,
+                                        Reason_for_Leave: item.reasonleave
+                                    };
+                                    return newItem;
+                                });
+
+                                const ws = XLSX.utils.json_to_sheet(filteredData);
+
+                                // Add style to make header text bold
+                                const headerCellStyle = {
+                                    font: {
+                                        bold: true
+                                    }
+                                };
+
+                                ws['!cols'] = [{
+                                        wch: 15
+                                    },
+                                    {
+                                        wch: 20
+                                    },
+                                    {
+                                        wch: 15
+                                    },
+                                    {
+                                        wch: 20
+                                    },
+                                    {
+                                        wch: 15
+                                    },
+                                    {
+                                        wch: 15
+                                    },
+                                    {
+                                        wch: 20
+                                    },
+                                    {
+                                        wch: 30
+                                    }
+                                ];
+
+                                // Apply style to header cells
+                                Object.keys(ws).filter(key => key.startsWith('A')).forEach(
+                                    key => {
+                                        ws[key].s = headerCellStyle;
+                                    });
+
+                                const wb = XLSX.utils.book_new();
+                                XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
+                                const excelBuffer = XLSX.write(wb, {
+                                    bookType: "xlsx",
+                                    type: "array"
+                                });
+                                const dataBlob = new Blob([excelBuffer], {
+                                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                });
+                                saveAs(dataBlob, "Apply_Report_Filter_List.xlsx");
+                            }
+                            //  // Call the function to export to Excel
+                            //  exportToExcel();
+                        }
+                        $('#clickExcell').on('click', function() {
+                            // Call the function to export to Excel
+                            exportToExcel();
+                        });
+                    }
+                }
+            });
+        });
+
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+        //   Create Zip Folder button click event
+        $('#downloadButton').click(function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var assignmentgenerateid = {{ $assignmentgenerateid }}; // Use the variable from Blade
+
+            $.ajax({
+                type: 'GET',
+                url: '/assignmentzipfolder',
+                data: {
+                    assignmentgenerateid: assignmentgenerateid,
+                },
+                success: function(data) {
+                    // Handle the success response here
+                },
+                error: function(error) {
+                    // Handle any errors here
+                }
+            });
+        });
+    });
+</script>
+
+
+
+{{-- validation for comparision date and block year for 4 disit --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var startDateInput = $('#startdate');
+        var endDateInput = $('#enddate');
+
+        function compareDates() {
+            var startDate = new Date(startDateInput.val());
+            var endDate = new Date(endDateInput.val());
+
+            if (startDate > endDate) {
+                alert('End date should be greater than or equal to the Start date');
+                endDateInput.val(''); // Clear the end date input
+            }
+        }
+
+        startDateInput.on('input', compareDates);
+        endDateInput.on('blur', compareDates);
+    });
+</script>
+
+{{-- validation for block 4 digit to  year --}}
+{{-- <script>
+      $(document).ready(function() {
+          $('#startdate').on('change', function() {
+              var startclear = $('#startdate');
+              var startDateInput1 = $('#startdate').val();
+              var startDate = new Date(startDateInput1);
+              var startyear = startDate.getFullYear();
+              var yearLength = startyear.toString().length;
+              if (yearLength > 4) {
+                  alert('Enter four digits for the year');
+                  startclear.val('');
+              }
+              //   //   validation for year match
+              //   var yearvalue = $('#year').val();
+              //   if (yearvalue != startyear) {
+              //       alert('Enter Start Date According Year');
+              //       startclear.val('');
+              //   }
+          });
+          $('#enddate').on('change', function() {
+              var endclear = $('#enddate');
+              var endDateInput1 = $('#enddate').val();
+              var endtDate = new Date(endDateInput1);
+              var endyear = endtDate.getFullYear();
+              var endyearLength = endyear.toString().length;
+              if (endyearLength > 4) {
+                  alert('Enter four digits for the year');
+                  endclear.val('');
+              }
+              //   //   validation for year match
+              //   var yearvalue = $('#year').val();
+              //   if (yearvalue != endyear) {
+              //       alert('Enter End Date According Year');
+              //       endclear.val('');
+              //   }
+          });
+
+
+          // Add form submission handling
+          $('form').submit(function(event) {
+              var year = $('#year').val();
+              var startdate = $('#startdate').val();
+              var enddate = $('#enddate').val();
+              //   validation for year match
+              var yearvalue = $('#year').val();
+              if (yearvalue != startyear) {
+                  alert('Enter Start Date According Year');
+                  startclear.val('');
+              }
+              if (year === "" || startdate === "" || enddate === "") {
+                  alert("Please select filter data.");
+                  event.preventDefault(); // Prevent form submission
+              }
+          });
+      });
+  </script> --}}
+
+<script>
+    $(document).ready(function() {
+        $('#startdate').on('change', function() {
+            var startclear = $('#startdate');
+            var startDateInput1 = $('#startdate').val();
+            var startDate = new Date(startDateInput1);
+            var startyear = startDate.getFullYear();
+            var yearLength = startyear.toString().length;
+            if (yearLength > 4) {
+                alert('Enter four digits for the year');
+                startclear.val('');
+            }
+        });
+
+        $('#enddate').on('change', function() {
+            var endclear = $('#enddate');
+            var endDateInput1 = $('#enddate').val();
+            var endtDate = new Date(endDateInput1);
+            var endyear = endtDate.getFullYear();
+            var endyearLength = endyear.toString().length;
+            if (endyearLength > 4) {
+                alert('Enter four digits for the year');
+                endclear.val('');
+            }
+        });
+
+        // Add form submission handling
+        $('form').submit(function(event) {
+            var year = $('#year').val();
+            var startdate = $('#startdate').val();
+            var enddate = $('#enddate').val();
+
+            var startclear = $('#startdate');
+            var startDateInput1 = $('#startdate').val();
+            var startDate = new Date(startDateInput1);
+            var startyear = startDate.getFullYear();
+            var yearvalue = $('#year').val();
+            if (yearvalue != startyear) {
+                alert('Enter Start Date According Year');
+                startclear.val('');
+                event.preventDefault(); // Prevent form submission
+                return; // Exit the function
+            }
+
+            if (year === "" || startdate === "" || enddate === "") {
+                alert("Please select filter data.");
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
+{{-- <script>
+      $(document).ready(function() {
+          $('#startdate').on('change', function() {
+              var startclear = $('#startdate');
+              var startDateInput1 = $('#startdate').val();
+              var startDate = new Date(startDateInput1);
+              var startyear = startDate.getFullYear();
+              var yearLength = startyear.toString().length;
+              if (yearLength > 4) {
+                  alert('Enter four digits for the year');
+                  startclear.val('');
+              }
+          });
+
+          $('#enddate').on('change', function() {
+              var endclear = $('#enddate');
+              var endDateInput1 = $('#enddate').val();
+              var endtDate = new Date(endDateInput1);
+              var endyear = endtDate.getFullYear();
+              var endyearLength = endyear.toString().length;
+              if (endyearLength > 4) {
+                  alert('Enter four digits for the year');
+                  endclear.val('');
+              }
+          });
+
+          // Add form submission handling
+          $('form').submit(function(event) {
+              var year = $('#year').val();
+              var startdate = $('#startdate').val();
+              var enddate = $('#enddate').val();
+
+              var startclear = $('#startdate');
+              var startDateInput1 = $('#startdate').val();
+              var startDate = new Date(startDateInput1);
+              var startyear = startDate.getFullYear();
+
+              var endclear = $('#enddate');
+              var endDateInput1 = $('#enddate').val();
+              var endDate = new Date(endDateInput1);
+              var endyear = endDate.getFullYear();
+
+              var yearvalue = $('#year').val();
+              if (yearvalue != startyear || yearvalue != endyear) {
+                  alert('Enter Start and End Date According to the selected Year');
+                  startclear.val('');
+                  endclear.val('');
+                  event.preventDefault(); // Prevent form submission
+                  return; // Exit the function
+              }
+
+              if (year === "" || startdate === "" || enddate === "") {
+                  alert("Please select filter data.");
+                  event.preventDefault(); // Prevent form submission
+              }
+          });
+      });
+  </script> --}}
