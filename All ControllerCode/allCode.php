@@ -6,7 +6,9 @@ class ZipController extends Controller
 //*
 //*
 //*
-//*
+//* 
+
+
 //* regarding store image/ regarding image store 
         // this code download any folder from public folder 
         public function zipfile(Request $request, $assignmentfolder_id) {
@@ -363,6 +365,15 @@ public function store(Request $request)
         $output = array('msg' => $e->getMessage());
         return back()->withErrors($output)->withInput();
     }
+}
+
+$permissiontimesheet = DB::table('timesheetreport')->first();
+
+if ($permissiontimesheet) {
+    // Access properties of $permissiontimesheet here
+    // Example: $permissiontimesheet->columnName
+} else {
+    // Handle case where no record was found
 }
 //* zip download on assignment folder all 
  // public function zipfolderdownload(Request $request, $assignmentgenerateid)

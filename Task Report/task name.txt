@@ -22,7 +22,9 @@ task name
 15 user should be export own timesheet and also fliter 
 16 problem solved 23-01-24 this is in my notebook 
 
-
+##################################################  01-feb-2024 ##############################################################
+reject reasion will be show on email 
+reject reason will be display inside rejected information 
 
 
 
@@ -34,8 +36,8 @@ to do
 6. user end = timesheet submitted priode date ke aacording accending order hona chahiye 
 filter should be aprover wize in applyleave on admin 
 everywhere client want to export file name after download
-reject reasion will be show on email 
-reject reason will be display inside rejected information 
+
+
 
 
 

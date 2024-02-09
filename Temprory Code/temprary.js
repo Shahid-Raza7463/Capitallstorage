@@ -1,5 +1,11 @@
 2222222222222222222222222222222222222222222222222222222222
 
+$permissiontimesheet = DB::table('timesheetreport')
+->where('timesheetreport.teamid', auth()->user()->teammember_id)
+->first();
+// dd($permissiontimesheet);
+22222222222222
+
 
 
 

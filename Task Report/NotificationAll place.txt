@@ -51,7 +51,7 @@ find text
 
 Blade 222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 resources\views\backEnd\index.blade.php
-add below codw after Upcoming Holidays box
+add below code after Upcoming Holidays box on dashboard
 
 
 
@@ -106,12 +106,13 @@ add below codw after Upcoming Holidays box
 
 
 
-
-
-
-
-
-
-
 ################################################################################################################################
- ->paginate(2);
+
+find text   $assignment =  DB::table('assignmentmappings')
+basically index function me jaha bhi $assignment hai vaha take(2) lagana hai like 
+
+
+->take(2)->get();
+
+
+

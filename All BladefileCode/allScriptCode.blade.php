@@ -1,5 +1,283 @@
 {{-- *  --}}
 {{-- *  --}}
+{{-- *  --}}
+{{-- *  --}}
+{{-- *  --}}
+{{-- *  --}}
+{{-- * form on submit / regarding submit   --}}
+<style>
+    .dt-buttons {
+        margin-bottom: -34px;
+    }
+</style>
+{{-- ! 29-01-24 --}}
+{{-- <script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                //   [0, "DESC"]
+                //   [2, "DESC"]
+            ],
+            buttons: [{
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, ':visible']
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    filename: 'Timesheet_Download',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    filename: 'Timesheet Download',
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 5]
+                    }
+                },
+                'colvis'
+            ]
+        });
+    });
+</script> --}}
+
+
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                //   [0, "DESC"]
+                //   [2, "DESC"]
+            ],
+            buttons: [{
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, ':visible']
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    filename: 'Timesheet_Download',
+                    exportOptions: {
+                        columns: ':visible'
+                    },
+
+                    customize: function(xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                        //   set column width
+                        $('col', sheet).eq(0).attr('width', 15);
+                        $('col', sheet).eq(1).attr('width', 15);
+                        $('col', sheet).eq(3).attr('width', 30);
+                        $('col', sheet).eq(4).attr('width', 30);
+                        $('col', sheet).eq(5).attr('width', 30);
+                        $('col', sheet).eq(6).attr('width', 30);
+                        $('col', sheet).eq(7).attr('width', 30);
+                        //   remove extra spaces
+                        $('c', sheet).each(function() {
+                            var originalText = $(this).find('is t').text();
+                            var cleanedText = originalText.replace(/\s+/g, ' ').trim();
+                            $(this).find('is t').text(cleanedText);
+                        });
+                    }
+                },
+
+                {
+                    extend: 'pdfHtml5',
+                    filename: 'Timesheet Download',
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 5]
+                    }
+                },
+                'colvis'
+            ]
+        });
+    });
+</script>
+
+
+{{-- validation for comparision date and block year for 4 disit --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var startDateInput = $('#startdate');
+        var endDateInput = $('#enddate');
+
+        function compareDates() {
+            var startDate = new Date(startDateInput.val());
+            var endDate = new Date(endDateInput.val());
+
+            if (startDate > endDate) {
+                alert('End date should be greater than or equal to the Start date');
+                endDateInput.val(''); // Clear the end date input
+            }
+        }
+
+        startDateInput.on('input', compareDates);
+        endDateInput.on('blur', compareDates);
+    });
+</script>
+
+{{-- validation for block 4 digit to  year --}}
+
+<script>
+    $(document).ready(function() {
+        $('#startdate').on('change', function() {
+            var startclear = $('#startdate');
+            var startDateInput1 = $('#startdate').val();
+            var startDate = new Date(startDateInput1);
+            var startyear = startDate.getFullYear();
+            var yearLength = startyear.toString().length;
+            if (yearLength > 4) {
+                alert('Enter four digits for the year');
+                startclear.val('');
+            }
+        });
+
+        $('#enddate').on('change', function() {
+            var endclear = $('#enddate');
+            var endDateInput1 = $('#enddate').val();
+            var endtDate = new Date(endDateInput1);
+            var endyear = endtDate.getFullYear();
+            var endyearLength = endyear.toString().length;
+            if (endyearLength > 4) {
+                alert('Enter four digits for the year');
+                endclear.val('');
+            }
+        });
+
+        //   condition on submit
+        $('form').submit(function(event) {
+            var year = $('#year').val();
+            var startdate = $('#startdate').val();
+            var enddate = $('#enddate').val();
+
+            var startclear = $('#startdate');
+            var startDateInput1 = $('#startdate').val();
+            var startDate = new Date(startDateInput1);
+            var startyear = startDate.getFullYear();
+            var yearvalue = $('#year').val();
+            if (year && startdate) {
+                if (yearvalue != startyear) {
+                    alert('Enter Start Date According Year');
+                    startclear.val('');
+                    // Prevent form submission
+                    event.preventDefault();
+                    // Exit the function
+                    return;
+                }
+            }
+
+            var endclear = $('#enddate');
+            var endDateInput1 = $('#enddate').val();
+            var endtDate = new Date(endDateInput1);
+            var endyear = endtDate.getFullYear();
+            var yearvalue = $('#year').val();
+            if (year && enddate) {
+                if (yearvalue != endyear) {
+                    alert('Enter End Date According Year');
+                    endclear.val('');
+                    // Prevent form submission
+                    event.preventDefault();
+                    // Exit the function
+                    return;
+                }
+            }
+
+            if (year === "" && startdate === "" && enddate === "") {
+                alert("Please select year.");
+                event.preventDefault();
+                return;
+            }
+            if (startdate !== "" && enddate === "") {
+                alert("Please select End date.");
+                event.preventDefault();
+                return;
+            }
+            //   if (year !== "" && startdate !== "" && enddate === "") {
+            //       alert("Please select End date.");
+            //       event.preventDefault();
+            //       return;
+            //   }
+            //   if (startdate !== "" && enddate !== "" && year === "") {
+            //       alert("Please select Year.");
+            //       event.preventDefault();
+            //       return;
+            //   }
+        });
+    });
+</script>
+{{-- *regarding form submit --}}
+<script>
+    $(document).ready(function() {
+        $('#startdate').on('change', function() {
+            var startclear = $('#startdate');
+            var startDateInput1 = $('#startdate').val();
+            var startDate = new Date(startDateInput1);
+            var startyear = startDate.getFullYear();
+            var yearLength = startyear.toString().length;
+            if (yearLength > 4) {
+                alert('Enter four digits for the year');
+                startclear.val('');
+            }
+        });
+
+        $('#enddate').on('change', function() {
+            var endclear = $('#enddate');
+            var endDateInput1 = $('#enddate').val();
+            var endtDate = new Date(endDateInput1);
+            var endyear = endtDate.getFullYear();
+            var endyearLength = endyear.toString().length;
+            if (endyearLength > 4) {
+                alert('Enter four digits for the year');
+                endclear.val('');
+            }
+        });
+
+        // Add form submission handling
+        $('form').submit(function(event) {
+            var year = $('#year').val();
+            var startdate = $('#startdate').val();
+            var enddate = $('#enddate').val();
+
+            var startclear = $('#startdate');
+            var startDateInput1 = $('#startdate').val();
+            var startDate = new Date(startDateInput1);
+            var startyear = startDate.getFullYear();
+
+            var endclear = $('#enddate');
+            var endDateInput1 = $('#enddate').val();
+            var endDate = new Date(endDateInput1);
+            var endyear = endDate.getFullYear();
+
+            var yearvalue = $('#year').val();
+            if (yearvalue != startyear || yearvalue != endyear) {
+                alert('Enter Start and End Date According to the selected Year');
+                startclear.val('');
+                endclear.val('');
+                event.preventDefault(); // Prevent form submission
+                return; // Exit the function
+            }
+
+            if (year !== "" && startdate !== "" && enddate === "") {
+                alert("Please select End date.");
+                event.preventDefault();
+                return;
+            }
+
+            if (year === "" || startdate === "" || enddate === "") {
+                alert("Please select filter data.");
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
 {{-- * regarding ajax --}}
 {{-- * regarding ajax / table heading replace    --}}
 <script>
