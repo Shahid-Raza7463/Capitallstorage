@@ -4,10 +4,256 @@
 {{-- *   --}}
 {{-- *   --}}
 {{-- *   --}}
-{{-- *   --}}
-{{-- *   --}}
-{{-- * structure   --}}
+{{-- * regarding comma / regarding key/ regarding foreach  --}}
 
+<td>
+    @foreach ($client_id as $key => $item)
+        {{ $item->client_name ?? '' }}
+        @if ($key < count($client_id) - 1 && $item->client_name != null)
+            ,
+        @endif
+    @endforeach
+</td>
+
+<td>
+    @foreach ($client_id as $key => $item)
+        {{ $item->assignment_name ?? '' }}
+        @if ($key < count($client_id) - 1 && $item->assignment_name != null)
+            ,
+        @endif
+    @endforeach
+</td>
+
+<td>
+    @foreach ($client_id as $key => $item)
+        {{ $item->workitem ?? '' }}
+        @if ($key < count($client_id) - 1 && $item->workitem != null)
+            ,
+        @endif
+    @endforeach
+</td>
+
+<td>
+    @foreach ($client_id as $key => $item)
+        {{ $item->location ?? '' }}
+        @if ($key < count($client_id) - 1 && $item->location != null)
+            ,
+        @endif
+    @endforeach
+</td>
+
+<td>
+    @foreach ($client_id as $key => $item)
+        {{ $item->team_member ?? '' }}
+        @if ($key < count($client_id) - 1 && $item->team_member != null)
+            ,
+        @endif
+    @endforeach
+</td>
+
+
+{{-- * regarding Ascending / regarding Descending / regarding order /regarding ordering   --}}
+
+<table>
+    <tr>
+        <td> <span style="display: none;">
+                {{ date('Y-m-d', strtotime($jobDatas->created_at)) }}</span>{{ $jobDatas->week }}
+        </td>
+        <td>
+            <span style="display: none;">
+                {{ $jobDatas->created_at }}</span>
+            {{ date('d-m-Y', strtotime($jobDatas->created_at)) }}
+            {{ date('h:i A', strtotime($jobDatas->created_at)) }}
+        </td>
+    </tr>
+</table>
+
+{{-- *   --}}
+<table class="table display table-bordered table-striped table-hover" style = "width:100%">
+
+</table>
+{{-- * email fotrmate / regarding email  --}}
+{{-- resources\views\backEnd\layouts\includes\leftsidebar.blade.php --}}
+<h3>Dear {{ $name ?? '' }} ,</h3>
+<br>
+<p>This email is to inform you that your assignment has been closed by OTP.</p>
+<p>The OTP is <b>{{ $otp }}</b>. Please enter this OTP in the assignment submission form to close your
+    assignment.
+</p>
+
+<table>
+    <tbody>
+        <tr>
+            <td><b>Assignment Name : </b></td>
+            <td>{{ $assignmentname }}</td>
+        </tr>
+        <tr>
+            <td><b>Client Name :</b></td>
+            <td>{{ $client_name }}</td>
+        </tr>
+        <tr>
+            <td><b>Team Members :</b></td>
+            @foreach ($assignmentteammember as $teammembers)
+                <td>{{ $teammembers->team_member }},</td>
+            @endforeach
+        </tr>
+    <tbody>
+</table>
+
+<tr>
+    <td><b>Team Leaders :</b></td>
+    @foreach ($assignmentteammember as $teammembers)
+        @if ($teammembers->type == 0)
+            <td>{{ $teammembers->team_member }},</td>
+        @endif
+    @endforeach
+</tr>
+<tr>
+    <td><b>Staff:</b></td>
+    @foreach ($assignmentteammember as $teammembers)
+        @if ($teammembers->type == 2)
+            <td>{{ $teammembers->team_member }},</td>
+        @endif
+    @endforeach
+</tr>
+
+{{-- * regarding button / open / onclick / on click   --}}
+
+<td><b>Status : </b></td>
+<td>
+    @if (Auth::user()->role_id == 13)
+        @if ($assignmentbudgetingDatas->status != 0)
+            <a id="editCompanys" data-id="{{ $assignmentbudgetingDatas->assignmentgenerate_id }}" data-toggle="modal"
+                data-target="#exampleModal134">
+                @if ($assignmentbudgetingDatas->status == 1)
+                    <span class="badge badge-primary">OPEN</span>
+                @else
+                    <span class="badge badge-danger">CLOSED</span>
+                @endif
+            </a>
+        @else
+            @if ($assignmentbudgetingDatas->status == 1)
+                <span class="badge badge-primary">OPEN</span>
+            @else
+                <span class="badge badge-danger">CLOSED</span>
+            @endif
+        @endif
+    @else
+        @if ($assignmentbudgetingDatas->status == 1)
+            <span class="badge badge-primary">OPEN</span>
+        @else
+            <span class="badge badge-danger">CLOSED</span>
+        @endif
+
+    @endif
+</td>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(function() {
+        $('body').on('click', '#editCompanys', function(event) {
+            //        debugger;
+            var id = $(this).data('id');
+            alert(id);
+            debugger;
+            $.ajax({
+                type: "GET",
+
+                url: "{{ url('assignmentotp') }}",
+                data: "id=" + id,
+                success: function(response) {
+                    // alert(res);
+                    debugger;
+                    $("#assignmentgenerateid").val(response.assignmentgenerate_id);
+
+
+                    if (response !== null) {
+                        // Show the message that the OTP has been sent to the email
+                        $('#otp-message').html('OTP send to your email please check');
+                    }
+                },
+                error: function() {
+
+                },
+            });
+        });
+    });
+</script>
+
+
+
+{{-- * regarding stucture / stucture --}}
+
+<pre>
+...........................................................
+.      name      .      email   .    location     .  work .                                                       .
+...........................................................
+.      Shahid    .abc@gmail.com.        delhi   .timesheet.
+...........................................................
+.      Shahid    .abc@gmail.com.   delhi,mumbai   .Gst,Gst2.
+...........................................................
+.      Shahid    .abc@gmail.com.   delhi,mumbai   .Gst,Gst2.
+...........................................................
+.      Shahid    .abc@gmail.com.        patna    .Submitted.
+...........................................................
+
+
+
+...........................................................
+.      name      .      email   .    location     .  work .                                                       .
+...........................................................
+.      Shahid    .abc@gmail.com.        delhi   .timesheet.
+...........................................................
+.      Shahid    .abc@gmail.com.         delhi   .  Gst   .
+...........................................................
+.      Shahid    .abc@gmail.com.       mumbai   .    Gst2.
+...........................................................
+.      Shahid    .abc@gmail.com.        patna    .Submitted.
+...........................................................
+
+
+
+
+</pre>
+
+
+
+
+
+
+<pre>
+.....................  ..........................................
+.    assin=nment    .  . ....................  ..............   .
+.                   .  . .  notifiction     .  . Birthday   .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . . .................   .. .......... .
+.                   .  .                                        .
+.                   .  . ....................  ..............   .
+.                   .  . .Upcoming Holidays .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . .                  .  .            .   .
+.                   .  . . .................   .. ...........   .
+.....................  ..........................................
+</pre>
+{{-- file stucture on download  --}}
+<pre>
 - NEW100212.zip
 ----Shahid f
 ------Shahid f
@@ -16,18 +262,61 @@
 ----sultan 2
 ------sultan 2
 
-
-{{-- * file stucture    --}}
 - NEW100212.zip
 --- Shahid f
 ------image1.zip
 ------laravel.zip
 ---sultan 2
-{{-- * regarding isset  --}}
 --- Shahid f
 ------screenshot.png
 ------larave2.zip
+</pre>
 
+{{-- * filter according email / accrording mail   --}}
+{{-- <div class="col-4">
+                             <div class="form-group">
+                                 <label class="font-weight-600">Employee</label>
+                                 <select class="language form-control" id="employee1" name="employee">
+                                     <option value="">Please Select One</option>
+                                     @php
+                                         $displayedValues = [];
+                                     @endphp
+                                     @foreach ($teamapplyleaveDatas as $applyleaveDatas)
+                                         @if (!in_array($applyleaveDatas->team_member, $displayedValues))
+                                             <option value="{{ $applyleaveDatas->createdby }}">
+                                                 {{ $applyleaveDatas->team_member }}
+                                             </option>
+                                             @php
+                                                 $displayedValues[] = $applyleaveDatas->team_member;
+                                             @endphp
+                                         @endif
+                                     @endforeach
+                                 </select>
+                             </div>
+                         </div> --}}
+<div class="col-4">
+    <div class="form-group">
+        <label class="font-weight-600">Employee</label>
+        <select class="language form-control" id="employee1" name="employee">
+            <option value="">Please Select One</option>
+            @php
+                $displayedValues = [];
+            @endphp
+            @foreach ($teamapplyleaveDatas as $applyleaveDatas)
+                @if (!in_array($applyleaveDatas->emailid, $displayedValues))
+                    <option value="{{ $applyleaveDatas->createdby }}">
+                        {{ $applyleaveDatas->team_member }} ({{ $applyleaveDatas->emailid }})
+                    </option>
+                    @php
+                        $displayedValues[] = $applyleaveDatas->emailid;
+                    @endphp
+                @endif
+            @endforeach
+        </select>
+    </div>
+</div>
+
+{{-- * regarding isset  --}}
 
 @if (isset($message))
     <div>
@@ -38,6 +327,10 @@
 <button type="button" id="downloadButton" class="btn btn-outline-primary">Create Zip Folder</button>
 {{-- * date on pdf / regarding pdf/ regarding excell   --}}
 
+<td>
+    <span>{{ $timesheetDatas->team_member ?? '' }}</span>
+    <span style="display: none;">{{ $timesheetDatas->staffcode ?? '' }}</span>
+</td>
 
 <script>
     $(document).ready(function() {
@@ -89,7 +382,7 @@
         });
     });
 </script>
-{{-- * old value / regarding old value   --}}
+{{-- * old value / regarding old value / regarding option tag    --}}
 {{-- add this code before return view blade file in controller --}}
 $request->flash();
 <td>
@@ -121,7 +414,17 @@ $request->flash();
     </div>
 </td>
 
-
+@foreach ($teammembers as $teammember)
+    @if (!in_array($teammember->staffcode, $displayedValues))
+        {{-- <option value="{{ $teammember->id }}"> --}}
+        <option value="{{ $teammember->id }}" {{ old('teammemberId') == $teammember->id ? 'selected' : '' }}>
+            {{ $teammember->team_member }} ({{ $teammember->staffcode }})
+        </option>
+        @php
+            $displayedValues[] = $teammember->staffcode;
+        @endphp
+    @endif
+@endforeach
 
 {{-- *   --}}
 <div class="form-group">
@@ -156,7 +459,7 @@ $request->flash();
 
 
 
-{{-- * basic class/ regarding table/ regarding ordering   --}}
+{{-- * basic class/ regarding basic class/ regarding table/ regarding ordering /regarding heading / regarding table /regarding th tag   --}}
 <!--Page Active Scripts(used by this page)-->
 {{-- <script src="{{ url('backEnd/plugins/datatables/dataTables.min.js') }}"></script> --}}
 <script src="{{ url('backEnd/plugins/datatables/data-basic.active.js') }}"></script>
@@ -204,6 +507,39 @@ resources\views\backEnd\layouts\includes\js.blade.php
     });
 </script>
 
+@foreach ($myapplyleaveDatas as $applyleaveDatas)
+    @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
+        <th>Action</th>
+    @endif
+@endforeach
+
+@foreach ($client_id as $item)
+    @if ($loop->iteration == 1)
+        {{ $item->client_name ?? '' }}
+    @endif
+@endforeach
+
+@foreach ($client_id as $item)
+    @if ($loop->first)
+        {{ $item->client_name ?? '' }}a
+    @elseif ($loop->last)
+        {{ $item->client_name ?? '' }}b
+    @endif
+@endforeach
+
+@foreach ($client_id as $item)
+    @if ($loop->iteration == 1)
+        @if ($loop->first)
+            {{ $item->client_name ?? '' }}
+        @endif
+    @endif
+    @if ($loop->iteration == 2)
+        @if ($loop->first)
+            {{ $item->client_name ?? '' }}b
+        @endif
+    @endif
+@endforeach
+
 
 {{-- * Permission / regarding permission / 0 error     --}}
 
@@ -237,6 +573,13 @@ return view('backEnd.assignmentfolder.index', compact('assignmentfolder', 'id', 
 @endif
 
 {{-- * empty /regarding empty   --}}
+
+@if (!empty($permissiontimesheet->teamid))
+    <li><a href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Timesheet
+            Report</a></li>
+@endif
+
+
 @if ($assignmentfolder->isNotEmpty())
     <li style="margin-left: 13px;">
         <a href="{{ route('zipfolder', ['assignmentgenerateid' => $assignmentfolder[0]->assignmentgenerateid]) }}"
@@ -263,12 +606,7 @@ return view('backEnd.assignmentfolder.index', compact('assignmentfolder', 'id', 
 
 
 
-{{-- * regarding heading / regarding table /regarding th tag    --}}
-@foreach ($myapplyleaveDatas as $applyleaveDatas)
-    @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
-        <th>Action</th>
-    @endif
-@endforeach
+
 {{-- * progress bar / persentage/  --}}
 <div class="details-form-field form-group row">
     <label for="name" class="col-sm-3 col-form-label font-weight-600">File upload:</label>
@@ -311,8 +649,43 @@ return view('backEnd.assignmentfolder.index', compact('assignmentfolder', 'id', 
         }
     });
 </script>
-{{-- * regarding request/ regarding url / regarding route  --}}
+{{-- * regarding request/ regarding url / regarding route / regarding permission   --}}
 
+<nav aria-label="breadcrumb" class="col-sm-4 order-sm-last mb-3 mb-sm-0 p-0 ">
+    @if (
+        !(Auth::user()->role_id == 13 && Request::is('timesheet/teamlist')) &&
+            (Auth::user()->role_id == 14 || Auth::user()->role_id == 15 || Auth::user()->role_id == 13))
+        <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
+            @if ($permissiontimesheet && $permissiontimesheet->teamid !== null)
+                <li>
+                    <a class="btn btn-info"
+                        href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Download</a>
+                </li>
+            @endif
+        </ol>
+    @endif
+    @if (Auth::user()->role_id == 11 || (Auth::user()->role_id == 13 && Request::is('timesheet/teamlist')))
+        <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
+            <li>
+                <a class="btn btn-info" href="{{ url('admintimesheetlist') }}">Download</a>
+            </li>
+        </ol>
+    @endif
+</nav>
+
+@if (Request::is('adminsearchtimesheet') || Request::is('mytimesheetlist/*') || Request::is('searchingtimesheet'))
+    <button type="submit" class="btn btn-success">Search</button>
+@endif
+
+
+<div class="media-body">
+    @if (Request::is('admintimesheetlist') || Request::is('adminsearchtimesheet'))
+        <h1 class="font-weight-bold">Team Timesheet Report</h1>
+    @elseif(Request::is('mytimesheetlist/*') || Request::is('searchingtimesheet'))
+        <h1 class="font-weight-bold">Timesheet Report</h1>
+    @endif
+    <small>Team Workbook List</small>
+</div>
 <div>
     @if (Request::is('mytimesheetlist/*'))
         <button type="submit" class="btn btn-success">Search</button>
@@ -324,9 +697,11 @@ return view('backEnd.assignmentfolder.index', compact('assignmentfolder', 'id', 
 
 <div>
 
-    <form method="post" action="{{ url('timesheetrequest/update', $applyleave->id) }}" enctype="multipart/form-data">
+    <form method="post" action="{{ url('timesheetrequest/update', $applyleave->id) }}"
+        enctype="multipart/form-data">
 
-        <form method="post" action="{{ route('applyleave.update', $applyleave->id) }}" enctype="multipart/form-data">
+        <form method="post" action="{{ route('applyleave.update', $applyleave->id) }}"
+            enctype="multipart/form-data">
 
 
             <select class="language form-control" name="client_id[]" id="client{{ $i }}"
@@ -1588,6 +1963,7 @@ zip download in laravel
     });
 </script>
 <!--Success message on Deleted end-->
+
 
 {{-- ###################################################################### --}}
 {{-- * get data from database in blade file --}}

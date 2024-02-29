@@ -1,11 +1,5 @@
 {{-- *   --}}
-DROP TABLE `timesheetreport`, `timesheets`, `timesheetusers`;
-resources\views\backEnd\report\assignmentreport.blade.php
-850
-kapishg@vsa.co.in
-public\backEnd
-{{-- * working folder  --}}
-{{-- all folder download --}}
+
 working/16 jan 24 =
 {{-- my latest local code --}}
 Updated Code 17 jan 24 =111
@@ -23,9 +17,9 @@ http://127.0.0.1:8000/assignmentfolders/NEW100212
 sunny gupta
 understand model box hare easily on click add folder button
 {{-- * User   --}}
-sunnygupta@vsa.co.in 13
+sunnygupta@vsa.co.in 13 844
 itsupport_delhi@vsa.co.in 11
-bhaskark@vsa.co.in 14
+bhaskark@vsa.co.in 14 847
 amans@vsa.co.in 15
 
 ye staff ka hai jisme data show ho raha hai
@@ -93,3 +87,23 @@ https://github.com/anil-sidhu
 casual leave
 find text // adding approver in patner section in it is 2 places
 app\Http\Controllers\ApplyleaveController.php
+
+
+<div>
+    <div>
+        <div class="table-responsive">
+            .
+            .
+            .
+            .
+        </div>
+    </div>
+</div>
+
+task name
+1.deafault input 10
+2.remove team name , total hour from filter
+3 remove accesending and desending order icon on submeted timesheet datatable
+4.fix accsending order on submited timesheet
+5.remove search input box
+6.filter add on patner using team name and date

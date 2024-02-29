@@ -3,6 +3,232 @@
 class ZipController extends Controller
 {
 //*
+//*
+//*
+//*
+//*
+//*
+//*
+    //! 20-02-2024 understanding
+    public function store(Request $request)
+    {
+      // app\Http\Controllers\AssignmentmappingController.php
+        // dd($request);
+        $request->validate([
+            'client_id' => "required",
+            'assignment_id' => "required",
+            'teammember_id.*' => "required",
+            'type.*' => "required"
+        ]);
+
+        try {
+            $previouschck = DB::table('assignmentmappings')
+                ->where('assignmentgenerate_id', $request->assignment_id)
+                ->first();
+            // "NEW100467"
+
+
+            // dd($previouschck);
+            // if ($previouschck != null) {
+            //     //dd('hi');
+            //     $output = array('msg' => 'You already created assignment for this.');
+            //     return back()->with('success', $output);
+            // }
+
+            $assignment_id = Assignmentbudgeting::where('assignmentgenerate_id', $request->assignment_id)->select('assignment_id')->pluck('assignment_id')->first();
+            // $request->assignment_id
+            // "NEW100467"
+            // dd($assignment_id);
+
+            // Storage::disk('s3')->makeDirectory($request->assignment_id);
+            $request->except(['_token']);
+            //  dd($data); die();
+            //insert data 
+            $id = DB::table('assignmentmappings')->insertGetId([
+
+                'assignmentgenerate_id'         =>     $request->assignment_id,
+                'periodstart'         =>     $request->periodstart,
+                'periodend'         =>     $request->periodend,
+                'year'         =>     Carbon::parse($request->periodend)->year,
+                'roleassignment'                =>      $request->roleassignment,
+                'assignment_id'         =>     $assignment_id,
+                'esthours'            =>       $request->esthours,
+                'leadpartner'            =>       $request->leadpartner,
+                'otherpartner'            =>       $request->otherpartner,
+                'stdcost'            =>       $request->stdcost,
+                'estcost'            =>       $request->estcost,
+                'filecreationdate'                =>       date('y-m-d'),
+                'modifieddate'              =>    date('y-m-d'),
+                'auditcompletiondate'                =>       date('y-m-d'),
+                'documentationdate'              =>    date('y-m-d'),
+                'created_at'                =>       date('y-m-d'),
+                'updated_at'              =>    date('y-m-d'),
+            ]);
+            // 477
+            // dd($request->teammember_id);
+
+            if ($request->teammember_id != '0') {
+                $count = count($request->teammember_id);
+                // 1
+
+                // dd($count); die;
+                for ($i = 0; $i < $count; $i++) {
+                    DB::table('assignmentteammappings')->insert([
+                        'assignmentmapping_id'       =>     $id,
+                        'type'       =>     $request->type[$i],
+                        'teammember_id'       =>     $request->teammember_id[$i],
+                        // default status 0 so that i can active or inactive assignment assrejected
+                        'status'       =>  0,
+                        'created_at'                =>       date('y-m-d'),
+                        'updated_at'              =>    date('y-m-d'),
+                    ]);
+                }
+
+                // dd($request->assignment_id);
+                $clientname = DB::table('clients')->where('id', $request->client_id)->select('client_name')->first();
+                $assignmentnames = DB::table('assignmentbudgetings')->where('assignmentgenerate_id', $request->assignment_id)->select('assignmentname')->first();
+
+                $teamemail = DB::table('teammembers')->wherein('id', $request->teammember_id)->select('emailid')->get();
+                foreach ($teamemail as $teammember) {
+                    $data = array(
+                        'assignmentid' =>  $request->assignment_id,
+                        'clientname' =>  $clientname->client_name,
+                        'assignmentname' =>  $assignmentnames->assignmentname,
+                        'emailid' =>  $teammember->emailid,
+
+
+                    );
+
+                    Mail::send('emails.assignmentassign', $data, function ($msg) use ($data) {
+                        $msg->to($data['emailid']);
+                        $msg->subject('VSA New Assignment Assigned || ' . $data['assignmentname'] . ' / ' . $data['assignmentid']);
+                    });
+                }
+            }
+            $assignmentname = Assignment::where('id', $request->assignment_id)->select('assignment_name')->pluck('assignment_name')->first();
+            // dd($assignmentname);
+            $actionName = class_basename($request->route()->getActionname());
+            dd($actionName);
+            $pagename = substr($actionName, 0, strpos($actionName, "Controller"));
+            $id = auth()->user()->teammember_id;
+            DB::table('activitylogs')->insert([
+                'user_id' => $id,
+                'ip_address' => $request->ip(),
+                'activitytitle' => $pagename,
+                'description' => 'New Assignment Mapping Added' . ' ' . '( ' . $assignmentname . ' )',
+                'created_at' => date('y-m-d'),
+                'updated_at' => date('y-m-d')
+            ]);
+            $output = array('msg' => 'Create Successfully');
+            return back()->with('success', $output);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            report($e);
+            $output = array('msg' => $e->getMessage());
+            return back()->withErrors($output)->withInput();
+        }
+    }
+//*
+//! 20-02-2024 before implementation assignment mapping and budegeting one place 
+    public function store(Request $request)
+    {
+      // app\Http\Controllers\AssignmentbudgetingController.php
+        $request->validate([
+            'client_id' => "required",
+            'assignment_id' => "required",
+
+        ]);
+
+        try {
+            $data = $request->except(['_token']);
+            //             array:4 [▼
+            //   "client_id" => "199"
+            //   "assignment_id" => "198"
+            //   "assignmentname" => "asdf"
+            //   "duedate" => "2024-02-14"
+            // ]
+
+
+            $data['created_by'] = auth()->user()->id;
+
+            //             array:5 [▼
+            //   "client_id" => "199"
+            //   "assignment_id" => "198"
+            //   "assignmentname" => "asdf"
+            //   "duedate" => "2024-02-14"
+            //   "created_by" => 634
+            // ]
+
+            $clientcode = DB::table('clients')->where('id', $request->client_id)->first();
+            $assignmentgenerateid = strtoupper(substr($clientcode->client_name, 0, 3));
+            // "ANI"
+
+            $assign = Assignmentbudgeting::latest()->get();
+
+            // dd($assign); die;
+            if ($assign->isEmpty()) {
+                // false
+                // dd('hia1');
+                $assignmentnumbers = '100001';
+            } else {
+                $assignmentnumb = Assignmentbudgeting::latest()->first()->assignmentnumber;
+                // 100467
+                if ($assignmentnumb ==  null) {
+                    $assignmentnumbers = '100001';
+                } else {
+                    $assignmentnumbers = $assignmentnumb + 1;
+                    // 100468
+
+                }
+            }
+
+
+            $assignmentgenerate = $assignmentgenerateid . $assignmentnumbers;
+            // "ANI100468"
+            $data['assignmentgenerate_id'] = $assignmentgenerate;
+            $data['assignmentnumber'] = $assignmentnumbers;
+            //     array:7 [▼
+            //     "client_id" => "199"
+            //     "assignment_id" => "198"
+            //     "assignmentname" => "asdf"
+            //     "duedate" => "2024-02-14"
+            //     "created_by" => 634
+            //     "assignmentgenerate_id" => "ANI100468"
+            //     "assignmentnumber" => 100468
+            //   ]
+
+            // insert data
+            // Assignmentbudgeting::Create($data);
+            $assignmentname = Assignment::where('id', $request->assignment_id)->select('assignment_name')->pluck('assignment_name')->first();
+            // "Special Purpose Audit"
+            $actionName = class_basename($request->route()->getActionname());
+            // "AssignmentbudgetingController@store"
+            $pagename = substr($actionName, 0, strpos($actionName, "Controller"));
+            // "Assignmentbudgeting"
+
+            $id = auth()->user()->teammember_id;
+            // insert data
+            DB::table('activitylogs')->insert([
+                'user_id' => $id,
+                'ip_address' => $request->ip(),
+                'activitytitle' => $pagename,
+                'description' => 'New Assignment Budgeting Added' . ' ' . '( ' . $assignmentname . ' )',
+                'created_at' => date('y-m-d'),
+                'updated_at' => date('y-m-d')
+            ]);
+            $output = array('msg' => 'Create Successfully');
+            dd($output);
+            return back()->with('success', $output);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            report($e);
+            $output = array('msg' => $e->getMessage());
+            return back()->withErrors($output)->withInput();
+        }
+    }
+
 // 22222222222222222222222222222222222222222222222222222222222222222222222222
 // app\Http\Controllers\TimesheetController.php
 // } else {  only understand else part in this 
@@ -379,292 +605,1233 @@ public function timesheetsubmission(Request $request)
 
 // 2222222222222222222222222222222222222222222222222222222222222222
 // applyleave controller update function 
-if ($request->status == 1) {
-  $team = DB::table('leaverequest')
-    ->leftjoin('applyleaves', 'applyleaves.id', 'leaverequest.applyleaveid')
-    ->leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
-    ->leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
-    ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
-    ->where('leaverequest.id', $id)
-    ->select('applyleaves.*', 'teammembers.emailid', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'leavetypes.holiday', 'leaverequest.id as examrequestId', 'leaverequest.date')
-    ->first();
 
+public function update(Request $request, $id)
+{
 
-if ($team->name == 'Exam Leave') {
+  // dd($request);
+  try {
 
-  $from = Carbon::createFromFormat('Y-m-d', $team->from);
-  //2023-12-16 16:12:40.0 Asia/Kolkata (+05:30)
-  $to = Carbon::createFromFormat('Y-m-d', $team->to ?? '');
-  // 2023-12-24 16:12:00.0 Asia/Kolkata (+05:30)
-  $camefromexam = Carbon::createFromFormat('Y-m-d', $team->date);
-  // dd($camefromexam);
-  // $nowrequestdays = $to->diffInDays($camefromexam) + 1;
-  // remove days from database 
-  $removedays = $to->diffInDays($camefromexam) + 1;
-  // dd($removedays);
-  // my total leave now after coming
-  $nowtotalleave = $from->diffInDays($camefromexam);
-  // 5 days
-  // dd($nowtotalleave);
-  // for serching from data base 
-  $finddatafromleaverequest = $to->diffInDays($from) + 1;
-  // dd($finddatafromleaverequest);
-  // 9
-  // dd($finddatafromleaverequest);
+    if ($request->status == 1) {
+      $team = DB::table('applyleaves')
+        ->leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
+        ->leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
+        ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        ->where('applyleaves.id', $id)
+        ->select('applyleaves.*', 'teammembers.emailid', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'leavetypes.holiday')->first();
 
-  // dd($requestdays);
-  // $holidaycount = DB::table('holidays')->where('startdate', '>=', $team->from)
-  //   ->where('enddate', '<=', $team->to)
-  //   ->count();
-  // //0
-  // $totalrqstday = $nowrequestdays - $holidaycount;
-  // 9
-  // dd($holidaycount);
-  // dd($totalrqstday);
+      if ($team->leavetype == '8' && $team->type == '1') {
+        $to = Carbon::createFromFormat('Y-m-d', $team->to ?? '');
+        $from = Carbon::createFromFormat('Y-m-d', $team->from);
 
-  DB::table('leaveapprove')
-    ->where('teammemberid', $team->createdby)
-    ->where('totaldays', $finddatafromleaverequest)
-    ->latest()
-    ->update([
-      'totaldays' => $nowtotalleave,
-      'updated_at' => now(),
-    ]);
-  // dd($finddatafromleaverequest);
+        $period = date('Y-m-d', strtotime($team->to));
+        $bl_leave_day = date('d', strtotime($period));
+        $bl_leave_month = date('F', strtotime($period));
 
-  // dd($team->from);
-  // "2023-12-16"
-  // dd($team->date);
-  // "2023-12-20"
-  // dd($team->to);
-  // "2023-12-24"
-  //! working one delete ek baar me
-  // // $period = CarbonPeriod::create($team->date, $team->to);
-  // $period = CarbonPeriod::create('2023-12-21', $team->to);
-  // // dd($period);
-  // $datess = [];
-  // foreach ($period as $date) {
-  //   $datess[] = $date->format('Y-m-d');
-  //   // dd($datess);
-  //   $deletedIds = DB::table('timesheets')
-  //     ->where('created_by', $team->createdby)
-  //     ->where('date', $datess)
-  //     ->pluck('id');
-  //   // dd($deletedIds);
+        if ($bl_leave_day >= 26 && $bl_leave_day <= 31) {
+          $bl_leave_month = date('F', strtotime($period . ' +1 month'));
+        }
 
-  //   DB::table('timesheets')
-  //     ->where('created_by', $team->createdby)
-  //     ->where('date', $datess)
-  //     ->delete();
+        $requestdays = $to->diffInDays($from) + 1;
 
-  //   $a = DB::table('timesheetusers')
-  //     ->whereIn('timesheetid', $deletedIds)
-  //     ->delete();
-  // }
-  // dd($datess);
-  // dd($deletedIds);
+        $holidaycount = DB::table('holidays')->where('startdate', '>=', $team->from)
+          ->where('enddate', '<=', $team->to)
+          ->count();
 
-  $period = CarbonPeriod::create($team->date, $team->to);
+        $totalrqstday = $requestdays - $holidaycount;
 
-  $datess = [];
-  foreach ($period as $date) {
-    $datess[] = $date->format('Y-m-d');
-
-    $deletedIds = DB::table('timesheets')
-      ->where('created_by', $team->createdby)
-      ->whereIn('date', $datess)
-      ->pluck('id');
-
-    DB::table('timesheets')
-      ->where('created_by', $team->createdby)
-      ->whereIn('date', $datess)
-      ->delete();
-
-    $a = DB::table('timesheetusers')
-      ->whereIn('timesheetid', $deletedIds)
-      ->delete();
-  }
-
-  // dd($datess);
-
-
-  // $getholidays = DB::table('holidays')->where('startdate', '>=', $team->from)
-  //   ->where('enddate', '<=', $team->to)->select('startdate')->get();
-
-  // if (count($getholidays) != 0) {
-  //   foreach ($getholidays as $date) {
-  //     $hdatess[] = date('Y-m-d', strtotime($date->startdate));
-  //   }
-  // } else {
-  //   $hdatess[] = 0;
-  // }
-
-  // dd($hdatess);
-  $el_leave = $datess;
-  // 0 => "2023-09-16"
-  // 1 => "2023-09-17"
-  // 2 => "2023-09-18"
-  // $exam_leave_total = count(array_diff($datess, $hdatess));
-  // 62
-
-
-  // $lstatus = "EL/A";
-  // $lstatus = "Null";
-  // $lstatus = "";
-  $lstatus = null;
-
-  foreach ($el_leave as $cl_leave) {
-    // date get one by one 
-
-    $cl_leave_day = date('d', strtotime($cl_leave));
-    // "16"
-
-
-
-    $cl_leave_month = date('F', strtotime($cl_leave));
-
-    // September
-    // dd($cl_leave_month);
-    // dd($cl_leave_day);
-    // 16
-    if ($cl_leave_day >= 26 && $cl_leave_day <= 31) {
-      $cl_leave_month = date('F', strtotime($cl_leave . ' +1 month'));
-    }
-    // dd('hi1', $team->createdby);
-    // 802
-    $attendances = DB::table('attendances')->where('employee_name', $team->createdby)
-      ->where('month', $cl_leave_month)->first();
-    // September
-    // dd($attendances);
-    //  dd($value->created_by);
-
-    // dd('hi2', $attendances);
-    // dd($cl_leave_day);
-    // 16
-    $column = '';
-    switch ($cl_leave_day) {
-      case '26':
-        $column = 'twentysix';
-        break;
-      case '27':
-        $column = 'twentyseven';
-        break;
-      case '28':
-        $column = 'twentyeight';
-        break;
-      case '29':
-        $column = 'twentynine';
-        break;
-      case '30':
-        $column = 'thirty';
-        break;
-      case '31':
-        $column = 'thirtyone';
-        break;
-      case '01':
-        $column = 'one';
-        break;
-      case '02':
-        $column = 'two';
-        break;
-      case '03':
-        $column = 'three';
-        break;
-      case '04':
-        $column = 'four';
-        break;
-      case '05':
-        $column = 'five';
-        break;
-      case '06':
-        $column = 'six';
-        break;
-      case '07':
-        $column = 'seven';
-        break;
-      case '08':
-        $column = 'eight';
-        break;
-      case '09':
-        $column = 'nine';
-        break;
-      case '10':
-        $column = 'ten';
-        break;
-      case '11':
-        $column = 'eleven';
-        break;
-      case '12':
-        $column = 'twelve';
-        break;
-      case '13':
-        $column = 'thirteen';
-        break;
-      case '14':
-        $column = 'fourteen';
-        break;
-      case '15':
-        $column = 'fifteen';
-        break;
-      case '16':
-        $column = 'sixteen';
-        break;
-      case '17':
-        $column = 'seventeen';
-        break;
-      case '18':
-        $column = 'eighteen';
-        break;
-      case '19':
-        $column = 'ninghteen';
-        break;
-      case '20':
-        $column = 'twenty';
-        break;
-      case '21':
-        $column = 'twentyone';
-        break;
-      case '22':
-        $column = 'twentytwo';
-        break;
-      case '23':
-        $column = 'twentythree';
-        break;
-      case '24':
-        $column = 'twentyfour';
-        break;
-      case '25':
-        $column = 'twentyfive';
-        break;
-    }
-    // dd('pa', $column);
-    // sixteen
-    // dd('pa', $lstatus);
-    // EL/A
-    if (!empty($column)) {
-      // store EL/A sexteen to 25 tak 
-      DB::table('attendances')
-        ->where('employee_name', $team->createdby)
-        ->where('month', $cl_leave_month)
-        ->whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
-        ->whereRaw("{$column} != 'LWP'")
-        ->update([
-          $column => $lstatus,
+        DB::table('leaveapprove')->insert([
+          'teammemberid'     =>     $team->createdby,
+          'leavetype'     =>     $team->leavetype,
+          'totaldays'     =>     $totalrqstday,
+          'year'     =>     '2023',
+          'created_at'          =>     date('y-m-d'),
+          'updated_at'              =>    date('y-m-d'),
         ]);
-    }
-    // if (!empty($column)) {
-    //   // store EL/A sexteen to 25 tak 
-    //   DB::table('attendances')
-    //     ->where('employee_name', $team->createdby)
-    //     ->where('month', $cl_leave_month)
-    //     ->whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
-    //     ->whereRaw("{$column} != 'LWP'")
-    //     ->delete();
-    // }
-  }
-  // dd('hq');
-}
-}
-dd('end hare ', $team->name);
 
+
+        $lstatus = "BL/A";
+
+        $attendances = DB::table('attendances')
+          ->where('employee_name', $team->createdby)
+          ->where('month', $bl_leave_month)->first();
+
+
+        if ($attendances->birthday_religious == null) {
+          $birthday = 0;
+        } else {
+          $birthday = $attendances->birthday_religious;
+        }
+
+        $attendances = DB::table('attendances')->where('employee_name', $team->createdby)
+          ->where('month', $bl_leave_month)->first();
+
+        $column = '';
+        switch ($bl_leave_day) {
+          case '26':
+            $column = 'twentysix';
+            break;
+          case '27':
+            $column = 'twentyseven';
+            break;
+          case '28':
+            $column = 'twentyeight';
+            break;
+          case '29':
+            $column = 'twentynine';
+            break;
+          case '30':
+            $column = 'thirty';
+            break;
+          case '31':
+            $column = 'thirtyone';
+            break;
+          case '01':
+            $column = 'one';
+            break;
+          case '02':
+            $column = 'two';
+            break;
+          case '03':
+            $column = 'three';
+            break;
+          case '04':
+            $column = 'four';
+            break;
+          case '05':
+            $column = 'five';
+            break;
+          case '06':
+            $column = 'six';
+            break;
+          case '07':
+            $column = 'seven';
+            break;
+          case '08':
+            $column = 'eight';
+            break;
+          case '09':
+            $column = 'nine';
+            break;
+          case '10':
+            $column = 'ten';
+            break;
+          case '11':
+            $column = 'eleven';
+            break;
+          case '12':
+            $column = 'twelve';
+            break;
+          case '13':
+            $column = 'thirteen';
+            break;
+          case '14':
+            $column = 'fourteen';
+            break;
+          case '15':
+            $column = 'fifteen';
+            break;
+          case '16':
+            $column = 'sixteen';
+            break;
+          case '17':
+            $column = 'seventeen';
+            break;
+          case '18':
+            $column = 'eighteen';
+            break;
+          case '19':
+            $column = 'ninghteen';
+            break;
+          case '20':
+            $column = 'twenty';
+            break;
+          case '21':
+            $column = 'twentyone';
+            break;
+          case '22':
+            $column = 'twentytwo';
+            break;
+          case '23':
+            $column = 'twentythree';
+            break;
+          case '24':
+            $column = 'twentyfour';
+            break;
+          case '25':
+            $column = 'twentyfive';
+            break;
+        }
+
+        if (!empty($column)) {
+
+          DB::table('attendances')
+            ->where('employee_name', $team->createdby)
+            ->where('month', $bl_leave_month)
+            ->whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
+            ->update([
+              $column => $lstatus,
+            ]);
+        }
+      } elseif ($team->leavetype == '8' && $team->type == '0') {
+        $to = Carbon::createFromFormat('Y-m-d', $team->to ?? '');
+        $from = Carbon::createFromFormat('Y-m-d', $team->from);
+
+        $period = date('Y-m-d', strtotime($team->to));
+        $bl_leave_day = date('d', strtotime($period));
+        $bl_leave_month = date('F', strtotime($period));
+
+        $requestdays = $to->diffInDays($from) + 1;
+
+        $holidaycount = DB::table('holidays')->where('startdate', '>=', $team->from)
+          ->where('enddate', '<=', $team->to)
+          ->count();
+
+        $totalrqstday = $requestdays - $holidaycount;
+
+        DB::table('leaveapprove')->insert([
+          'teammemberid'     =>     $team->createdby,
+          'leavetype'     =>     $team->leavetype,
+          'type'     =>     $team->type,
+          'totaldays'     =>     $totalrqstday,
+          'year'     =>     '2023',
+          'created_at'          =>     date('y-m-d'),
+          'updated_at'              =>    date('y-m-d'),
+        ]);
+
+
+
+        // dd($period);
+        $lstatus = "BL/A";
+
+
+
+
+        $attendances = DB::table('attendances')
+          ->where('employee_name', $team->createdby)
+          ->where('month', $bl_leave_month)->first();
+
+        // dd($attendances);
+        if ($attendances->birthday_religious == null) {
+          $birthday = 0;
+        } else {
+          $birthday = $attendances->birthday_religious;
+        }
+
+
+
+
+        $attendances = DB::table('attendances')->where('employee_name', $team->createdby)
+          ->where('month', $bl_leave_month)->first();
+
+        $column = '';
+        switch ($bl_leave_day) {
+          case '26':
+            $column = 'twentysix';
+            break;
+          case '27':
+            $column = 'twentyseven';
+            break;
+          case '28':
+            $column = 'twentyeight';
+            break;
+          case '29':
+            $column = 'twentynine';
+            break;
+          case '30':
+            $column = 'thirty';
+            break;
+          case '31':
+            $column = 'thirtyone';
+            break;
+          case '01':
+            $column = 'one';
+            break;
+          case '02':
+            $column = 'two';
+            break;
+          case '03':
+            $column = 'three';
+            break;
+          case '04':
+            $column = 'four';
+            break;
+          case '05':
+            $column = 'five';
+            break;
+          case '06':
+            $column = 'six';
+            break;
+          case '07':
+            $column = 'seven';
+            break;
+          case '08':
+            $column = 'eight';
+            break;
+          case '09':
+            $column = 'nine';
+            break;
+          case '10':
+            $column = 'ten';
+            break;
+          case '11':
+            $column = 'eleven';
+            break;
+          case '12':
+            $column = 'twelve';
+            break;
+          case '13':
+            $column = 'thirteen';
+            break;
+          case '14':
+            $column = 'fourteen';
+            break;
+          case '15':
+            $column = 'fifteen';
+            break;
+          case '16':
+            $column = 'sixteen';
+            break;
+          case '17':
+            $column = 'seventeen';
+            break;
+          case '18':
+            $column = 'eighteen';
+            break;
+          case '19':
+            $column = 'ninghteen';
+            break;
+          case '20':
+            $column = 'twenty';
+            break;
+          case '21':
+            $column = 'twentyone';
+            break;
+          case '22':
+            $column = 'twentytwo';
+            break;
+          case '23':
+            $column = 'twentythree';
+            break;
+          case '24':
+            $column = 'twentyfour';
+            break;
+          case '25':
+            $column = 'twentyfive';
+            break;
+        }
+
+        if (!empty($column)) {
+
+          DB::table('attendances')
+            ->where('employee_name', $team->createdby)
+            ->where('month', $bl_leave_month)
+            ->whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
+            ->update([
+              $column => $lstatus,
+            ]);
+        }
+      }
+      if ($team->name == 'Casual Leave') {
+        $to = Carbon::createFromFormat('Y-m-d', $team->to ?? '');
+        $from = Carbon::createFromFormat('Y-m-d', $team->from);
+      
+        $requestdays = $to->diffInDays($from) + 1;
+      
+        $holidaycount = DB::table('holidays')->where('startdate', '>=', $team->from)
+          ->where('enddate', '<=', $team->to)
+          ->count();
+      
+        $totalrqstday = $requestdays - $holidaycount;
+      
+        DB::table('leaveapprove')->insert([
+          'teammemberid'     =>     $team->createdby,
+          'leavetype'     =>     $team->leavetype,
+          'totaldays'     =>     $totalrqstday,
+          'year'     =>     '2023',
+          'created_at'          =>     date('y-m-d'),
+          'updated_at'              =>    date('y-m-d'),
+        ]);
+      
+      
+        $period = CarbonPeriod::create($team->from, $team->to);
+        // dd($period);
+      
+        $datess = [];
+        foreach ($period as $date) {
+          $datess[] = $date->format('Y-m-d');
+        }
+      
+      
+      
+      
+        $getholidays = DB::table('holidays')->where('startdate', '>=', $team->from)
+          ->where('enddate', '<=', $team->to)->select('startdate')->get();
+      
+        if (count($getholidays) != 0) {
+          foreach ($getholidays as $date) {
+            $hdatess[] = date('Y-m-d', strtotime($date->startdate));
+          }
+        } else {
+          $hdatess[] = 0;
+        }
+        $cl_leave = array_diff($datess, $hdatess);
+      
+      
+      
+        $lstatus = "CL/A";
+      
+      
+      
+      
+        foreach ($cl_leave as $cl_leave) {
+      
+      
+          $cl_leave_day = date('d', strtotime($cl_leave));
+          $cl_leave_month = date('F', strtotime($cl_leave));
+      
+          if ($cl_leave_day >= 26 && $cl_leave_day <= 31) {
+            $cl_leave_month = date('F', strtotime($cl_leave . ' +1 month'));
+          }
+      
+      
+          $attendances = DB::table('attendances')->where('employee_name', $team->createdby)
+            ->where('month', $cl_leave_month)->first();
+      
+          $column = '';
+          switch ($cl_leave_day) {
+            case '26':
+              $column = 'twentysix';
+              break;
+            case '27':
+              $column = 'twentyseven';
+              break;
+            case '28':
+              $column = 'twentyeight';
+              break;
+            case '29':
+              $column = 'twentynine';
+              break;
+            case '30':
+              $column = 'thirty';
+              break;
+            case '31':
+              $column = 'thirtyone';
+              break;
+            case '01':
+              $column = 'one';
+              break;
+            case '02':
+              $column = 'two';
+              break;
+            case '03':
+              $column = 'three';
+              break;
+            case '04':
+              $column = 'four';
+              break;
+            case '05':
+              $column = 'five';
+              break;
+            case '06':
+              $column = 'six';
+              break;
+            case '07':
+              $column = 'seven';
+              break;
+            case '08':
+              $column = 'eight';
+              break;
+            case '09':
+              $column = 'nine';
+              break;
+            case '10':
+              $column = 'ten';
+              break;
+            case '11':
+              $column = 'eleven';
+              break;
+            case '12':
+              $column = 'twelve';
+              break;
+            case '13':
+              $column = 'thirteen';
+              break;
+            case '14':
+              $column = 'fourteen';
+              break;
+            case '15':
+              $column = 'fifteen';
+              break;
+            case '16':
+              $column = 'sixteen';
+              break;
+            case '17':
+              $column = 'seventeen';
+              break;
+            case '18':
+              $column = 'eighteen';
+              break;
+            case '19':
+              $column = 'ninghteen';
+              break;
+            case '20':
+              $column = 'twenty';
+              break;
+            case '21':
+              $column = 'twentyone';
+              break;
+            case '22':
+              $column = 'twentytwo';
+              break;
+            case '23':
+              $column = 'twentythree';
+              break;
+            case '24':
+              $column = 'twentyfour';
+              break;
+            case '25':
+              $column = 'twentyfive';
+              break;
+          }
+      
+          if (!empty($column)) {
+      
+            DB::table('attendances')
+              ->where('employee_name', $team->createdby)
+              ->where('month', $cl_leave_month)
+              ->whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
+              ->whereRaw("{$column} != 'LWP'")
+              ->update([
+                $column => $lstatus,
+              ]);
+          }
+        }
+      }
+
+      if ($team->name == 'Exam Leave') {
+
+        $from = Carbon::createFromFormat('Y-m-d', $team->from);
+        //2023-12-16 16:12:40.0 Asia/Kolkata (+05:30)
+        $to = Carbon::createFromFormat('Y-m-d', $team->to ?? '');
+        // 2023-12-24 16:12:00.0 Asia/Kolkata (+05:30)
+        $camefromexam = Carbon::createFromFormat('Y-m-d', $team->date);
+        // dd($camefromexam);
+        // $nowrequestdays = $to->diffInDays($camefromexam) + 1;
+        // remove days from database 
+        $removedays = $to->diffInDays($camefromexam) + 1;
+        // dd($removedays);
+        // my total leave now after coming
+        $nowtotalleave = $from->diffInDays($camefromexam);
+        // 5 days
+        // dd($nowtotalleave);
+        // for serching from data base 
+        $finddatafromleaverequest = $to->diffInDays($from) + 1;
+        // dd($finddatafromleaverequest);
+        // 9
+        // dd($finddatafromleaverequest);
+      
+        // dd($requestdays);
+        // $holidaycount = DB::table('holidays')->where('startdate', '>=', $team->from)
+        //   ->where('enddate', '<=', $team->to)
+        //   ->count();
+        // //0
+        // $totalrqstday = $nowrequestdays - $holidaycount;
+        // 9
+        // dd($holidaycount);
+        // dd($totalrqstday);
+      
+        DB::table('leaveapprove')
+          ->where('teammemberid', $team->createdby)
+          ->where('totaldays', $finddatafromleaverequest)
+          ->latest()
+          ->update([
+            'totaldays' => $nowtotalleave,
+            'updated_at' => now(),
+          ]);
+        // dd($finddatafromleaverequest);
+      
+        // dd($team->from);
+        // "2023-12-16"
+        // dd($team->date);
+        // "2023-12-20"
+        // dd($team->to);
+        // "2023-12-24"
+        //! working one delete ek baar me
+        // // $period = CarbonPeriod::create($team->date, $team->to);
+        // $period = CarbonPeriod::create('2023-12-21', $team->to);
+        // // dd($period);
+        // $datess = [];
+        // foreach ($period as $date) {
+        //   $datess[] = $date->format('Y-m-d');
+        //   // dd($datess);
+        //   $deletedIds = DB::table('timesheets')
+        //     ->where('created_by', $team->createdby)
+        //     ->where('date', $datess)
+        //     ->pluck('id');
+        //   // dd($deletedIds);
+      
+        //   DB::table('timesheets')
+        //     ->where('created_by', $team->createdby)
+        //     ->where('date', $datess)
+        //     ->delete();
+      
+        //   $a = DB::table('timesheetusers')
+        //     ->whereIn('timesheetid', $deletedIds)
+        //     ->delete();
+        // }
+        // dd($datess);
+        // dd($deletedIds);
+      
+        $period = CarbonPeriod::create($team->date, $team->to);
+      
+        $datess = [];
+        foreach ($period as $date) {
+          $datess[] = $date->format('Y-m-d');
+      
+          $deletedIds = DB::table('timesheets')
+            ->where('created_by', $team->createdby)
+            ->whereIn('date', $datess)
+            ->pluck('id');
+      
+          DB::table('timesheets')
+            ->where('created_by', $team->createdby)
+            ->whereIn('date', $datess)
+            ->delete();
+      
+          $a = DB::table('timesheetusers')
+            ->whereIn('timesheetid', $deletedIds)
+            ->delete();
+        }
+      
+        // dd($datess);
+      
+      
+        // $getholidays = DB::table('holidays')->where('startdate', '>=', $team->from)
+        //   ->where('enddate', '<=', $team->to)->select('startdate')->get();
+      
+        // if (count($getholidays) != 0) {
+        //   foreach ($getholidays as $date) {
+        //     $hdatess[] = date('Y-m-d', strtotime($date->startdate));
+        //   }
+        // } else {
+        //   $hdatess[] = 0;
+        // }
+      
+        // dd($hdatess);
+        $el_leave = $datess;
+        // 0 => "2023-09-16"
+        // 1 => "2023-09-17"
+        // 2 => "2023-09-18"
+        // $exam_leave_total = count(array_diff($datess, $hdatess));
+        // 62
+      
+      
+        // $lstatus = "EL/A";
+        // $lstatus = "Null";
+        // $lstatus = "";
+        $lstatus = null;
+      
+        foreach ($el_leave as $cl_leave) {
+          // date get one by one 
+      
+          $cl_leave_day = date('d', strtotime($cl_leave));
+          // "16"
+      
+      
+      
+          $cl_leave_month = date('F', strtotime($cl_leave));
+      
+          // September
+          // dd($cl_leave_month);
+          // dd($cl_leave_day);
+          // 16
+          if ($cl_leave_day >= 26 && $cl_leave_day <= 31) {
+            $cl_leave_month = date('F', strtotime($cl_leave . ' +1 month'));
+          }
+          // dd('hi1', $team->createdby);
+          // 802
+          $attendances = DB::table('attendances')->where('employee_name', $team->createdby)
+            ->where('month', $cl_leave_month)->first();
+          // September
+          // dd($attendances);
+          //  dd($value->created_by);
+      
+          // dd('hi2', $attendances);
+          // dd($cl_leave_day);
+          // 16
+          $column = '';
+          switch ($cl_leave_day) {
+            case '26':
+              $column = 'twentysix';
+              break;
+            case '27':
+              $column = 'twentyseven';
+              break;
+            case '28':
+              $column = 'twentyeight';
+              break;
+            case '29':
+              $column = 'twentynine';
+              break;
+            case '30':
+              $column = 'thirty';
+              break;
+            case '31':
+              $column = 'thirtyone';
+              break;
+            case '01':
+              $column = 'one';
+              break;
+            case '02':
+              $column = 'two';
+              break;
+            case '03':
+              $column = 'three';
+              break;
+            case '04':
+              $column = 'four';
+              break;
+            case '05':
+              $column = 'five';
+              break;
+            case '06':
+              $column = 'six';
+              break;
+            case '07':
+              $column = 'seven';
+              break;
+            case '08':
+              $column = 'eight';
+              break;
+            case '09':
+              $column = 'nine';
+              break;
+            case '10':
+              $column = 'ten';
+              break;
+            case '11':
+              $column = 'eleven';
+              break;
+            case '12':
+              $column = 'twelve';
+              break;
+            case '13':
+              $column = 'thirteen';
+              break;
+            case '14':
+              $column = 'fourteen';
+              break;
+            case '15':
+              $column = 'fifteen';
+              break;
+            case '16':
+              $column = 'sixteen';
+              break;
+            case '17':
+              $column = 'seventeen';
+              break;
+            case '18':
+              $column = 'eighteen';
+              break;
+            case '19':
+              $column = 'ninghteen';
+              break;
+            case '20':
+              $column = 'twenty';
+              break;
+            case '21':
+              $column = 'twentyone';
+              break;
+            case '22':
+              $column = 'twentytwo';
+              break;
+            case '23':
+              $column = 'twentythree';
+              break;
+            case '24':
+              $column = 'twentyfour';
+              break;
+            case '25':
+              $column = 'twentyfive';
+              break;
+          }
+          // dd('pa', $column);
+          // sixteen
+          // dd('pa', $lstatus);
+          // EL/A
+          if (!empty($column)) {
+            // store EL/A sexteen to 25 tak 
+            DB::table('attendances')
+              ->where('employee_name', $team->createdby)
+              ->where('month', $cl_leave_month)
+              ->whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
+              ->whereRaw("{$column} != 'LWP'")
+              ->update([
+                $column => $lstatus,
+              ]);
+          }
+          // if (!empty($column)) {
+          //   // store EL/A sexteen to 25 tak 
+          //   DB::table('attendances')
+          //     ->where('employee_name', $team->createdby)
+          //     ->where('month', $cl_leave_month)
+          //     ->whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
+          //     ->whereRaw("{$column} != 'LWP'")
+          //     ->delete();
+          // }
+        }
+        // dd('hq');
+      }
+      if ($team->name == 'Sick Leave') {
+        $to = Carbon::createFromFormat('Y-m-d', $team->to ?? '');
+        $from = Carbon::createFromFormat('Y-m-d', $team->from);
+
+        $requestdays = $to->diffInDays($from) + 1;
+        // dd($requestdays);
+        $holidaycount = DB::table('holidays')->where('startdate', '>=', $team->from)
+          ->where('enddate', '<=', $team->to)
+          ->count();
+        // dd($holidaycount);
+        $totalrqstday = $requestdays - $holidaycount;
+        // dd($totalrqstday); die;
+
+        DB::table('leaveapprove')->insert([
+          'teammemberid'     =>     $team->createdby,
+          'leavetype'     =>     $team->leavetype,
+          'totaldays'     =>     $totalrqstday,
+          'year'     =>     '2023',
+          'created_at'          =>     date('y-m-d'),
+          'updated_at'              =>    date('y-m-d'),
+        ]);
+
+
+
+
+        $period = CarbonPeriod::create($team->from, $team->to);
+        $datess = [];
+        foreach ($period as $date) {
+          $datess[] = $date->format('Y-m-d');
+        }
+
+
+        $getholidays = DB::table('holidays')->where('startdate', '>=', $team->from)
+          ->where('enddate', '<=', $team->to)->select('startdate')->get();
+
+        if (count($getholidays) != 0) {
+          foreach ($getholidays as $date) {
+            $hdatess[] = date('Y-m-d', strtotime($date->startdate));
+          }
+        } else {
+          $hdatess[] = 0;
+        }
+        $sl_leave = array_diff($datess, $hdatess);
+
+        //  dd( $cl_leave );
+        $sl_leave_total = count(array_diff($datess, $hdatess));
+
+        $lstatus = "SL/A";
+
+
+
+
+        $noofdaysaspertimesheet = DB::table('timesheets')
+          ->where('created_by', auth()->user()->teammember_id)
+          ->where('date', '>=', '2023-04-26')
+          ->where('date', '<=', '2023-05-25')
+          ->select('timesheets.*')
+          ->first();
+        // dd($noofdaysaspertimesheet );
+
+        foreach ($sl_leave as $cl_leave) {
+
+
+
+
+          $cl_leave_day = date('d', strtotime($cl_leave));
+          $cl_leave_month = date('F', strtotime($cl_leave));
+
+          if ($cl_leave_day >= 26 && $cl_leave_day <= 31) {
+            $cl_leave_month = date('F', strtotime($cl_leave . ' +1 month'));
+          }
+
+
+          $attendances = DB::table('attendances')->where('employee_name', $team->createdby)
+            ->where('month', $cl_leave_month)->first();
+
+          $column = '';
+          switch ($cl_leave_day) {
+            case '26':
+              $column = 'twentysix';
+              break;
+            case '27':
+              $column = 'twentyseven';
+              break;
+            case '28':
+              $column = 'twentyeight';
+              break;
+            case '29':
+              $column = 'twentynine';
+              break;
+            case '30':
+              $column = 'thirty';
+              break;
+            case '31':
+              $column = 'thirtyone';
+              break;
+            case '01':
+              $column = 'one';
+              break;
+            case '02':
+              $column = 'two';
+              break;
+            case '03':
+              $column = 'three';
+              break;
+            case '04':
+              $column = 'four';
+              break;
+            case '05':
+              $column = 'five';
+              break;
+            case '06':
+              $column = 'six';
+              break;
+            case '07':
+              $column = 'seven';
+              break;
+            case '08':
+              $column = 'eight';
+              break;
+            case '09':
+              $column = 'nine';
+              break;
+            case '10':
+              $column = 'ten';
+              break;
+            case '11':
+              $column = 'eleven';
+              break;
+            case '12':
+              $column = 'twelve';
+              break;
+            case '13':
+              $column = 'thirteen';
+              break;
+            case '14':
+              $column = 'fourteen';
+              break;
+            case '15':
+              $column = 'fifteen';
+              break;
+            case '16':
+              $column = 'sixteen';
+              break;
+            case '17':
+              $column = 'seventeen';
+              break;
+            case '18':
+              $column = 'eighteen';
+              break;
+            case '19':
+              $column = 'ninghteen';
+              break;
+            case '20':
+              $column = 'twenty';
+              break;
+            case '21':
+              $column = 'twentyone';
+              break;
+            case '22':
+              $column = 'twentytwo';
+              break;
+            case '23':
+              $column = 'twentythree';
+              break;
+            case '24':
+              $column = 'twentyfour';
+              break;
+            case '25':
+              $column = 'twentyfive';
+              break;
+          }
+
+          if (!empty($column)) {
+
+            DB::table('attendances')
+              ->where('employee_name', $team->createdby)
+              ->where('month', $cl_leave_month)
+              ->whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
+              ->whereRaw("{$column} != 'LWP'")
+              ->update([
+                $column => $lstatus,
+              ]);
+          }
+        }
+      }
+      // dd($id);
+      $applyleaveteam = DB::table('leaveteams')
+        ->leftjoin('teammembers', 'teammembers.id', 'leaveteams.teammember_id')
+        ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        ->where('leaveteams.leave_id', $id)
+        ->select('teammembers.emailid')->get();
+      //   dd($applyleaveteam);
+      if ($applyleaveteam != null) {
+        foreach ($applyleaveteam as $applyleaveteammail) {
+          $data = array(
+            'emailid' =>  $applyleaveteammail->emailid,
+            'team_member' =>  $team->team_member,
+            'from' =>  $team->from,
+            'to' =>  $team->to,
+          );
+
+          Mail::send('emails.applyleaveteam', $data, function ($msg) use ($data) {
+            $msg->to($data['emailid']);
+            $msg->subject('VSA Leave Approved');
+          });
+        }
+      }
+      $data = array(
+        'emailid' =>  $team->emailid,
+        'id' =>  $id,
+        'from' =>  $team->from,
+        'to' =>  $team->to,
+      );
+
+      Mail::send('emails.applyleavestatus', $data, function ($msg) use ($data) {
+        $msg->to($data['emailid']);
+        // $msg->cc('priyankasharma@kgsomani.com');
+        $msg->subject('VSA Leave Approved');
+      });
+    }
+    if ($request->status == 2) {
+
+      $team = DB::table('applyleaves')
+        ->leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
+        ->leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
+        ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        ->where('applyleaves.id', $id)
+        ->select('applyleaves.*', 'teammembers.emailid', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name')->first();
+
+
+      $data = array(
+        'emailid' =>  $team->emailid,
+        'id' =>  $id,
+        'from' =>  $team->from,
+        'to' =>  $team->to,
+      );
+
+      Mail::send('emails.applyleavereject', $data, function ($msg) use ($data) {
+        $msg->to($data['emailid']);
+        // $msg->cc('priyankasharma@kgsomani.com');
+        $msg->subject('VSA Leave Reject');
+      });
+
+
+      $period = CarbonPeriod::create($team->from, $team->to);
+
+      $datess = [];
+      foreach ($period as $date) {
+        $datess[] = $date->format('Y-m-d');
+
+        DB::table('timesheets')->where('date', $date->format('Y-m-d'))
+          ->where('created_by', $team->createdby)->delete();
+        DB::table('timesheetusers')->where('createdby', $team->createdby)
+          ->where('date', $date->format('Y-m-d'))->delete();
+      }
+
+
+      $getholidays = DB::table('holidays')->where('startdate', '>=', $team->from)
+        ->where('enddate', '<=', $team->to)->select('startdate')->get();
+
+      if (count($getholidays) != 0) {
+        foreach ($getholidays as $date) {
+          $hdatess[] = date('Y-m-d', strtotime($date->startdate));
+        }
+      } else {
+        $hdatess[] = 0;
+      }
+      $leave = array_diff($datess, $hdatess);
+
+      //  dd( $cl_leave );
+      $leave_total = count(array_diff($datess, $hdatess));
+
+      $lstatus = NULL;
+
+
+
+
+
+
+      foreach ($leave as $cl_leave) {
+
+        $cl_leave_day = date('d', strtotime($cl_leave));
+        $cl_leave_month = date('F', strtotime($cl_leave));
+
+        if ($cl_leave_day >= 26 && $cl_leave_day <= 31) {
+          $cl_leave_month = date('F', strtotime($cl_leave . ' +1 month'));
+        }
+
+
+        $attendances = DB::table('attendances')->where('employee_name', $team->createdby)
+          ->where('month', $cl_leave_month)->first();
+
+        $column = '';
+
+        switch ($cl_leave_day) {
+          case '26':
+            $column = 'twentysix';
+            break;
+          case '27':
+            $column = 'twentyseven';
+            break;
+          case '28':
+            $column = 'twentyeight';
+            break;
+          case '29':
+            $column = 'twentynine';
+            break;
+          case '30':
+            $column = 'thirty';
+            break;
+          case '31':
+            $column = 'thirtyone';
+            break;
+          case '01':
+            $column = 'one';
+            break;
+          case '02':
+            $column = 'two';
+            break;
+          case '03':
+            $column = 'three';
+            break;
+          case '04':
+            $column = 'four';
+            break;
+          case '05':
+            $column = 'five';
+            break;
+          case '06':
+            $column = 'six';
+            break;
+          case '07':
+            $column = 'seven';
+            break;
+          case '08':
+            $column = 'eight';
+            break;
+          case '09':
+            $column = 'nine';
+            break;
+          case '10':
+            $column = 'ten';
+            break;
+          case '11':
+            $column = 'eleven';
+            break;
+          case '12':
+            $column = 'twelve';
+            break;
+          case '13':
+            $column = 'thirteen';
+            break;
+          case '14':
+            $column = 'fourteen';
+            break;
+          case '15':
+            $column = 'fifteen';
+            break;
+          case '16':
+            $column = 'sixteen';
+            break;
+          case '17':
+            $column = 'seventeen';
+            break;
+          case '18':
+            $column = 'eighteen';
+            break;
+          case '19':
+            $column = 'ninghteen';
+            break;
+          case '20':
+            $column = 'twenty';
+            break;
+          case '21':
+            $column = 'twentyone';
+            break;
+          case '22':
+            $column = 'twentytwo';
+            break;
+          case '23':
+            $column = 'twentythree';
+            break;
+          case '24':
+            $column = 'twentyfour';
+            break;
+          case '25':
+            $column = 'twentyfive';
+            break;
+        }
+
+        if (!empty($column)) {
+          $columnValue = DB::table('attendances')
+            ->where('employee_name', $team->createdby)
+            ->where('month', $cl_leave_month)
+            ->whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
+            ->value($column);
+
+
+
+          if ($columnValue == "SL/C" || $columnValue == "SL/A") {
+            DB::table('attendances')
+              ->where('employee_name', $team->createdby)
+              ->where('month', $cl_leave_month)
+              ->decrement('sick_leave');
+          }
+
+          if ($columnValue == "EL/C" || $columnValue == "EL/A") {
+            DB::table('attendances')
+              ->where('employee_name', $team->createdby)
+              ->where('month', $cl_leave_month)
+              ->decrement('exam_leave');
+          }
+          if ($columnValue == "BL/C" || $columnValue == "BL/A") {
+            DB::table('attendances')
+              ->where('employee_name', $team->createdby)
+              ->where('month', $cl_leave_month)
+              ->decrement('birthday_religious');
+          }
+          if ($columnValue == "LWP") {
+            DB::table('attendances')
+              ->where('employee_name', $team->createdby)
+              ->where('month', $cl_leave_month)
+              ->decrement('LWP');
+          }
+          DB::table('attendances')
+            ->where('employee_name', $team->createdby)
+            ->where('month', $cl_leave_month)
+            ->whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
+            ->update([
+              $column => $lstatus
+            ]);
+        }
+      }
+      // dd('end');
+    }
+
+    $data = $request->except(['_token', 'teammember_id']);
+    $data['updatedby'] = auth()->user()->teammember_id;
+    Applyleave::find($id)->update($data);
+
+
+    $output = array('msg' => 'Updated Successfully');
+    return redirect('applyleave')->with('success', $output);
+  } catch (Exception $e) {
+    DB::rollBack();
+    Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+    report($e);
+    $output = array('msg' => $e->getMessage());
+    return back()->withErrors($output)->withInput();
+  }
 }

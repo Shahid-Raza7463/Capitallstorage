@@ -1,6 +1,7 @@
 Controller 222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 app\Http\Controllers\NotificationController.php
 add filterDataAdmin() function 
+replace filterDataAdmin() function 
 
 
 
@@ -8,8 +9,9 @@ add filterDataAdmin() function
 
 
 Blade 222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\NotificationController.php
-replace show() function 
+resources\views\backEnd\timesheet\myteamindex.blade.php
+find text   <div class="table-responsive"> 
+replace  <div class="table-responsive"> tag 
 
 
 

@@ -1,8 +1,1524 @@
 2222222222222222222222222222222222222222222222222222222222
+// $timesheetData = DB::table('timesheetusers')
+//   ->whereIn('status', [1, 2, 3])
+//   ->where('client_id', $request->clientId)
+//   ->orderBy('date', 'DESC')
+//   ->get();
 
-$permissiontimesheet = DB::table('timesheetreport')
-->where('timesheetreport.teamid', auth()->user()->teammember_id)
-->first();
+dd($request);
+
+
+2222222222222222222222222222222222222222222222222222222222
+employee code
+adminsearchtimesheet
+admintimesheetlist
+blade file
+2222222222222222222222222222222222222222222222222222222222
+
+#parameters: array: 2[
+    "cid" => "415"
+"datepickers" => "28-02-2024"
+  ]
+
+data: {
+    cid: cid,
+        datepickers: datepickers
+},
+
+var datepickers = $('#datepickers').val();
+
+
+old
+    + request: Symfony\Component\HttpFoundation\InputBag {#52
+    #parameters: array: 1[
+        "cid" => "147"
+    ]
+}
+
+2222222222222222222222222222222222222222222222222222222222
+
+    < table id = "examplee" class="table display table-bordered table-striped table-hover" >
+<thead>
+    <tr>
+        <th style="display: none;">id</th>
+        <th>Employee Name</th>
+        <th>Date</th>
+        <th>Day</th>
+        <th>Client Name</th>
+        <th>Assignment Name</th>
+        <th>Work Item</th>
+        <th>Location</th>
+        <th>Partner</th>
+        <th> Hour</th>
+        <th>Status</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach ($timesheetData as $timesheetDatas)
+        <tr>
+            <td style="display: none;">{{ $timesheetDatas->id }}</td>
+            <td>
+                {{ $timesheetDatas->team_member ?? '' }} </td>
+            <td>{{ date('d-m-Y', strtotime($timesheetDatas->date)) }}
+            </td>
+            <td>
+                @if ($timesheetDatas->date != null)
+                    {{ $dates ?? '' }}
+                @endif
+            </td>
+
+            {{-- <span style="font-size: 13px;"> --}}
+            <td>{{ $timesheetDatas->client_name ?? '' }} </td>
+            <td>
+                {{ $timesheetDatas->assignment_name ?? '' }}
+            </td>
+            <td>
+                {{ $timesheetDatas->workitem ?? '' }}
+            </td>
+
+            <td>
+                {{ $timesheetDatas->location ?? '' }}
+            </td>
+            <td>
+                {{ $timesheetDatas->team_member ?? '' }}
+            </td>
+
+            <td>{{ $timesheetDatas->hour ?? '' }}</td>
+            <td>
+                @if ($timesheetDatas->status == 0)
+                    <span class="badge badge-pill badge-warning">saved</span>
+                @elseif ($timesheetDatas->status == 1 || $timesheetDatas->status == 3)
+                    <span class="badge badge-pill badge-danger">submit</span>
+                @else
+                    <span class="badge badge-pill badge-secondary">Rejected</span>
+                @endif
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+</ >
+
+
+    3 => {#2776 ▼
+    +"id": 117475
+        + "timesheetid": 116536
+            + "client_id": 415
+                + "assignmentgenerate_id": null
+                    + "partner": 844
+                        + "totalhour": "8"
+                            + "assignment_id": 193
+                                + "project_id": null
+                                    + "date": "2024-02-15"
+                                        + "job_id": null
+                                            + "workitem": "IA Q3 23-24"
+                                                + "location": "GSTN"
+                                                    + "billable_status": null
+                                                        + "description": null
+                                                            + "status": 1
+                                                                + "hour": "8"
+                                                                    + "createdby": 844
+                                                                        + "rejectedby": null
+                                                                            + "updatedby": null
+                                                                                + "created_at": "2024-02-19 11:40:28"
+                                                                                    + "updated_at": "2024-02-19 00:00:00"
+                                                                                        + "assignment_name": "Internal Audit"
+                                                                                            + "client_name": "Goods and Services Tax Network"
+
+
+    2222222222222222222222
+
+
+    {
+        {
+            -- < table id = "examplee" class="table display table-bordered table-striped table-hover" >
+<thead>
+    <tr>
+        <th style="display: none;">id</th>
+        <th>Employee Name</th>
+        <th>Date</th>
+        <th>Day</th>
+        <th>Client Name</th>
+        <th>Assignment Name</th>
+        <th>Work Item</th>
+        <th>Location</th>
+        <th>Partner</th>
+        <th>Hour</th>
+        <th>Status</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach ($timesheetData as $timesheetDatas)
+        @php
+            $timeid = DB::table('timesheetusers')
+                ->where('timesheetusers.timesheetid', $timesheetDatas->timesheetid)
+                ->first();
+
+            $client_id = DB::table('timesheetusers')
+                ->leftjoin('clients', 'clients.id', 'timesheetusers.client_id')
+                ->leftjoin('assignments', 'assignments.id', 'timesheetusers.assignment_id')
+                ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.partner')
+                ->where('timesheetusers.timesheetid', $timesheetDatas->timesheetid)
+                ->select('clients.client_name', 'timesheetusers.hour', 'timesheetusers.location', 'timesheetusers.*', 'assignments.assignment_name', 'billable_status', 'workitem', 'teammembers.team_member', 'timesheetusers.timesheetid')
+                ->get();
+
+            $total = DB::table('timesheetusers')
+                ->where('timesheetusers.timesheetid', $timesheetDatas->timesheetid)
+                ->sum('hour');
+
+            $dates = date('l', strtotime($timesheetDatas->date));
+        @endphp
+
+        @foreach ($client_id as $item)
+            <tr>
+                <td style="display: none;">{{ $timesheetDatas->id }}</td>
+                <td>{{ $timesheetDatas->team_member ?? '' }}</td>
+                <td>{{ date('d-m-Y', strtotime($timesheetDatas->date)) }}</td>
+                <td>
+                    @if ($timesheetDatas->date != null)
+                        {{ $dates ?? '' }}
+                    @endif
+                </td>
+                <td>{{ $item->client_name ?? '' }}</td>
+                <td>{{ $item->assignment_name ?? '' }}</td>
+                <td>{{ $item->workitem ?? '' }}</td>
+                <td>{{ $item->location ?? '' }}</td>
+                <td>{{ $item->team_member ?? '' }}</td>
+                <td>{{ $timesheetDatas->hour ?? '' }}</td>
+                <td>
+                    @if ($item->status == 0)
+                        <span class="badge badge-pill badge-warning">saved</span>
+                    @elseif ($item->status == 1 || $item->status == 3)
+                        <span class="badge badge-pill badge-danger">submit</span>
+                    @else
+                        <span class="badge badge-pill badge-secondary">Rejected</span>
+                    @endif
+                </td>
+            </tr>
+        @endforeach
+    @endforeach
+</tbody>
+</table > --}
+    }
+
+
+
+
+
+
+
+
+
+
+    { { --above --} }
+
+    {
+        {
+            -- < td >
+
+                @foreach($client_id as $item)
+            { { $item -> client_name ?? '' } }
+            @if ($item -> client_name != 0)
+                                                    ,
+                    @endif
+                    @endforeach
+                                        </td >
+                                        <td>
+                                            @foreach ($client_id as $item)
+                                                {{ $item->assignment_name ?? '' }}
+                                                @if ($item->assignment_name != null)
+                                                    ,
+                                                @endif
+                                            @endforeach
+                                        </td>
+
+                                        <td>
+                                            @foreach ($client_id as $item)
+                                                {{ $item->workitem ?? '' }}
+                                                @if ($item->workitem != null)
+                                                    ,
+                                                @endif
+                                            @endforeach
+                                        </td>
+
+                                        <td>
+                                            @foreach ($client_id as $item)
+                                                {{ $item->location ?? '' }}
+                                                @if ($item->location != null)
+                                                    ,
+                                                @endif
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            @foreach ($client_id as $item)
+                                                {{ $item->team_member ?? '' }}
+                                                @if ($item->team_member != null)
+                                                    ,
+                                                @endif
+                                            @endforeach
+                                        </td> --}
+    }
+
+
+
+    { { --below --} }
+
+    {
+        {
+            -- < td >
+                @foreach($client_id as $key => $item)
+            { { $item -> client_name ?? '' } }
+            @if ($key < count($client_id) - 1 && $item -> client_name != null)
+                                                    ,
+                    @endif
+                    @endforeach
+                                        </td >
+
+                                        <td>
+                                            @foreach ($client_id as $key => $item)
+                                                {{ $item->assignment_name ?? '' }}
+                                                @if ($key < count($client_id) - 1 && $item->assignment_name != null)
+                                                    ,
+                                                @endif
+                                            @endforeach
+                                        </td>
+
+                                        <td>
+                                            @foreach ($client_id as $key => $item)
+                                                {{ $item->workitem ?? '' }}
+                                                @if ($key < count($client_id) - 1 && $item->workitem != null)
+                                                    ,
+                                                @endif
+                                            @endforeach
+                                        </td>
+
+                                        <td>
+                                            @foreach ($client_id as $key => $item)
+                                                {{ $item->location ?? '' }}
+                                                @if ($key < count($client_id) - 1 && $item->location != null)
+                                                    ,
+                                                @endif
+                                            @endforeach
+                                        </td>
+
+                                        <td>
+                                            @foreach ($client_id as $key => $item)
+                                                {{ $item->team_member ?? '' }}
+                                                @if ($key < count($client_id) - 1 && $item->team_member != null)
+                                                    ,
+                                                @endif
+                                            @endforeach
+                                        </td> --}
+    }
+
+
+
+    2222222222222222222222222222222222222222222222222222222222
+
+
+
+
+
+        < table id = "examplee" class="table display table-bordered table-striped table-hover" >
+<thead>
+    <tr>
+        <th style="display: none;">id</th>
+        <th>Employee Name</th>
+        <th>Date</th>
+        <th>Day</th>
+        <th>Client Name</th>
+        <th>Assignment Name</th>
+        <th>Work Item</th>
+        <th>Location</th>
+        <th>Partner</th>
+        <th>Hour</th>
+        <th>Status</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach ($timesheetData as $timesheetDatas)
+        @php
+            $timeid = DB::table('timesheetusers')
+                ->where('timesheetusers.timesheetid', $timesheetDatas->timesheetid)
+                ->first();
+
+            $client_id = DB::table('timesheetusers')
+                ->leftjoin('clients', 'clients.id', 'timesheetusers.client_id')
+                ->leftjoin('assignments', 'assignments.id', 'timesheetusers.assignment_id')
+                ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.partner')
+                ->where('timesheetusers.timesheetid', $timesheetDatas->timesheetid)
+                ->select('clients.client_name', 'timesheetusers.hour', 'timesheetusers.location', 'timesheetusers.*', 'assignments.assignment_name', 'billable_status', 'workitem', 'teammembers.team_member', 'timesheetusers.timesheetid')
+                ->get();
+
+            $total = DB::table('timesheetusers')
+                ->where('timesheetusers.timesheetid', $timesheetDatas->timesheetid)
+                ->sum('hour');
+
+            $dates = date('l', strtotime($timesheetDatas->date));
+        @endphp
+
+        <tr>
+            <td style="display: none;">{{ $timesheetDatas->id }}</td>
+            <td>{{ $timesheetDatas->team_member ?? '' }}</td>
+            <td>{{ date('d-m-Y', strtotime($timesheetDatas->date)) }}</td>
+            <td>
+                @if ($timesheetDatas->date != null)
+                    {{ $dates ?? '' }}
+                @endif
+            </td>
+
+            @foreach ($client_id as $item)
+                <td>{{ $item->client_name ?? '' }}</td>
+                <td>{{ $item->assignment_name ?? '' }}</td>
+                <td>{{ $item->workitem ?? '' }}</td>
+                <td>{{ $item->location ?? '' }}</td>
+                <td>{{ $item->team_member ?? '' }}</td>
+                <td>{{ $timesheetDatas->hour ?? '' }}</td>
+                <td>
+                    @if ($item->status == 0)
+                        <span class="badge badge-pill badge-warning">saved</span>
+                    @elseif ($item->status == 1 || $item->status == 3)
+                        <span class="badge badge-pill badge-danger">submit</span>
+                    @else
+                        <span class="badge badge-pill badge-secondary">Rejected</span>
+                    @endif
+                </td>
+            @endforeach
+        </tr>
+    @endforeach
+</tbody>
+</table >
+
+
+        Sunny Gupta	16-02 - 2024	Friday	RCCPL(P) Ltd, Other, Lucknow Observation, VSA, Sunny Gupta, 2	submit 
+Sunny Gupta	16-02 - 2024	Friday	 Unallocated, Other, Miscellaneous, VSA, Sunny Gupta, 6	submit 
+
+
+
+Sunny Gupta	16-02 - 2024	Friday	RCCPL(P) Ltd	Other	Lucknow Observation	VSA	Sunny Gupta	2	submit
+Sunny Gupta	16-02 - 2024	Friday	Unallocated	Other	Miscellaneous	VSA	Sunny Gupta	6	submit
+
+    222222222222222
+
+    resources\views\backEnd\clientlist.blade.php
+
+
+    #parameters: array: 16[▼
+    "_token" => "tXHHg5qmQtcNbSYDcEsqv5rHSbc0z9cDjy18Euhv"
+    "client_id" => "227"
+    "assignment_id" => "197"
+    "assignmentname" => "Testing today"
+    "duedate" => "2024-02-23"
+    "periodstart" => "2024-02-25"
+    "periodend" => "2024-02-25"
+    "roleassignment" => "1"
+    "esthours" => "11"
+    "stdcost" => "12"
+    "estcost" => "13"
+    "fees" => "1234"
+    "leadpartner" => "837"
+    "otherpartner" => "838"
+    "teammember_id" => array: 2[▶]
+    "type" => array: 2[▶]
+  ]
+}
+
+
+$teamleader = DB:: table('assignmentteammappings')
+    // ->where('assignmentmapping_id', $id)
+    -> where('assignmentmapping_id', 497)
+    // ->leftjoin('assignmentteammappings', 'assignmentteammappings.assignmentmapping_id', 'assignmentmappings.id')
+    -> leftjoin('teammembers', 'teammembers.id', 'assignmentteammappings.teammember_id')
+    // ->where('assignmentteammappings.type', '0')
+    -> select('teammembers.team_member')
+    -> get();
+
+// $teamleader =    DB::table('assignmentmappings')
+//     ->leftjoin('assignmentteammappings', 'assignmentteammappings.assignmentmapping_id', 'assignmentmappings.id')
+//     ->leftjoin('teammembers', 'teammembers.id', 'assignmentteammappings.teammember_id')
+//     ->where('assignmentmappings.assignmentgenerate_id', 'BEN100465')
+//     ->where('assignmentteammappings.type', '0')
+//     ->select('teammembers.team_member')
+//     ->get();
+
+
+dd($teamleader);
+
+
+
+
+
+
+
+
+"_token" => "fbwcAf2MNu8fc2bf6KHMq6rYzbqV5q0zccuKb02g"
+"client_id" => "227"
+"assignment_id" => "199"
+"assignmentname" => "aaaaaa"
+"duedate" => "2024-02-21"
+
+
+"_token" => "fbwcAf2MNu8fc2bf6KHMq6rYzbqV5q0zccuKb02g"
+"client_id" => "199"
+"assignment_id" => "ANI100464"
+"periodstart" => "2024-02-20"
+"periodend" => "2024-02-29"
+"roleassignment" => "1"
+"esthours" => "2"
+"stdcost" => "3"
+"estcost" => "4"
+"fees" => "1211"
+"leadpartner" => "839"
+"otherpartner" => null
+"teammember_id" => array: 1[▶]
+"type" => array: 1[▶]
+
+
+
+
+"_token" => "fbwcAf2MNu8fc2bf6KHMq6rYzbqV5q0zccuKb02g"
+"client_id2" => "191"
+"assignment_id2" => "202"
+"assignmentname2" => "asasas"
+"duedate2" => "2024-02-20"
+"client_id" => "199"
+"assignment_id" => "ANI100464"
+"periodstart" => "2024-02-21"
+"periodend" => "2024-02-22"
+"roleassignment" => "1"
+"esthours" => "12"
+"stdcost" => "12"
+"estcost" => "12"
+"fees" => "1212"
+"leadpartner" => "838"
+"otherpartner" => null
+"teammember_id" => array: 1[▶]
+"type" => array: 1[▶]
+
+2222222222222222222222222222
+
+
+
+public function filterDataAdmin(Request $request) {
+    // this is for patner submitted timesheet 
+    dd(auth() -> user() -> role_id);
+    if (auth() -> user() -> role_id == 13) {
+        // dd($request);
+        $teamname = $request -> input('teamname');
+        $start = $request -> input('start');
+        $end = $request -> input('end');
+        $totalhours = $request -> input('totalhours');
+        $partnerId = $request -> input('partnersearch');
+
+
+        $query = DB:: table('timesheetreport')
+            -> leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+            -> leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+            -> where('timesheetreport.teamid', auth() -> user() -> teammember_id)
+            -> select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+            -> latest();
+
+        // teamname with othser field to  filter
+        if ($teamname) {
+            $query -> where('timesheetreport.teamid', $teamname);
+        }
+
+        if ($teamname && $totalhours) {
+            $query -> where(function ($q) use($teamname, $totalhours) {
+                $q-> where('timesheetreport.teamid', $teamname)
+                -> where('timesheetreport.totaltime', $totalhours);
+        });
+    }
+    if ($teamname && $partnerId) {
+        $query -> where(function ($q) use($teamname, $partnerId) {
+            $q-> where('timesheetreport.teamid', $teamname)
+            -> where('timesheetreport.partnerid', $partnerId);
+    });
+}
+
+// patner or othse one data
+if ($partnerId) {
+    $query -> where('timesheetreport.partnerid', $partnerId);
+}
+
+if ($partnerId && $totalhours) {
+    $query -> where(function ($q) use($partnerId, $totalhours) {
+        $q-> where('timesheetreport.partnerid', $partnerId)
+        -> where('timesheetreport.totaltime', $totalhours);
+});
+    }
+
+// total hour wise  wise or othser data
+if ($totalhours) {
+    $query -> where('timesheetreport.totaltime', $totalhours);
+}
+//! end date 
+if ($start && $end) {
+    $query -> where(function ($query) use($start, $end) {
+        $query-> whereBetween('timesheetreport.startdate', [$start, $end])
+        -> orWhereBetween('timesheetreport.enddate', [$start, $end])
+        -> orWhere(function ($query) use($start, $end) {
+            $query-> where('timesheetreport.startdate', '<=', $start)
+            -> where('timesheetreport.enddate', '>=', $end);
+});
+      });
+    }
+  } elseif(auth() -> user() -> role_id == 14 || auth() -> user() -> role_id == 15) {
+    // dd($request);
+    $teamname = $request -> input('teamname');
+    $start = $request -> input('start');
+    $end = $request -> input('end');
+    $totalhours = $request -> input('totalhours');
+    $partnerId = $request -> input('partnersearch');
+
+
+    $query = DB:: table('timesheetreport')
+        -> leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+        -> leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+        -> where('timesheetreport.teamid', auth() -> user() -> teammember_id)
+        -> select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+        -> latest();
+
+    // teamname with othser field to  filter
+    if ($teamname) {
+        $query -> where('timesheetreport.teamid', $teamname);
+    }
+
+    if ($teamname && $totalhours) {
+        $query -> where(function ($q) use($teamname, $totalhours) {
+            $q-> where('timesheetreport.teamid', $teamname)
+            -> where('timesheetreport.totaltime', $totalhours);
+    });
+}
+if ($teamname && $partnerId) {
+    $query -> where(function ($q) use($teamname, $partnerId) {
+        $q-> where('timesheetreport.teamid', $teamname)
+        -> where('timesheetreport.partnerid', $partnerId);
+});
+    }
+
+// patner or othse one data
+if ($partnerId) {
+    $query -> where('timesheetreport.partnerid', $partnerId);
+}
+
+if ($partnerId && $totalhours) {
+    $query -> where(function ($q) use($partnerId, $totalhours) {
+        $q-> where('timesheetreport.partnerid', $partnerId)
+        -> where('timesheetreport.totaltime', $totalhours);
+});
+    }
+
+// total hour wise  wise or othser data
+if ($totalhours) {
+    $query -> where('timesheetreport.totaltime', $totalhours);
+}
+//! end date 
+if ($start && $end) {
+    $query -> where(function ($query) use($start, $end) {
+        $query-> whereBetween('timesheetreport.startdate', [$start, $end])
+        -> orWhereBetween('timesheetreport.enddate', [$start, $end])
+        -> orWhere(function ($query) use($start, $end) {
+            $query-> where('timesheetreport.startdate', '<=', $start)
+            -> where('timesheetreport.enddate', '>=', $end);
+});
+      });
+    }
+  }
+  // this is for admin
+  else {
+    // dd(auth()->user()->role_id);
+    $teamname = $request -> input('teamname');
+    $start = $request -> input('start');
+    $end = $request -> input('end');
+    $totalhours = $request -> input('totalhours');
+    $partnerId = $request -> input('partnersearch');
+
+
+    $query = DB:: table('timesheetreport')
+        -> leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+        -> leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+        -> select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+        -> orderBy('timesheetreport.startdate', 'desc');
+
+    // teamname with othser field to  filter
+    if ($teamname) {
+        $query -> where('timesheetreport.teamid', $teamname);
+    }
+
+    if ($teamname && $totalhours) {
+        $query -> where(function ($q) use($teamname, $totalhours) {
+            $q-> where('timesheetreport.teamid', $teamname)
+            -> where('timesheetreport.totaltime', $totalhours);
+    });
+}
+if ($teamname && $partnerId) {
+    $query -> where(function ($q) use($teamname, $partnerId) {
+        $q-> where('timesheetreport.teamid', $teamname)
+        -> where('timesheetreport.partnerid', $partnerId);
+});
+    }
+
+// patner or othse one data
+if ($partnerId) {
+    $query -> where('timesheetreport.partnerid', $partnerId);
+}
+
+if ($partnerId && $totalhours) {
+    $query -> where(function ($q) use($partnerId, $totalhours) {
+        $q-> where('timesheetreport.partnerid', $partnerId)
+        -> where('timesheetreport.totaltime', $totalhours);
+});
+    }
+
+// total hour wise  wise or othser data
+if ($totalhours) {
+    $query -> where('timesheetreport.totaltime', $totalhours);
+}
+//! end date 
+if ($start && $end) {
+    $query -> where(function ($query) use($start, $end) {
+        $query-> whereBetween('timesheetreport.startdate', [$start, $end])
+        -> orWhereBetween('timesheetreport.enddate', [$start, $end])
+        -> orWhere(function ($query) use($start, $end) {
+            $query-> where('timesheetreport.startdate', '<=', $start)
+            -> where('timesheetreport.enddate', '>=', $end);
+});
+      });
+    }
+  }
+
+$filteredDataaa = $query -> get();
+
+// maping double date ************
+$groupedData = $filteredDataaa -> groupBy(function ($item) {
+    return $item -> team_member. '|'.$item -> week;
+}) -> map(function ($group) {
+    $firstItem = $group -> first();
+
+    return (object)[
+        'id' => $firstItem -> id,
+            'teamid' => $firstItem -> teamid,
+                'week' => $firstItem -> week,
+                    'totaldays' => $group -> sum('totaldays'),
+                        'totaltime' => $group -> sum('totaltime'),
+                            'startdate' => $firstItem -> startdate,
+                                'enddate' => $firstItem -> enddate,
+                                    'partnername' => $firstItem -> partnername,
+                                        'created_at' => $firstItem -> created_at,
+                                            'team_member' => $firstItem -> team_member,
+                                                'partnerid' => $firstItem -> partnerid,
+    ];
+});
+
+$filteredData = collect($groupedData -> values());
+return response() -> json($filteredData);
+}
+public function filterpatnerteam(Request $request) {
+    // this is for patner submitted timesheet 
+    if (auth() -> user() -> role_id == 13) {
+        $teamname = $request -> input('teamname');
+        $start = $request -> input('start');
+        $end = $request -> input('end');
+        $totalhours = $request -> input('totalhours');
+        $partnerId = $request -> input('partnersearch');
+
+
+        $query = DB:: table('timesheetreport')
+            -> leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+            -> leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+            -> where('timesheetreport.partnerid', auth() -> user() -> teammember_id)
+            -> select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+            -> orderBy('timesheetreport.startdate', 'desc');
+
+        // teamname with othser field to  filter
+        if ($teamname) {
+            $query -> where('timesheetreport.teamid', $teamname);
+        }
+
+        if ($teamname && $totalhours) {
+            $query -> where(function ($q) use($teamname, $totalhours) {
+                $q-> where('timesheetreport.teamid', $teamname)
+                -> where('timesheetreport.totaltime', $totalhours);
+        });
+    }
+    if ($teamname && $partnerId) {
+        $query -> where(function ($q) use($teamname, $partnerId) {
+            $q-> where('timesheetreport.teamid', $teamname)
+            -> where('timesheetreport.partnerid', $partnerId);
+    });
+}
+
+// patner or othse one data
+if ($partnerId) {
+    $query -> where('timesheetreport.partnerid', $partnerId);
+}
+
+if ($partnerId && $totalhours) {
+    $query -> where(function ($q) use($partnerId, $totalhours) {
+        $q-> where('timesheetreport.partnerid', $partnerId)
+        -> where('timesheetreport.totaltime', $totalhours);
+});
+    }
+
+// total hour wise  wise or othser data
+if ($totalhours) {
+    $query -> where('timesheetreport.totaltime', $totalhours);
+}
+//! end date 
+if ($start && $end) {
+    $query -> where(function ($query) use($start, $end) {
+        $query-> whereBetween('timesheetreport.startdate', [$start, $end])
+        -> orWhereBetween('timesheetreport.enddate', [$start, $end])
+        -> orWhere(function ($query) use($start, $end) {
+            $query-> where('timesheetreport.startdate', '<=', $start)
+            -> where('timesheetreport.enddate', '>=', $end);
+});
+      });
+    }
+  }
+
+$filteredDataaa = $query -> get();
+
+// maping double date ************
+$groupedData = $filteredDataaa -> groupBy(function ($item) {
+    return $item -> team_member. '|'.$item -> week;
+}) -> map(function ($group) {
+    $firstItem = $group -> first();
+
+    return (object)[
+        'id' => $firstItem -> id,
+            'teamid' => $firstItem -> teamid,
+                'week' => $firstItem -> week,
+                    'totaldays' => $group -> sum('totaldays'),
+                        'totaltime' => $group -> sum('totaltime'),
+                            'startdate' => $firstItem -> startdate,
+                                'enddate' => $firstItem -> enddate,
+                                    'partnername' => $firstItem -> partnername,
+                                        'created_at' => $firstItem -> created_at,
+                                            'team_member' => $firstItem -> team_member,
+                                                'partnerid' => $firstItem -> partnerid,
+    ];
+});
+
+$filteredData = collect($groupedData -> values());
+return response() -> json($filteredData);
+}
+
+
+
+
+
+
+
+
+22222222222222222222222222222222
+    < table class="table display table-bordered table-striped table-hover" style = "width:100%" >
+
+        <script>
+            $(document).ready(function() {
+                $('#examplee').DataTable({
+                    dom: 'Bfrtip',
+                    "order": [], // Disable initial sorting
+
+                    columnDefs: [{
+                        targets: [4],
+                        orderable: false
+                    } // Disable sorting for the fifth column (Total Hour)
+                    ],
+
+                    //   buttons: [{
+                    //           extend: 'copyHtml5',
+                    //           exportOptions: {
+                    //               columns: [0, ':visible']
+                    //           }
+                    //       },
+                    //       {
+                    //           extend: 'excelHtml5',
+                    //           exportOptions: {
+                    //               columns: ':visible'
+                    //           }
+                    //       },
+                    //       {
+                    //           extend: 'pdfHtml5',
+                    //           exportOptions: {
+                    //               columns: [0, 1, 2, 5]
+                    //           }
+                    //       },
+                    //       'colvis'
+                    //   ]
+                });
+});
+        </script>
+
+        
+        <script>
+      $(document).ready(function() {
+          $('#examplee').DataTable({
+              //   dom: 'Bfrtip',
+              //   dom: 'lrtip',
+              //   dom: '<"wrapper"flipt>',
+              dom: '<"top"i>rt<"bottom"flp><"clear">',
+              //   dom: '<lf<t>ip>',
+              //   dom: 'Blfrtip',
+              "order": [
+                  [0, "desc"]
+              ],
+              buttons: []
+          });
+      });
+  </script>
+
+
+
+222222222222222222222222222222
+
+
+
+    < li >
+                              <a class="has-arrow material-ripple" href="#">
+                                  <i class="typcn typcn-info-large-outline d-block mr-2"></i>
+                                  Report
+                              </a>
+                              <ul class="nav-second-level">
+
+                                  @if (Auth::user()->role_id == 18 ||
+                                          Auth::user()->role_id == 11 ||
+                                          Auth::user()->role_id == 13 ||
+                                          Auth::user()->role_id == 14 ||
+                                          Auth::user()->role_id == 17 ||
+                                          Auth::user()->role_id == 15 ||
+                                          Auth::user()->role_id == 16 ||
+                                          Auth::user()->role_id == 12)
+                                      <li><a href="{{ url('assignment_report') }}">Assignment Report</a></li>
+                                  @endif
+                                  @if (Auth::user()->role_id == 18 ||
+                                          Auth::user()->role_id == 11 ||
+                                          Auth::user()->role_id == 13 ||
+                                          Auth::user()->role_id == 14 ||
+                                          Auth::user()->role_id == 17 ||
+                                          Auth::user()->role_id == 15 ||
+                                          Auth::user()->role_id == 16 ||
+                                          Auth::user()->role_id == 12)
+                                      <li><a href="{{ url('examleaverequestlist') }}">Revert Leave</a></li>
+                                  @endif
+                              </ul>
+                          </ >
+
+
+
+
+    22222222222222222222222
+
+{
+    {
+        -- < script >
+            $(document).ready(function () {
+                $('.yearValidate').on('change', function () {
+                    var leaveDate = $('.yearValidate');
+                    //   alert(leaveDate);
+                    var leaveDateValue = $('.yearValidate').val();
+                    //   console.log(leaveDateValue);
+                    var leaveDateGet = new Date(leaveDateValue);
+                    var leaveyear = leaveDateGet.getFullYear();
+                    // console.log(startyear);
+                    var leaveyearLength = leaveyear.toString().length;
+                    if (leaveyearLength > 4) {
+                        alert('Enter four digits for the year');
+                        leaveDate.val('');
+                    }
+                });
+            });
+</script > --}
+}
+222222222222222222222
+
+public function examleaverequest(Request $request, $id) {
+    // dd($request);
+    try {
+        // start exam leave 
+        if ($request -> leavetype == 11) {
+            if ($request -> status == 1) {
+
+                $team = DB:: table('leaverequest')
+                    -> leftjoin('applyleaves', 'applyleaves.id', 'leaverequest.applyleaveid')
+                    -> leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
+                    -> leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
+                    -> leftjoin('roles', 'roles.id', 'teammembers.role_id')
+                    -> where('leaverequest.id', $id)
+                    -> select('applyleaves.*', 'teammembers.emailid', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'leavetypes.holiday', 'leaverequest.id as examrequestId', 'leaverequest.date')
+                    -> first();
+
+                // dd($team);
+
+                if ($team -> name == 'Exam Leave') {
+
+                    $from = Carbon:: createFromFormat('Y-m-d', $team -> from);
+                    $to = Carbon:: createFromFormat('Y-m-d', $team -> to ?? '');
+                    // came during exam leave
+                    $camefromexam = Carbon:: createFromFormat('Y-m-d', $team -> date);
+
+                    $removedays = $to -> diffInDays($camefromexam) + 1;
+
+                    $nowtotalleave = $from -> diffInDays($camefromexam);
+                    // it si only serching data from dtabase 
+                    $finddatafromleaverequest = $to -> diffInDays($from) + 1;
+
+                    // Update date in to  column in applyleaves table 
+                    $updatedcamedate = $camefromexam -> copy() -> subDay() -> format('Y-m-d');
+
+                    // dd($updatedcamedate);
+
+                    DB:: table('applyleaves')
+                        -> where('from', $team -> from)
+                        -> where('to', $team -> to)
+                        -> where('createdby', $team -> createdby)
+                        -> update([
+                            'to' => $updatedcamedate,
+                        ]);
+
+                    // DB::table('applyleaves')
+                    // ->where('id', $team->id)
+                    // ->update([
+                    //   'to' => $team->date,
+                    // ]);
+
+
+                    // for approved
+                    DB:: table('leaverequest')
+                        -> where('id', $team -> examrequestId)
+                        -> update([
+                            'status' => 1,
+                        ]);
+
+                    // update total leave after came during exam
+                    DB:: table('leaveapprove')
+                        -> where('teammemberid', $team -> createdby)
+                        -> where('totaldays', $finddatafromleaverequest)
+                        -> latest()
+                        -> update([
+                            'totaldays' => $nowtotalleave,
+                            'updated_at' => now(),
+                        ]);
+
+                    // get date
+                    $period = CarbonPeriod:: create($team -> date, $team -> to);
+
+                    $datess = [];
+                    foreach($period as $date) {
+                        $datess[] = $date -> format('Y-m-d');
+
+                        $deletedIds = DB:: table('timesheets')
+                            -> where('created_by', $team -> createdby)
+                            -> whereIn('date', $datess)
+                            -> pluck('id');
+
+                        DB:: table('timesheets')
+                            -> where('created_by', $team -> createdby)
+                            -> whereIn('date', $datess)
+                            -> delete ();
+
+                        $a = DB:: table('timesheetusers')
+                            -> whereIn('timesheetid', $deletedIds)
+                            -> delete ();
+                    }
+
+                    // dd($hdatess);
+                    $el_leave = $datess;
+                    $lstatus = null;
+
+                    foreach($el_leave as $cl_leave) {
+                        $cl_leave_day = date('d', strtotime($cl_leave));
+                        $cl_leave_month = date('F', strtotime($cl_leave));
+
+                        if ($cl_leave_day >= 26 && $cl_leave_day <= 31) {
+                            $cl_leave_month = date('F', strtotime($cl_leave. ' +1 month'));
+                        }
+
+                        $attendances = DB:: table('attendances') -> where('employee_name', $team -> createdby)
+                            -> where('month', $cl_leave_month) -> first();
+                        // September
+                        // dd($attendances);
+                        $column = '';
+                        switch ($cl_leave_day) {
+                            case '26':
+                                $column = 'twentysix';
+                                break;
+                            case '27':
+                                $column = 'twentyseven';
+                                break;
+                            case '28':
+                                $column = 'twentyeight';
+                                break;
+                            case '29':
+                                $column = 'twentynine';
+                                break;
+                            case '30':
+                                $column = 'thirty';
+                                break;
+                            case '31':
+                                $column = 'thirtyone';
+                                break;
+                            case '01':
+                                $column = 'one';
+                                break;
+                            case '02':
+                                $column = 'two';
+                                break;
+                            case '03':
+                                $column = 'three';
+                                break;
+                            case '04':
+                                $column = 'four';
+                                break;
+                            case '05':
+                                $column = 'five';
+                                break;
+                            case '06':
+                                $column = 'six';
+                                break;
+                            case '07':
+                                $column = 'seven';
+                                break;
+                            case '08':
+                                $column = 'eight';
+                                break;
+                            case '09':
+                                $column = 'nine';
+                                break;
+                            case '10':
+                                $column = 'ten';
+                                break;
+                            case '11':
+                                $column = 'eleven';
+                                break;
+                            case '12':
+                                $column = 'twelve';
+                                break;
+                            case '13':
+                                $column = 'thirteen';
+                                break;
+                            case '14':
+                                $column = 'fourteen';
+                                break;
+                            case '15':
+                                $column = 'fifteen';
+                                break;
+                            case '16':
+                                $column = 'sixteen';
+                                break;
+                            case '17':
+                                $column = 'seventeen';
+                                break;
+                            case '18':
+                                $column = 'eighteen';
+                                break;
+                            case '19':
+                                $column = 'ninghteen';
+                                break;
+                            case '20':
+                                $column = 'twenty';
+                                break;
+                            case '21':
+                                $column = 'twentyone';
+                                break;
+                            case '22':
+                                $column = 'twentytwo';
+                                break;
+                            case '23':
+                                $column = 'twentythree';
+                                break;
+                            case '24':
+                                $column = 'twentyfour';
+                                break;
+                            case '25':
+                                $column = 'twentyfive';
+                                break;
+                        }
+
+                        if (!empty($column)) {
+                            // store EL/A sexteen to 25 tak 
+                            DB:: table('attendances')
+                                -> where('employee_name', $team -> createdby)
+                                -> where('month', $cl_leave_month)
+                                -> whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
+                                -> whereRaw("{$column} != 'LWP'")
+                                -> update([
+                                    $column => $lstatus,
+                                ]);
+                        }
+                    }
+                }
+                // For approving mail
+                $applyleaveteam = DB:: table('leaverequest')
+                    -> leftjoin('applyleaves', 'applyleaves.id', 'leaverequest.applyleaveid')
+                    -> leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
+                    -> leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
+                    -> leftjoin('roles', 'roles.id', 'teammembers.role_id')
+                    -> where('leaverequest.id', $id)
+                    -> select('applyleaves.*', 'teammembers.emailid', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'leavetypes.holiday', 'leaverequest.id as examrequestId', 'leaverequest.date')
+                    -> get();
+
+                if ($applyleaveteam != null) {
+                    foreach($applyleaveteam as $applyleaveteammail) {
+                        $data = array(
+                            'emailid' => $applyleaveteammail -> emailid,
+                            'team_member' => $team -> team_member,
+                            'from' => $team -> from,
+                            'to' => $team -> to,
+                        );
+
+                        Mail:: send('emails.applyleaveteam', $data, function ($msg) use($data) {
+                            $msg-> to($data['emailid']);
+                        $msg -> subject('VSA Leave Approved');
+                    });
+                }
+            }
+            $data = array(
+                'emailid' => $team -> emailid,
+                'id' => $id,
+                'from' => $team -> from,
+                'to' => $team -> to,
+            );
+
+            Mail:: send('emails.duringexamleavestatus', $data, function ($msg) use($data) {
+                $msg-> to($data['emailid']);
+            $msg -> subject('VSA Exam Leave request Approved');
+        });
+    }
+      if ($request -> status == 2) {
+        $team = DB:: table('leaverequest')
+            -> leftjoin('applyleaves', 'applyleaves.id', 'leaverequest.applyleaveid')
+            -> leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
+            -> leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
+            -> leftjoin('roles', 'roles.id', 'teammembers.role_id')
+            -> where('leaverequest.id', $id)
+            -> select('applyleaves.*', 'teammembers.emailid', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'leavetypes.holiday', 'leaverequest.id as examrequestId', 'leaverequest.date')
+            -> first();
+
+        DB:: table('leaverequest')
+            -> where('id', $team -> examrequestId)
+            -> update([
+                'status' => 2,
+            ]);
+
+        $data = array(
+            'emailid' => $team -> emailid,
+            'id' => $id,
+            'from' => $team -> from,
+            'to' => $team -> to,
+        );
+
+        Mail:: send('emails.duringexamleavereject', $data, function ($msg) use($data) {
+            $msg-> to($data['emailid']);
+        // $msg->cc('priyankasharma@kgsomani.com');
+        $msg -> subject('VSA Exam Leave Request Reject');
+    });
+}
+    }
+    // start casual leave
+    else {
+    if ($request -> status == 1) {
+
+        $team = DB:: table('leaverequest')
+            -> leftjoin('applyleaves', 'applyleaves.id', 'leaverequest.applyleaveid')
+            -> leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
+            -> leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
+            -> leftjoin('roles', 'roles.id', 'teammembers.role_id')
+            -> where('leaverequest.id', $id)
+            -> select('applyleaves.*', 'teammembers.emailid', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'leavetypes.holiday', 'leaverequest.id as examrequestId', 'leaverequest.date')
+            -> first();
+
+
+        if ($team -> name == 'Casual Leave') {
+
+            $from = Carbon:: createFromFormat('Y-m-d', $team -> from);
+            $to = Carbon:: createFromFormat('Y-m-d', $team -> to ?? '');
+            // came during exam leave
+            $camefromexam = Carbon:: createFromFormat('Y-m-d', $team -> date);
+
+            $removedays = $to -> diffInDays($camefromexam) + 1;
+
+            $nowtotalleave = $from -> diffInDays($camefromexam);
+            // it si only serching data from dtabase 
+            $finddatafromleaverequest = $to -> diffInDays($from) + 1;
+
+            // Update date in to  column in applyleaves table 
+            $updatedcamedate = $camefromexam -> copy() -> subDay() -> format('Y-m-d');
+
+            // dd($updatedcamedate);
+
+            DB:: table('applyleaves')
+                -> where('from', $team -> from)
+                -> where('to', $team -> to)
+                -> where('createdby', $team -> createdby)
+                -> update([
+                    'to' => $updatedcamedate,
+                ]);
+
+            // DB::table('applyleaves')
+            // ->where('id', $team->id)
+            // ->update([
+            //   'to' => $team->date,
+            // ]);
+
+
+            // for approved
+            DB:: table('leaverequest')
+                -> where('id', $team -> examrequestId)
+                -> update([
+                    'status' => 1,
+                ]);
+
+
+            // update total leave after came during exam
+            DB:: table('leaveapprove')
+                -> where('teammemberid', $team -> createdby)
+                -> where('totaldays', $finddatafromleaverequest)
+                -> latest()
+                -> update([
+                    'totaldays' => $nowtotalleave,
+                    'updated_at' => now(),
+                ]);
+
+            // get date
+            $period = CarbonPeriod:: create($team -> date, $team -> to);
+
+            $datess = [];
+            foreach($period as $date) {
+                $datess[] = $date -> format('Y-m-d');
+
+                $deletedIds = DB:: table('timesheets')
+                    -> where('created_by', $team -> createdby)
+                    -> whereIn('date', $datess)
+                    -> pluck('id');
+
+                DB:: table('timesheets')
+                    -> where('created_by', $team -> createdby)
+                    -> whereIn('date', $datess)
+                    -> delete ();
+
+                $a = DB:: table('timesheetusers')
+                    -> whereIn('timesheetid', $deletedIds)
+                    -> delete ();
+            }
+
+            // dd($nowtotalleave);
+
+            // dd($hdatess);
+            $el_leave = $datess;
+            $lstatus = null;
+
+            foreach($el_leave as $cl_leave) {
+                $cl_leave_day = date('d', strtotime($cl_leave));
+                $cl_leave_month = date('F', strtotime($cl_leave));
+
+                if ($cl_leave_day >= 26 && $cl_leave_day <= 31) {
+                    $cl_leave_month = date('F', strtotime($cl_leave. ' +1 month'));
+                }
+
+                $attendances = DB:: table('attendances') -> where('employee_name', $team -> createdby)
+                    -> where('month', $cl_leave_month) -> first();
+                // September
+                // dd($attendances);
+                $column = '';
+                switch ($cl_leave_day) {
+                    case '26':
+                        $column = 'twentysix';
+                        break;
+                    case '27':
+                        $column = 'twentyseven';
+                        break;
+                    case '28':
+                        $column = 'twentyeight';
+                        break;
+                    case '29':
+                        $column = 'twentynine';
+                        break;
+                    case '30':
+                        $column = 'thirty';
+                        break;
+                    case '31':
+                        $column = 'thirtyone';
+                        break;
+                    case '01':
+                        $column = 'one';
+                        break;
+                    case '02':
+                        $column = 'two';
+                        break;
+                    case '03':
+                        $column = 'three';
+                        break;
+                    case '04':
+                        $column = 'four';
+                        break;
+                    case '05':
+                        $column = 'five';
+                        break;
+                    case '06':
+                        $column = 'six';
+                        break;
+                    case '07':
+                        $column = 'seven';
+                        break;
+                    case '08':
+                        $column = 'eight';
+                        break;
+                    case '09':
+                        $column = 'nine';
+                        break;
+                    case '10':
+                        $column = 'ten';
+                        break;
+                    case '11':
+                        $column = 'eleven';
+                        break;
+                    case '12':
+                        $column = 'twelve';
+                        break;
+                    case '13':
+                        $column = 'thirteen';
+                        break;
+                    case '14':
+                        $column = 'fourteen';
+                        break;
+                    case '15':
+                        $column = 'fifteen';
+                        break;
+                    case '16':
+                        $column = 'sixteen';
+                        break;
+                    case '17':
+                        $column = 'seventeen';
+                        break;
+                    case '18':
+                        $column = 'eighteen';
+                        break;
+                    case '19':
+                        $column = 'ninghteen';
+                        break;
+                    case '20':
+                        $column = 'twenty';
+                        break;
+                    case '21':
+                        $column = 'twentyone';
+                        break;
+                    case '22':
+                        $column = 'twentytwo';
+                        break;
+                    case '23':
+                        $column = 'twentythree';
+                        break;
+                    case '24':
+                        $column = 'twentyfour';
+                        break;
+                    case '25':
+                        $column = 'twentyfive';
+                        break;
+                }
+
+                if (!empty($column)) {
+                    // store EL/A sexteen to 25 tak 
+                    DB:: table('attendances')
+                        -> where('employee_name', $team -> createdby)
+                        -> where('month', $cl_leave_month)
+                        -> whereRaw("NOT ({$column} REGEXP '^-?[0-9]+$')")
+                        -> whereRaw("{$column} != 'LWP'")
+                        -> update([
+                            $column => $lstatus,
+                        ]);
+                }
+            }
+        }
+        // For approving mail
+        $applyleaveteam = DB:: table('leaverequest')
+            -> leftjoin('applyleaves', 'applyleaves.id', 'leaverequest.applyleaveid')
+            -> leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
+            -> leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
+            -> leftjoin('roles', 'roles.id', 'teammembers.role_id')
+            -> where('leaverequest.id', $id)
+            -> select('applyleaves.*', 'teammembers.emailid', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'leavetypes.holiday', 'leaverequest.id as examrequestId', 'leaverequest.date')
+            -> get();
+
+        if ($applyleaveteam != null) {
+            foreach($applyleaveteam as $applyleaveteammail) {
+                $data = array(
+                    'emailid' => $applyleaveteammail -> emailid,
+                    'team_member' => $team -> team_member,
+                    'from' => $team -> from,
+                    'to' => $team -> to,
+                );
+
+                Mail:: send('emails.applyleaveteam', $data, function ($msg) use($data) {
+                    $msg-> to($data['emailid']);
+                $msg -> subject('VSA Leave Approved');
+            });
+        }
+    }
+    $data = array(
+        'emailid' => $team -> emailid,
+        'id' => $id,
+        'from' => $team -> from,
+        'to' => $team -> to,
+    );
+
+    Mail:: send('emails.duringexamleavestatus', $data, function ($msg) use($data) {
+        $msg-> to($data['emailid']);
+    $msg -> subject('VSA Casual leave request Approved');
+});
+      }
+if ($request -> status == 2) {
+    $team = DB:: table('leaverequest')
+        -> leftjoin('applyleaves', 'applyleaves.id', 'leaverequest.applyleaveid')
+        -> leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
+        -> leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
+        -> leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        -> where('leaverequest.id', $id)
+        -> select('applyleaves.*', 'teammembers.emailid', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'leavetypes.holiday', 'leaverequest.id as examrequestId', 'leaverequest.date')
+        -> first();
+
+    DB:: table('leaverequest')
+        -> where('id', $team -> examrequestId)
+        -> update([
+            'status' => 2,
+        ]);
+
+    $data = array(
+        'emailid' => $team -> emailid,
+        'id' => $id,
+        'from' => $team -> from,
+        'to' => $team -> to,
+    );
+
+    Mail:: send('emails.duringexamleavereject', $data, function ($msg) use($data) {
+        $msg-> to($data['emailid']);
+    // $msg->cc('priyankasharma@kgsomani.com');
+    $msg -> subject('VSA Casual leave Request Reject');
+});
+      }
+    }
+
+$output = array('msg' => 'Updated Successfully');
+return redirect('examleaverequestlist') ->with ('success', $output);
+  } catch (Exception $e) {
+    DB:: rollBack();
+    Log:: emergency("File:".$e -> getFile(). "Line:".$e -> getLine(). "Message:".$e -> getMessage());
+    report($e);
+    $output = array('msg' => $e -> getMessage());
+    return back() -> withErrors($output) -> withInput();
+}
+}
+
+
+
+
+
+
+22222222222222222222
+
+$permissiontimesheet = DB:: table('timesheetreport')
+    -> where('timesheetreport.teamid', auth() -> user() -> teammember_id)
+    -> first();
 // dd($permissiontimesheet);
 22222222222222
 

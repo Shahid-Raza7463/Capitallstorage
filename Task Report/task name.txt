@@ -25,27 +25,37 @@ task name
 ##################################################  01-feb-2024 ##############################################################
 reject reasion will be show on email 
 reject reason will be display inside rejected information 
+notification show on admin and patner,manager ,staff
+download all folder 
+timesheet download on patner and admin 
+
+
+
 
 
 
 
 to do
 
- 
-
-6. user end = timesheet submitted priode date ke aacording accending order hona chahiye 
 filter should be aprover wize in applyleave on admin 
 everywhere client want to export file name after download
 
+timesheet excell will be latest date ordering 
+open assignment total show 198 and in excell 199 check it 
+
+leave not apply on sunday
+
+0.apply leave remark column add 
+1.mailing close assignment
+2. problem of sunny sir
+3. sounting assignment on dashboard 
+4.old details on casual leave revert 
 
 
-
-
-
-to do
-
-apply leave remark column add 
-
+5.holyday,notification seprated 
+5.knowledge base tab seprated
+6.sireal number missing
+7. redirection fix on apply leave to patner 
 
 
 

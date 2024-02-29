@@ -54,9 +54,7 @@ resources\views\backEnd\index.blade.php
 add below code after Upcoming Holidays box on dashboard
 
 
-
-
-             <div class="col-md-12 col-lg-4">
+                <div class="col-md-12 col-lg-4">
                     <div class="card mb-4" style="height: 310px;">
                         <div class="card-header" style="background-color:#ff000029;">
                             <div class="d-flex justify-content-between align-items-center">
@@ -74,14 +72,17 @@ add below code after Upcoming Holidays box on dashboard
                                         <div class="media new">
 
                                             <div class="media-body">
-                                                <h6> {{ $notificationData->title }} <a
-                                                        class="d-block fs-15 font-weight-600 text-sm mb-0"><span
+                                                <h6>
+                                                    {{ $notificationData->title }}
+
+                                                    {{-- <a class="d-block fs-15 font-weight-600 text-sm mb-0"><span
                                                             style="color:#007bff;font-size: small;">created by <b
                                                                 style="color: black;">{{ $notificationData->team_member }}</b></span>
-                                                    </a></h6>
+                                                    </a> --}}
+                                                </h6>
                                                 <span>
                                                     <small class="text-muted"><i class="far fa-clock mr-1"></i>
-                                                        {{ date('H:i A', strtotime($notificationData->created_at)) }},
+                                                        {{-- {{ date('H:i A', strtotime($notificationData->created_at)) }}, --}}
                                                         {{ date('F jS', strtotime($notificationData->created_at)) }}
                                                     </small>
                                                 </span>
@@ -113,6 +114,8 @@ basically index function me jaha bhi $assignment hai vaha take(2) lagana hai lik
 
 
 ->take(2)->get();
+
+ @foreach ($assignment as $assignmentData)
 
 
 

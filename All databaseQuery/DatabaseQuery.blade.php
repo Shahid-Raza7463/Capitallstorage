@@ -44,3 +44,6 @@ SELECT COUNT(*) FROM assignmentbudgetings WHERE status = 0;
 
 {{-- * count in database --}}
 SELECT COUNT(*) as count FROM `assignmentbudgetings` WHERE `closedby` = 844;
+
+{{-- ###################################################################### --}}
+{{--  --------------------- 29 sep 2023 joining date--------------- --}}

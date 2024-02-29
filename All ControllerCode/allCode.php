@@ -6,7 +6,308 @@ class ZipController extends Controller
 //*
 //*
 //*
-//* 
+//* regarding date All condition 
+public function store(Request $request)
+{
+  // app\Http\Controllers\TimesheetController.php
+
+      // Permission for Closed assignment
+      $assignmentcloseddata = DB::table('assignmentbudgetings')->where('assignmentgenerate_id', $request->assignment_id[0])->first();
+      $requestDate = \DateTime::createFromFormat('d-m-Y', $request->date);
+
+      if ($assignmentcloseddata && $assignmentcloseddata->otpverifydate) {
+        $assignmentcloseddate = \DateTime::createFromFormat('Y-m-d H:i:s', $assignmentcloseddata->otpverifydate)->setTime(23, 59, 59);
+        if ($assignmentcloseddata->status == 0 && $assignmentcloseddate <= $requestDate) {
+          $output = ['msg' => "This Assignment has closed : " . $request->assignment_id[0] . " You can not fill timesheet to Assignment name : " . $assignmentcloseddata->assignmentname . " Assignment id: " . $request->assignment_id[0]];
+          return redirect('timesheet/mylist')->with('statuss', $output);
+        }
+      }
+
+      // dd('hi 3', $count);
+      for ($i = 0; $i < $count; $i++) {
+
+        $assignment =  DB::table('assignmentmappings')->where('assignmentgenerate_id', $request->assignment_id[$i])->first();
+
+        // Permission for Closed assignment
+        $assignmentcloseddata2 = DB::table('assignmentbudgetings')->where('assignmentgenerate_id', $request->assignment_id[$i])->first();
+        $requestDate = \DateTime::createFromFormat('d-m-Y', $request->date);
+ 
+        if ($assignmentcloseddata2 && $assignmentcloseddata2->otpverifydate) {
+          $assignmentcloseddate2 = \DateTime::createFromFormat('Y-m-d H:i:s', $assignmentcloseddata2->otpverifydate)->setTime(23, 59, 59);
+          if ($assignmentcloseddata->status == 0 && $assignmentcloseddate2 <= $requestDate) {
+            $output = ['msg' => "This Assignment has closed : " . $request->assignment_id[$i] . " You can not fill timesheet to: Assignment name " . $assignmentcloseddata->assignmentname . " Assignment id: " . $request->assignment_id[$i]];
+            return redirect('timesheet/mylist')->with('statuss', $output);
+          }
+        }
+      }
+    } 
+}
+
+
+//* regarding dd 
+// dd($checkopenorclosed->status, $assignmentcloseddate, $requestDate);
+
+
+//* regarding otp
+public function assignmentotpstore(Request $request)
+{
+  dd($request);
+  $request->validate([
+    'otp' => 'required'
+  ]);
+
+  try {
+    $data = $request->except(['_token']);
+
+    $otp = DB::table('assignmentbudgetings')
+      ->where('otp', $request->otp)
+      ->where('assignmentgenerate_id', $request->assignmentgenerateid)->first();
+    if ($otp) {
+
+      DB::table('assignmentbudgetings')
+        ->where('assignmentgenerate_id', $request->assignmentgenerateid)->update([
+          'status' => '0',
+          'closedby'  => auth()->user()->teammember_id,
+          'otpverifydate' => date('Y-m-d H:i:s')
+        ]);
+      $output = array('msg' => 'assignment closed successfully');
+      return back()->with('success', $output);
+    } else {
+      $output = array('msg' => 'otp did not match! Please enter valid otp');
+      return back()->with('success', $output);
+    }
+  } catch (Exception $e) {
+    DB::rollBack();
+    Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+    report($e);
+    $output = array('msg' => $e->getMessage());
+    return back()->withErrors($output)->withInput();
+  }
+}
+//*  regarding function / function call 
+
+
+public function store(Request $request)
+{
+
+    // dd($id);
+    if ($request->teammember_id != '0') {
+        $count = count($request->teammember_id);
+        // dd($request->assignment_id);
+        $clientname = Client::where('id', $request->client_id)->select('client_name')->first();
+
+        $assignmentpartner = Teammember::where('id', $request->leadpartner)->select('team_member')->first();
+
+        // $teamleader =    DB::table('assignmentmappings')
+        //     ->leftjoin('assignmentteammappings', 'assignmentteammappings.assignmentmapping_id', 'assignmentmappings.id')
+        //     ->leftjoin('teammembers', 'teammembers.id', 'assignmentteammappings.teammember_id')
+        //     ->where('assignmentmappings.assignmentgenerate_id', $assignmentgenerate)
+        //     ->where('assignmentteammappings.type', '0')
+        //     ->select('teammembers.team_member')
+        //     ->get();
+
+        $teamemail = DB::table('teammembers')->wherein('id', $request->teammember_id)->select('emailid')->get();
+        // dd($teamemail);
+
+        foreach ($teamemail as $teammember) {
+            $data = array(
+                'assignmentid' =>  $assignmentgenerate,
+                'clientname' =>  $clientname->client_name,
+                'assignmentname' =>  $request->assignmentname,
+                'assignment_name' =>  $assignment_name,
+                'emailid' =>  $teammember->emailid,
+                'assignmentpartner' =>  $assignmentpartner->team_member,
+                // 'teamleader' =>  $teamleader,
+
+            );
+
+            // Mail::send('emails.assignmentassign', $data, function ($msg) use ($data) {
+            //     $msg->to($data['emailid']);
+            //     $msg->subject('VSA New Assignment Assigned || ' . $data['assignmentname'] . ' / ' . $data['assignmentid']);
+            // });
+            $this->sendAssignmentEmail($data);
+        }
+
+        $teamemailpartner = DB::table('teammembers')->where('id', $request->leadpartner)->select('emailid')->first();
+        // dd($teamemailpartner);
+        if ($request->leadpartner !=  null) {
+            $data = array(
+                'assignmentid' =>  $assignmentgenerate,
+                'clientname' =>  $clientname->client_name,
+                'assignmentname' =>  $request->assignmentname,
+                'assignment_name' =>  $assignment_name,
+                'emailid' =>  $teamemailpartner->emailid,
+                'assignmentpartner' =>  $assignmentpartner->team_member,
+                // 'teamleader' =>  $teamleader,
+
+            );
+
+            // Mail::send('emails.assignmentassign', $data, function ($msg) use ($data) {
+            //     $msg->to($data['emailid']);
+            //     $msg->subject('VSA New Assignment Assigned || ' . $data['assignmentname'] . ' / ' . $data['assignmentid']);
+            // });
+            $this->sendAssignmentEmail($data);
+        }
+        $teamemailotherpartner = DB::table('teammembers')->where('id', $request->otherpartner)->select('emailid')->first();
+        if ($request->otherpartner !=  null) {
+            $data = array(
+                'assignmentid' =>  $assignmentgenerate,
+                'clientname' =>  $clientname->client_name,
+                'assignmentname' =>  $request->assignmentname,
+                'assignment_name' =>  $assignment_name,
+                'emailid' =>  $teamemailotherpartner->emailid,
+                'assignmentpartner' =>  $assignmentpartner->team_member,
+                // 'teamleader' =>  $teamleader,
+
+            );
+
+            // Mail::send('emails.assignmentassign', $data, function ($msg) use ($data) {
+            //     $msg->to($data['emailid']);
+            //     $msg->subject('VSA New Assignment Assigned || ' . $data['assignmentname'] . ' / ' . $data['assignmentid']);
+            // });
+            $this->sendAssignmentEmail($data);
+        }
+    }
+
+}
+
+function sendAssignmentEmail($data)
+{
+    Mail::send('emails.assignmentassign', $data, function ($msg) use ($data) {
+        $msg->to($data['emailid']);
+        $msg->subject('VSA New Assignment Assigned || ' . $data['assignmentname'] . ' / ' . $data['assignmentid']);
+    });
+}
+
+
+//* regarding url / regarding route /  regarding path
+
+
+public function filterDataAdmin(Request $request)
+{
+  $urlheader = $request->headers->get('referer');
+  $url = parse_url($urlheader);
+  $path = $url['path'];
+  // dd($url);
+  // this is for patner submitted timesheet 
+  if (auth()->user()->role_id == 13 && $path == '/timesheet/partnersubmitted') {
+    // dd($url);
+  }
+  // this is for team submitted timesheet on patner
+  elseif (auth()->user()->role_id == 13 && $path == '/timesheet/teamlist') {
+      // dd($url);
+  }
+  // this is for submitted timesheet on staff and manager 
+  elseif (auth()->user()->role_id == 14 || auth()->user()->role_id == 15) {
+    
+  }
+  // this is for team submitted timesheet on Admin
+  else {
+    
+  }
+}
+
+
+$url = $request->url();
+dd($url);
+
+$referer = $request->headers->get('referer');
+$parsedReferer = parse_url($referer);
+$path = $parsedReferer['path'];
+
+dd($path);
+  // "http://127.0.0.1:8000/timesheet/teamlist"
+  //   /timesheet/teamlist
+
+//* find err0r / regarding error 
+// error is trailing data 
+          // try {
+          //   $camefromexam = Carbon::createFromFormat('Y-m-d', $team->date);
+          //   dd($camefromexam);
+          // } catch (\Exception $e) {
+          //   dd('Error parsing date: ' . $e->getMessage());
+          // }
+
+          // try {
+          //   $camefromexam = Carbon::createFromFormat('Y-m-d H:i:s', $team->date);
+          //   dd($camefromexam);
+          // } catch (\Exception $e) {
+          //   dd('Error parsing date: ' . $e->getMessage());
+          // }
+
+//* regarding email / regarding otp /
+// app\Http\Controllers\AssignmentController.php
+public function assignmentotp(Request $request)
+{
+
+  // die;
+  if ($request->ajax()) {
+    if (isset($request->id)) {
+      // $assignment = DB::table('assignmentmappings')
+      //   ->where('assignmentgenerate_id', $request->id)
+      //   ->first();
+
+      $assignment = DB::table('assignmentmappings')
+        ->where('assignmentmappings.assignmentgenerate_id', $request->id)
+        ->leftjoin('assignmentbudgetings', 'assignmentbudgetings.assignmentgenerate_id', 'assignmentmappings.assignmentgenerate_id')
+        ->leftjoin('clients', 'clients.id', 'assignmentbudgetings.client_id')
+        ->select('assignmentmappings.*', 'assignmentbudgetings.assignmentname', 'clients.client_name')
+        ->first();
+
+      $assignmentteammember = DB::table('assignmentteammappings')
+        ->leftjoin('teammembers', 'teammembers.id', 'assignmentteammappings.teammember_id')
+        ->where('assignmentmapping_id', $assignment->id)
+        ->select('teammembers.team_member')
+        ->get();
+
+      // dd($assignmentteammember);
+
+
+      $teammembers = DB::table('teammembers')
+        ->where('id', auth()->user()->teammember_id)
+        ->first();
+
+      $otp = sprintf("%06d", mt_rand(1, 999999));
+
+      DB::table('assignmentbudgetings')
+        ->where('assignmentgenerate_id', $assignment->assignmentgenerate_id)->update([
+          'otp'  => $otp,
+        ]);
+      $data = array(
+        'asassignmentsignmentid' => $assignment->assignmentgenerate_id,
+        'assignmentname' => $assignment->assignmentname,
+        'client_name' => $assignment->client_name,
+        'email' => $teammembers->emailid,
+        'otp' => $otp,
+        'name' => $teammembers->team_member,
+        'assignmentteammember' => $assignmentteammember,
+      );
+
+      // dd($data);
+
+      Mail::send('emails.assignmentclosed', $data, function ($msg) use ($data, $assignment) {
+        $msg->to($data['email']);
+        $msg->subject('Assignment Closed by OTP' . ' || ' . $assignment->assignmentgenerate_id);
+      });
+
+      return response()->json($assignment);
+    }
+  }
+}
+
+
+//*  regarding date 
+$period = CarbonPeriod::create($team->from, $team->to);
+dd($period);
+$datess = [];
+foreach ($period as $date) {
+  $datess[] = $date->format('Y-m-d');
+
+  DB::table('timesheets')->where('date', $date->format('Y-m-d'))
+    ->where('created_by', $team->createdby)->delete();
+  DB::table('timesheetusers')->where('createdby', $team->createdby)
+    ->where('date', $date->format('Y-m-d'))->delete();
+}
 
 
 //* regarding store image/ regarding image store 
@@ -640,367 +941,405 @@ public function searchingtimesheet(Request $request)
 }
 
 
-//* filter functionality 2
+public function adminsearchtimesheet(Request $request)
+{
+  // Get all input from form
+  $startDate = $request->input('startdate', null);
+  $endDate = $request->input('enddate', null);
+  $teamId = $request->input('teamid', null);
+  $teammemberId = $request->input('teammemberId', null);
+  $year = $request->input('year', null);
+  $clientId = $request->input('clientId', null);
+  $assignmentId = $request->input('assignmentId', null);
 
-  // it is implemented submitte timesheet tab on admin and patner 
-  public function filterDataAdmin(Request $request)
-  {
+  $teammembers = DB::table('teammembers')
+    ->where('status', 1)
+    ->whereIn('role_id', [14, 15, 13, 11])
+    ->select('team_member', 'id', 'staffcode')
+    ->orderBy('team_member', 'ASC')
+    ->get();
 
-    // for patner 
-    if (auth()->user()->role_id == 13) {
+  $clientsname = DB::table('clients')
+    ->whereIn('status', [0, 1])
+    ->select('id', 'client_name', 'client_code')
+    ->orderBy('client_name', 'ASC')
+    ->get();
 
-      $teamname = $request->input('teamname');
-      $start = $request->input('start');
-      $end = $request->input('end');
-      $totalhours = $request->input('totalhours');
-      $partnerId = $request->input('partnersearch');
+  $assignmentsname = DB::table('assignments')
+    ->where('status', 1)
+    ->select('id', 'assignment_name')
+    ->orderBy('assignment_name', 'ASC')
+    ->get();
 
-      // submitted teamtimesheet tab on patner then use this below query 
+  if (auth()->user()->role_id == 11) {
+    $timesheetData = DB::table('timesheetusers')
+      ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+      // When startDate and endDate exist then run 'when' clause
+      ->when($startDate && $endDate && $teammemberId && $year, function ($query) use ($startDate, $endDate, $teammemberId) {
+        // dd('teammemberId');
+        return $query->where('timesheetusers.createdby', $teammemberId)
+          ->where('timesheetusers.date', '>=', $startDate)
+          ->where('timesheetusers.date', '<=', $endDate);
+      })
+      ->when($startDate && $endDate && $clientId && $year, function ($query) use ($startDate, $endDate, $clientId) {
+        // dd($clientId);
+        return $query->where('timesheetusers.client_id', $clientId)
+          ->where('timesheetusers.date', '>=', $startDate)
+          ->where('timesheetusers.date', '<=', $endDate);
+      })
+      ->when($startDate && $endDate && $assignmentId && $year, function ($query) use ($startDate, $endDate, $assignmentId) {
+        // dd('assignmentId');
+        return $query->where('timesheetusers.assignment_id', $assignmentId)
+          ->where('timesheetusers.date', '>=', $startDate)
+          ->where('timesheetusers.date', '<=', $endDate);
+      })
+      ->when($startDate && $endDate && $year && $teammemberId == null && $clientId == null && $assignmentId == null, function ($query) use ($startDate, $endDate, $year) {
+        // dd('year');
+        return $query->where('timesheetusers.date', '>=', $startDate)
+          ->where('timesheetusers.date', '<=', $endDate);
+      })
+      ->whereIn('timesheetusers.status', [1, 2, 3])
+      ->leftjoin('clients', 'clients.id', 'timesheetusers.client_id')
+      ->leftjoin('assignments', 'assignments.id', 'timesheetusers.assignment_id')
+      ->leftjoin('teammembers as patnerid', 'patnerid.id', 'timesheetusers.partner')
+      ->select('timesheetusers.*', 'assignments.assignment_name', 'clients.client_name', 'teammembers.team_member', 'teammembers.staffcode', 'patnerid.team_member as patnername')
+      ->orderBy('date', 'DESC')
+      ->get();
 
-      // $query = DB::table('timesheetreport')
-      //   ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
-      //   ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
-      //   ->where('timesheetreport.partnerid', auth()->user()->teammember_id)
-      //   ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
-      //   ->latest();
+    $request->flash();
+    return view('backEnd.timesheet.timesheetdownload', compact('timesheetData', 'teammembers', 'clientsname', 'assignmentsname'));
+  }
+  // for patner team timesheet 
+  else {
+    $timesheetData = DB::table('timesheetusers')
+      ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+      // When startDate and endDate exist then run 'when' clause
+      ->when($startDate && $endDate && $teammemberId && $year, function ($query) use ($startDate, $endDate, $teammemberId) {
+        return $query->where('timesheetusers.createdby', $teammemberId)
+          ->where('timesheetusers.partner', auth()->user()->teammember_id)
+          ->where('timesheetusers.date', '>=', $startDate)
+          ->where('timesheetusers.date', '<=', $endDate);
+      })
+      ->when($startDate && $endDate && $clientId && $year, function ($query) use ($startDate, $endDate, $clientId) {
+        // dd($clientId);
+        return $query->where('timesheetusers.client_id', $clientId)
+          ->where('timesheetusers.partner', auth()->user()->teammember_id)
+          ->where('timesheetusers.date', '>=', $startDate)
+          ->where('timesheetusers.date', '<=', $endDate);
+      })
+      ->when($startDate && $endDate && $assignmentId && $year, function ($query) use ($startDate, $endDate, $assignmentId) {
+        // dd('assignmentId');
+        return $query->where('timesheetusers.assignment_id', $assignmentId)
+          ->where('timesheetusers.partner', auth()->user()->teammember_id)
+          ->where('timesheetusers.date', '>=', $startDate)
+          ->where('timesheetusers.date', '<=', $endDate);
+      })
+      ->when($startDate && $endDate && $year && $teammemberId == null && $clientId == null && $assignmentId == null, function ($query) use ($startDate, $endDate, $year) {
+        return $query->where('timesheetusers.date', '>=', $startDate)
+          ->where('timesheetusers.date', '<=', $endDate)
+          ->where('timesheetusers.partner', auth()->user()->teammember_id);
+      })
+      ->whereIn('timesheetusers.status', [1, 2, 3])
+      ->leftjoin('clients', 'clients.id', 'timesheetusers.client_id')
+      ->leftjoin('assignments', 'assignments.id', 'timesheetusers.assignment_id')
+      ->leftjoin('teammembers as patnerid', 'patnerid.id', 'timesheetusers.partner')
+      ->select('timesheetusers.*', 'assignments.assignment_name', 'clients.client_name', 'teammembers.team_member', 'teammembers.staffcode', 'patnerid.team_member as patnername')
+      ->orderBy('date', 'DESC')
+      ->get();
+    // dd($timesheetData);
+    $request->flash();
+    return view('backEnd.timesheet.timesheetdownload', compact('timesheetData', 'teammembers', 'clientsname', 'assignmentsname'));
+  }
+}
+// end hare
 
-      // submitted timesheet tab on patner 
-      $query = DB::table('timesheetreport')
-        ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
-        ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
-        ->where('timesheetreport.teamid', auth()->user()->teammember_id)
-        ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
-        ->latest();
+public function filterDataAdmin(Request $request)
+{
+  $urlheader = $request->headers->get('referer');
+  $url = parse_url($urlheader);
+  $path = $url['path'];
+  // dd($url);
+  // this is for patner submitted timesheet 
+  if (auth()->user()->role_id == 13 && $path == '/timesheet/partnersubmitted') {
+    // dd('patner');
+    $teamname = $request->input('teamname');
+    $start = $request->input('start');
+    $end = $request->input('end');
+    $totalhours = $request->input('totalhours');
+    $partnerId = $request->input('partnersearch');
 
-      // teamname with othser field to  filter
-      if ($teamname) {
-        $query->where('timesheetreport.teamid', $teamname);
-      }
 
-      if ($teamname && $totalhours) {
-        $query->where(function ($q) use ($teamname, $totalhours) {
-          $q->where('timesheetreport.teamid', $teamname)
-            ->where('timesheetreport.totaltime', $totalhours);
-        });
-      }
-      if ($teamname && $partnerId) {
-        $query->where(function ($q) use ($teamname, $partnerId) {
-          $q->where('timesheetreport.teamid', $teamname)
-            ->where('timesheetreport.partnerid', $partnerId);
-        });
-      }
+    $query = DB::table('timesheetreport')
+      ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+      ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+      ->where('timesheetreport.teamid', auth()->user()->teammember_id)
+      ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+      ->latest();
 
-      // patner or othse one data
-      if ($partnerId) {
-        $query->where('timesheetreport.partnerid', $partnerId);
-      }
-
-      if ($partnerId && $totalhours) {
-        $query->where(function ($q) use ($partnerId, $totalhours) {
-          $q->where('timesheetreport.partnerid', $partnerId)
-            ->where('timesheetreport.totaltime', $totalhours);
-        });
-      }
-
-      // total hour wise  wise or othser data
-      if ($totalhours) {
-        $query->where('timesheetreport.totaltime', $totalhours);
-      }
-      //! end date 
-      if ($start && $end) {
-        $query->where(function ($query) use ($start, $end) {
-          $query->whereBetween('timesheetreport.startdate', [$start, $end])
-            ->orWhereBetween('timesheetreport.enddate', [$start, $end])
-            ->orWhere(function ($query) use ($start, $end) {
-              $query->where('timesheetreport.startdate', '<=', $start)
-                ->where('timesheetreport.enddate', '>=', $end);
-            });
-        });
-      }
+    // teamname with othser field to  filter
+    if ($teamname) {
+      $query->where('timesheetreport.teamid', $teamname);
     }
-    // for Admin 
-    else {
-      // dd($request);
 
-      $teamname = $request->input('teamname');
-      $start = $request->input('start');
-      $end = $request->input('end');
-      $totalhours = $request->input('totalhours');
-      $partnerId = $request->input('partnersearch');
-
-
-      $query = DB::table('timesheetreport')
-        ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
-        ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
-        ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
-        ->latest();
-
-      // teamname with othser field to  filter
-      if ($teamname) {
-        $query->where('timesheetreport.teamid', $teamname);
-      }
-
-      if ($teamname && $totalhours) {
-        $query->where(function ($q) use ($teamname, $totalhours) {
-          $q->where('timesheetreport.teamid', $teamname)
-            ->where('timesheetreport.totaltime', $totalhours);
-        });
-      }
-      if ($teamname && $partnerId) {
-        $query->where(function ($q) use ($teamname, $partnerId) {
-          $q->where('timesheetreport.teamid', $teamname)
-            ->where('timesheetreport.partnerid', $partnerId);
-        });
-      }
-
-      // patner or othse one data
-      if ($partnerId) {
-        $query->where('timesheetreport.partnerid', $partnerId);
-      }
-
-      if ($partnerId && $totalhours) {
-        $query->where(function ($q) use ($partnerId, $totalhours) {
-          $q->where('timesheetreport.partnerid', $partnerId)
-            ->where('timesheetreport.totaltime', $totalhours);
-        });
-      }
-
-      // total hour wise  wise or othser data
-      if ($totalhours) {
-        $query->where('timesheetreport.totaltime', $totalhours);
-      }
-      //! end date 
-      if ($start && $end) {
-        $query->where(function ($query) use ($start, $end) {
-          $query->whereBetween('timesheetreport.startdate', [$start, $end])
-            ->orWhereBetween('timesheetreport.enddate', [$start, $end])
-            ->orWhere(function ($query) use ($start, $end) {
-              $query->where('timesheetreport.startdate', '<=', $start)
-                ->where('timesheetreport.enddate', '>=', $end);
-            });
-        });
-      }
+    if ($teamname && $totalhours) {
+      $query->where(function ($q) use ($teamname, $totalhours) {
+        $q->where('timesheetreport.teamid', $teamname)
+          ->where('timesheetreport.totaltime', $totalhours);
+      });
     }
-    $filteredDataaa = $query->get();
+    if ($teamname && $partnerId) {
+      $query->where(function ($q) use ($teamname, $partnerId) {
+        $q->where('timesheetreport.teamid', $teamname)
+          ->where('timesheetreport.partnerid', $partnerId);
+      });
+    }
 
-    // maping double date ************
-    $groupedData = $filteredDataaa->groupBy(function ($item) {
-      return $item->team_member . '|' . $item->week;
-    })->map(function ($group) {
-      $firstItem = $group->first();
+    // patner or othse one data
+    if ($partnerId) {
+      $query->where('timesheetreport.partnerid', $partnerId);
+    }
 
-      return (object)[
-        'id' => $firstItem->id,
-        'teamid' => $firstItem->teamid,
-        'week' => $firstItem->week,
-        'totaldays' => $group->sum('totaldays'),
-        'totaltime' => $group->sum('totaltime'),
-        'startdate' => $firstItem->startdate,
-        'enddate' => $firstItem->enddate,
-        'partnername' => $firstItem->partnername,
-        'created_at' => $firstItem->created_at,
-        'team_member' => $firstItem->team_member,
-        'partnerid' => $firstItem->partnerid,
-      ];
-    });
+    if ($partnerId && $totalhours) {
+      $query->where(function ($q) use ($partnerId, $totalhours) {
+        $q->where('timesheetreport.partnerid', $partnerId)
+          ->where('timesheetreport.totaltime', $totalhours);
+      });
+    }
+
+    // total hour wise  wise or othser data
+    if ($totalhours) {
+      $query->where('timesheetreport.totaltime', $totalhours);
+    }
+    //! end date 
+    if ($start && $end) {
+      $query->where(function ($query) use ($start, $end) {
+        $query->whereBetween('timesheetreport.startdate', [$start, $end])
+          ->orWhereBetween('timesheetreport.enddate', [$start, $end])
+          ->orWhere(function ($query) use ($start, $end) {
+            $query->where('timesheetreport.startdate', '<=', $start)
+              ->where('timesheetreport.enddate', '>=', $end);
+          });
+      });
+    }
+  }
+  // this is for team submitted timesheet on patner
+  elseif (auth()->user()->role_id == 13 && $path == '/timesheet/teamlist') {
+    // dd($request);
+    // dd('team');
+    $teamname = $request->input('teamname');
+    $start = $request->input('start');
+    $end = $request->input('end');
+    $totalhours = $request->input('totalhours');
+    $partnerId = $request->input('partnersearch');
 
 
-    $filteredData = collect($groupedData->values());
-    // dd($filteredData);
-    return response()->json($filteredData);
+    $query = DB::table('timesheetreport')
+      ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+      ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+      ->where('timesheetreport.partnerid', auth()->user()->teammember_id)
+      ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+      ->orderBy('timesheetreport.startdate', 'desc');
+
+    // teamname with othser field to  filter
+    if ($teamname) {
+      $query->where('timesheetreport.teamid', $teamname);
+    }
+
+    if ($teamname && $totalhours) {
+      $query->where(function ($q) use ($teamname, $totalhours) {
+        $q->where('timesheetreport.teamid', $teamname)
+          ->where('timesheetreport.totaltime', $totalhours);
+      });
+    }
+    if ($teamname && $partnerId) {
+      $query->where(function ($q) use ($teamname, $partnerId) {
+        $q->where('timesheetreport.teamid', $teamname)
+          ->where('timesheetreport.partnerid', $partnerId);
+      });
+    }
+
+    // patner or othse one data
+    if ($partnerId) {
+      $query->where('timesheetreport.partnerid', $partnerId);
+    }
+
+    if ($partnerId && $totalhours) {
+      $query->where(function ($q) use ($partnerId, $totalhours) {
+        $q->where('timesheetreport.partnerid', $partnerId)
+          ->where('timesheetreport.totaltime', $totalhours);
+      });
+    }
+
+    // total hour wise  wise or othser data
+    if ($totalhours) {
+      $query->where('timesheetreport.totaltime', $totalhours);
+    }
+    //! end date 
+    if ($start && $end) {
+      $query->where(function ($query) use ($start, $end) {
+        $query->whereBetween('timesheetreport.startdate', [$start, $end])
+          ->orWhereBetween('timesheetreport.enddate', [$start, $end])
+          ->orWhere(function ($query) use ($start, $end) {
+            $query->where('timesheetreport.startdate', '<=', $start)
+              ->where('timesheetreport.enddate', '>=', $end);
+          });
+      });
+    }
+  }
+  // this is for submitted timesheet on staff and manager 
+  elseif (auth()->user()->role_id == 14 || auth()->user()->role_id == 15) {
+    // dd($request);
+    $teamname = $request->input('teamname');
+    $start = $request->input('start');
+    $end = $request->input('end');
+    $totalhours = $request->input('totalhours');
+    $partnerId = $request->input('partnersearch');
+
+
+    $query = DB::table('timesheetreport')
+      ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+      ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+      ->where('timesheetreport.teamid', auth()->user()->teammember_id)
+      ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+      ->latest();
+
+    // teamname with othser field to  filter
+    if ($teamname) {
+      $query->where('timesheetreport.teamid', $teamname);
+    }
+
+    if ($teamname && $totalhours) {
+      $query->where(function ($q) use ($teamname, $totalhours) {
+        $q->where('timesheetreport.teamid', $teamname)
+          ->where('timesheetreport.totaltime', $totalhours);
+      });
+    }
+    if ($teamname && $partnerId) {
+      $query->where(function ($q) use ($teamname, $partnerId) {
+        $q->where('timesheetreport.teamid', $teamname)
+          ->where('timesheetreport.partnerid', $partnerId);
+      });
+    }
+
+    // patner or othse one data
+    if ($partnerId) {
+      $query->where('timesheetreport.partnerid', $partnerId);
+    }
+
+    if ($partnerId && $totalhours) {
+      $query->where(function ($q) use ($partnerId, $totalhours) {
+        $q->where('timesheetreport.partnerid', $partnerId)
+          ->where('timesheetreport.totaltime', $totalhours);
+      });
+    }
+
+    // total hour wise  wise or othser data
+    if ($totalhours) {
+      $query->where('timesheetreport.totaltime', $totalhours);
+    }
+    //! end date 
+    if ($start && $end) {
+      $query->where(function ($query) use ($start, $end) {
+        $query->whereBetween('timesheetreport.startdate', [$start, $end])
+          ->orWhereBetween('timesheetreport.enddate', [$start, $end])
+          ->orWhere(function ($query) use ($start, $end) {
+            $query->where('timesheetreport.startdate', '<=', $start)
+              ->where('timesheetreport.enddate', '>=', $end);
+          });
+      });
+    }
+  }
+  // this is for team submitted timesheet on Admin
+  else {
+    // dd(auth()->user()->role_id);
+    $teamname = $request->input('teamname');
+    $start = $request->input('start');
+    $end = $request->input('end');
+    $totalhours = $request->input('totalhours');
+    $partnerId = $request->input('partnersearch');
+
+
+    $query = DB::table('timesheetreport')
+      ->leftjoin('teammembers', 'teammembers.id', 'timesheetreport.teamid')
+      ->leftjoin('teammembers as partners', 'partners.id', 'timesheetreport.partnerid')
+      ->select('timesheetreport.*', 'teammembers.team_member', 'partners.team_member as partnername')
+      ->orderBy('timesheetreport.startdate', 'desc');
+
+    // teamname with othser field to  filter
+    if ($teamname) {
+      $query->where('timesheetreport.teamid', $teamname);
+    }
+
+    if ($teamname && $totalhours) {
+      $query->where(function ($q) use ($teamname, $totalhours) {
+        $q->where('timesheetreport.teamid', $teamname)
+          ->where('timesheetreport.totaltime', $totalhours);
+      });
+    }
+    if ($teamname && $partnerId) {
+      $query->where(function ($q) use ($teamname, $partnerId) {
+        $q->where('timesheetreport.teamid', $teamname)
+          ->where('timesheetreport.partnerid', $partnerId);
+      });
+    }
+
+    // patner or othse one data
+    if ($partnerId) {
+      $query->where('timesheetreport.partnerid', $partnerId);
+    }
+
+    if ($partnerId && $totalhours) {
+      $query->where(function ($q) use ($partnerId, $totalhours) {
+        $q->where('timesheetreport.partnerid', $partnerId)
+          ->where('timesheetreport.totaltime', $totalhours);
+      });
+    }
+
+    // total hour wise  wise or othser data
+    if ($totalhours) {
+      $query->where('timesheetreport.totaltime', $totalhours);
+    }
+    //! end date 
+    if ($start && $end) {
+      $query->where(function ($query) use ($start, $end) {
+        $query->whereBetween('timesheetreport.startdate', [$start, $end])
+          ->orWhereBetween('timesheetreport.enddate', [$start, $end])
+          ->orWhere(function ($query) use ($start, $end) {
+            $query->where('timesheetreport.startdate', '<=', $start)
+              ->where('timesheetreport.enddate', '>=', $end);
+          });
+      });
+    }
   }
 
-//* filter functionality 1
+  $filteredDataaa = $query->get();
 
- // applyleave filter implemented
- public function filterDataAdmin(Request $request)
- {
-   if (auth()->user()->role_id == 13) {
-     // apply leave filter on patner 
-     $teamname = $request->input('employee');
-     $leavetype = $request->input('leave');
-     // if ($startdate != null || $endtdate != null) {
-     $startdate = $request->input('start');
-     $startdate1 = date('Y-m-d H:i:s', strtotime($startdate));
-     $endtdate = $request->input('end');
-     $endtdate1 = date('Y-m-d H:i:s', strtotime($endtdate));
-     // }
-     $statusdata = $request->input('status');
+  // maping double date ************
+  $groupedData = $filteredDataaa->groupBy(function ($item) {
+    return $item->team_member . '|' . $item->week;
+  })->map(function ($group) {
+    $firstItem = $group->first();
 
-     $query  = DB::table('applyleaves')
-       ->leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
-       ->leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
-       ->leftjoin('teammembers as approvername', 'approvername.id', 'applyleaves.approver')
-       ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
-       ->where('applyleaves.approver', auth()->user()->teammember_id)
-       ->select('applyleaves.*', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'approvername.team_member as approvernames');
+    return (object)[
+      'id' => $firstItem->id,
+      'teamid' => $firstItem->teamid,
+      'week' => $firstItem->week,
+      'totaldays' => $group->sum('totaldays'),
+      'totaltime' => $group->sum('totaltime'),
+      'startdate' => $firstItem->startdate,
+      'enddate' => $firstItem->enddate,
+      'partnername' => $firstItem->partnername,
+      'created_at' => $firstItem->created_at,
+      'team_member' => $firstItem->team_member,
+      'partnerid' => $firstItem->partnerid,
+    ];
+  });
 
+  $filteredData = collect($groupedData->values());
+  return response()->json($filteredData);
+}
+// end hare
 
-     // According employee
-     if ($teamname) {
-       $query->where('applyleaves.createdby', $teamname);
-     }
-     // According leave type
-     if ($leavetype) {
-       $query->where('applyleaves.leavetype', $leavetype);
-     }
-
-     // According Status 
-     if ($statusdata != null) {
-       if ($statusdata == 0) {
-         $query->where('applyleaves.status', 0);
-       } elseif ($statusdata == 1) {
-         $query->where('applyleaves.status', 1);
-       } elseif ($statusdata == 2) {
-         $query->where('applyleaves.status', 2);
-       }
-     }
-
-     // According strat date and end date 
-     if ($teamname == null && $leavetype == null && $statusdata == null) {
-       $query->whereBetween('applyleaves.created_at', [$startdate1, $endtdate1]);
-     }
-     // According stratdate and enddate and employee
-     if ($startdate != null && $endtdate != null && $teamname != null) {
-       $query->whereBetween('applyleaves.created_at', [$startdate1, $endtdate1])
-         ->where('applyleaves.createdby', $teamname);
-     }
-
-     // According employee and leave type
-     if ($teamname && $leavetype) {
-       $query->where(function ($q) use ($teamname, $leavetype) {
-         $q->where('applyleaves.createdby', $teamname)
-           ->where('applyleaves.leavetype', $leavetype);
-       });
-     }
-     // According Status and teamname
-     if ($statusdata != null && $teamname != null) {
-       if ($statusdata == 0 && $teamname != null) {
-         $query->where('applyleaves.status', 0)
-           ->where('applyleaves.createdby', $teamname);
-       } elseif ($statusdata == 1 && $teamname != null) {
-         $query->where('applyleaves.status', 1)
-           ->where('applyleaves.createdby', $teamname);
-       } elseif ($statusdata == 2 && $teamname != null) {
-         $query->where('applyleaves.status', 2)
-           ->where('applyleaves.createdby', $teamname);
-       }
-     }
-
-     // According Status and leave type 
-     if ($statusdata != null && $leavetype != null) {
-       if ($statusdata == 0 && $leavetype != null) {
-         $query->where('applyleaves.status', 0)
-           ->where('applyleaves.leavetype', $leavetype);
-       } elseif ($statusdata == 1 && $leavetype != null) {
-         $query->where('applyleaves.status', 1)
-           ->where('applyleaves.leavetype', $leavetype);
-       } elseif ($statusdata == 2 && $leavetype != null) {
-         $query->where('applyleaves.status', 2)
-           ->where('applyleaves.leavetype', $leavetype);
-       }
-     }
-   } else {
-     // apply leave filter on admin 
-     $teamname = $request->input('employee');
-     // dd($teamname);
-     $leavetype = $request->input('leave');
-     // if ($startdate != null || $endtdate != null) {
-     $startdate = $request->input('start');
-     $startdate1 = date('Y-m-d H:i:s', strtotime($startdate));
-     $endtdate = $request->input('end');
-     $endtdate1 = date('Y-m-d H:i:s', strtotime($endtdate));
-     // }
-     $statusdata = $request->input('status');
-
-     $startperioddata = $request->input('startperiod');
-     $endperioddata = $request->input('endperiod');
-
-     $query  = DB::table('applyleaves')
-       ->leftjoin('leavetypes', 'leavetypes.id', 'applyleaves.leavetype')
-       ->leftjoin('teammembers', 'teammembers.id', 'applyleaves.createdby')
-       ->leftjoin('teammembers as approvername', 'approvername.id', 'applyleaves.approver')
-       ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
-       ->select('applyleaves.*', 'teammembers.team_member', 'roles.rolename', 'leavetypes.name', 'approvername.team_member as approvernames');
-
-
-     // According leave periode 
-     if ($startperioddata && $endperioddata) {
-       // $query->where('applyleaves.from', $startperioddata);
-       // $query->whereBetween('applyleaves.from', [$startperioddata, $endperioddata]);
-       $query->where('applyleaves.from', '>=', $startperioddata)
-         ->where('applyleaves.to', '<=', $endperioddata);
-     }
-
-     // According employee
-     if ($teamname) {
-       $query->where('applyleaves.createdby', $teamname);
-     }
-     // According leave type
-     if ($leavetype) {
-       $query->where('applyleaves.leavetype', $leavetype);
-     }
-
-     // According Status 
-     if ($statusdata != null) {
-       if ($statusdata == 0) {
-         $query->where('applyleaves.status', 0);
-       } elseif ($statusdata == 1) {
-         $query->where('applyleaves.status', 1);
-       } elseif ($statusdata == 2) {
-         $query->where('applyleaves.status', 2);
-       }
-     }
-
-     // According strat date and end date 
-     if ($teamname == null && $leavetype == null && $statusdata == null && $startperioddata == null && $endperioddata == null) {
-       $query->whereBetween('applyleaves.created_at', [$startdate1, $endtdate1]);
-     }
-     // According stratdate and enddate and employee
-     if ($startdate != null && $endtdate != null && $teamname != null) {
-       $query->whereBetween('applyleaves.created_at', [$startdate1, $endtdate1])
-         ->where('applyleaves.createdby', $teamname);
-     }
-
-     // According employee and leave type
-     if ($teamname && $leavetype) {
-       $query->where(function ($q) use ($teamname, $leavetype) {
-         $q->where('applyleaves.createdby', $teamname)
-           ->where('applyleaves.leavetype', $leavetype);
-       });
-     }
-     // According Status and teamname
-     if ($statusdata != null && $teamname != null) {
-       if ($statusdata == 0 && $teamname != null) {
-         $query->where('applyleaves.status', 0)
-           ->where('applyleaves.createdby', $teamname);
-       } elseif ($statusdata == 1 && $teamname != null) {
-         $query->where('applyleaves.status', 1)
-           ->where('applyleaves.createdby', $teamname);
-       } elseif ($statusdata == 2 && $teamname != null) {
-         $query->where('applyleaves.status', 2)
-           ->where('applyleaves.createdby', $teamname);
-       }
-     }
-
-     // According Status and leave type 
-     if ($statusdata != null && $leavetype != null) {
-       if ($statusdata == 0 && $leavetype != null) {
-         $query->where('applyleaves.status', 0)
-           ->where('applyleaves.leavetype', $leavetype);
-       } elseif ($statusdata == 1 && $leavetype != null) {
-         $query->where('applyleaves.status', 1)
-           ->where('applyleaves.leavetype', $leavetype);
-       } elseif ($statusdata == 2 && $leavetype != null) {
-         $query->where('applyleaves.status', 2)
-           ->where('applyleaves.leavetype', $leavetype);
-       }
-     }
-   }
-   $filteredData = $query->get();
-   // if holyday days occure error in future then find holiday according blade file and merge data with $filteredData 
-   return response()->json($filteredData);
- }
 
 //* filter functionality on date / filter created_at column 
 
@@ -1493,10 +1832,28 @@ $holidaycount = DB::table('holidays')->where('startdate', '>=', $team->from)
 dd($holidaycount);
 //* regarding redirect / regarding message /success message 
 
+
+$output = array('msg' => "Created Successfully <strong>Client Name:</strong> $clientname->client_name <strong>Assignment:</strong> $assignment_name <strong>Assignment Name:</strong> $request->assignmentname <strong>Assignment Id:</strong> $assignmentgenerate ");
+return redirect('assignmentbudgeting')->with('success', $output);
+
+// @if (session()->has('success'))
+// <div class="alert alert-success">
+//     @if (is_array(session()->get('success')))
+//         @foreach (session()->get('success') as $message)
+//             <p>{!! $message !!}</p>
+//         @endforeach
+//     @else
+//         <p>{{ session()->get('success') }}</p>
+//     @endif
+// </div>
+// @endif
+$output = ['msg' => "You can not fill timesheet to: Assignment name " . $assignmentcloseddata->assignmentname . " Assignment id: " . $request->assignment_id[$i]];
+$output = ['msg' => "You can not fill timesheet to: " . $request->assignment_id[$i]];
 $output = array('msg' => "Timesheet Submit Successfully till " . Carbon::createFromFormat('Y-m-d', $previousMondayFormatted)->format('d-m-Y') . " to " . Carbon::createFromFormat('Y-m-d', $nextSaturdayFormatted)->format('d-m-Y'));
 $output = array('msg' => "Timesheet Submit Successfully till $previousMondayFormatted to $nextSaturdayFormatted ");
 $output = array('msg' => "Fill the timesheet Previous Week: $formattedPreviousSaturday");
 $output = array('msg' => 'Please Approve Latest Timesheet Request');
+$output = array('msg' => 'You Have already filled timesheet for the Day (' . date('d-m-Y', strtotime($leaveDate)) . ')');
 return redirect('timesheetrequest/view/' . $id)->with('statuss', $output);
 
 // for rejected message 
@@ -1669,7 +2026,7 @@ Output:
           ]);
         }
       }
-    //*order by  desc / DESC/ASC/ Ascending  order / Descending 
+    //* regarding Ascending / regarding Descending / regarding order /regarding ordering 
 
     $getauthh =  DB::table('timesheetusers')
     ->where('createdby', auth()->user()->teammember_id)
@@ -1750,7 +2107,7 @@ Output:
             ]
           );
 
-    //*  week days in numbric/ regarding months / weeks days / regarding date and time  /regarding date 
+    //*  week days in numbric/ regarding months / weeks days / regarding date and time  /regarding date /regarding time
 
 //* in blade file 
 
@@ -1805,6 +2162,21 @@ Output:
             $requestdays = $to->diffInDays($from) + 1;
             // 62 days
           // count days  end
+
+          // current date 
+          'otpverifydate' => date('Y-m-d H:i:s')
+          $assignmentcloseddate = \DateTime::createFromFormat('Y-m-d H:i:s', $assignmentcloseddata->otpverifydate)->setTime(23, 59, 59);
+
+       // current date 
+          $assignmentcloseddata = DB::table('assignmentbudgetings')->where('assignmentgenerate_id', $request->assignment_id[$i])->first();
+          $requestDate = \DateTime::createFromFormat('d-m-Y', $request->date);
+          $assignmentcloseddate = \DateTime::createFromFormat('Y-m-d H:i:s', $assignmentcloseddata->otpverifydate)->setTime(23, 59, 59);
+
+          if ($assignmentcloseddata->status == 0 && $assignmentcloseddate <= $requestDate) {
+            $output = ['msg' => 'Hi shahid.'];
+            return redirect('timesheet/mylist')->with('success', $output);
+          }
+
 
 
        // now() function 
@@ -1881,6 +2253,9 @@ Output:
       $timestamp = strtotime('2023-12-01'); 
       // Format the Unix timestamp
       $formattedDate = date('Y-m-d', $timestamp); 
+      // December 29th
+     date('F jS', strtotime($notificationData->created_at))
+     $output = array('msg' => 'You Have already filled timesheet for the Day (' . date('d-m-Y', strtotime($leaveDate)) . ')');
       
       // Current year
        $year = date('Y');     

@@ -1,9 +1,331 @@
 {{-- *  --}}
 {{-- *  --}}
 {{-- *  --}}
+{{-- * navbar / regarding navbar/ regarding url  --}}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const menuItems = document.querySelectorAll('nav.sidebar-nav li a');
+        const currentUrl = document.URL;
+
+        menuItems.forEach((link) => {
+            const href = link.href;
+
+            if (href === currentUrl) {
+                $(link).attr("aria-expanded", "true");
+
+                const parent = link.closest("li");
+                $(parent).addClass("mm-active").css({
+                    "background-color": "#37a000",
+                    "box-shadow": "0 0 10px 1px rgba(55, 160, 0, .7)"
+                });
+
+                const secondLevel = parent.querySelector("ul.nav-second-level");
+                const thirdLevel = parent.querySelector("ul.nav-third-level");
+
+                if (secondLevel) {
+                    const parentMenu = secondLevel.closest("li");
+                    $(parentMenu).addClass("mm-active").css({
+                        "background-color": "#37a000",
+                        "box-shadow": "0 0 10px 1px rgba(55, 160, 0, .7)"
+                    });
+                    secondLevel.classList.add("mm-show");
+                }
+
+                if (thirdLevel) {
+                    $(thirdLevel).addClass("mm-show");
+
+                    const secondLevel = thirdLevel.closest("ul.nav-second-level");
+                    const parentMenu = secondLevel.closest("li");
+                    $(parentMenu).addClass("mm-active").css({
+                        "background-color": "#37a000",
+                        "box-shadow": "0 0 10px 1px rgba(55, 160, 0, .7)"
+                    });
+                    secondLevel.classList.add("mm-show");
+                }
+            }
+        });
+    });
+</script>
+
+
+{{-- <script>
+    $(document).ready(function() {
+        var currentUrl = window.location.href;
+
+        $('.metismenu li a').each(function() {
+            var $this = $(this);
+            var href = $this.prop('href');
+
+            if (href === currentUrl) {
+                console.log('Match found! Adding mm-active2 class.');
+                $this.addClass('mm-active2');
+            }
+        });
+    });
+</script> --}}
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const menuItems = document.querySelectorAll('nav.sidebar-nav li a');
+        const currentUrl = document.URL;
+
+        menuItems.forEach((link) => {
+            const href = link.href;
+
+            if (href === currentUrl) {
+                link.setAttribute("aria-expanded", "true");
+
+                const parent = link.closest("li");
+                parent.classList.add("mm-active");
+                parent.style.backgroundColor = "green";
+                parent.style.boxShadow = "0 0 10px 1px rgba(55, 160, 0, .7)";
+
+                const secondLevel = parent.querySelector("ul.nav-second-level");
+                const thirdLevel = parent.querySelector("ul.nav-third-level");
+
+                if (secondLevel) {
+                    const parentMenu = secondLevel.closest("li");
+                    parentMenu.classList.add("mm-active");
+                    parentMenu.style.backgroundColor = "green";
+                    parentMenu.style.boxShadow = "0 0 10px 1px rgba(55, 160, 0, .7)";
+                    secondLevel.classList.add("mm-show");
+                }
+
+                if (thirdLevel) {
+                    thirdLevel.classList.add("mm-show");
+
+                    const secondLevel = thirdLevel.closest("ul.nav-second-level");
+                    const parentMenu = secondLevel.closest("li");
+                    parentMenu.classList.add("mm-active");
+                    parentMenu.style.backgroundColor = "green";
+                    parentMenu.style.boxShadow = "0 0 10px 1px rgba(55, 160, 0, .7)";
+                    secondLevel.classList.add("mm-show");
+                }
+            }
+        });
+    });
+</script>
+
+
+{{-- * php in javascript  / regarding php  --}}
+
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                //   [0, "DESC"]
+                //   [2, "DESC"]
+            ],
+            searching: false,
+
+            @if (Auth::user()->role_id == 11 || Auth::user()->role_id == 13)
+                columnDefs: [{
+                    targets: [1, 2, 4, 5, 6, 7, 8, 9],
+                    orderable: false
+                }],
+            @else
+                columnDefs: [{
+                    targets: [1, 3, 4, 5, 6, 7, 8, 9],
+                    orderable: false
+                }],
+            @endif
+
+            buttons: [{
+                    extend: 'excelHtml5',
+                    //   enabled: false,
+                    filename: 'Timesheet_Download',
+                    exportOptions: {
+                        columns: ':visible'
+                    },
+
+                    customize: function(xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                        //   set column width
+                        $('col', sheet).eq(0).attr('width', 15);
+                        $('col', sheet).eq(1).attr('width', 15);
+                        $('col', sheet).eq(3).attr('width', 30);
+                        $('col', sheet).eq(4).attr('width', 30);
+                        $('col', sheet).eq(5).attr('width', 30);
+                        $('col', sheet).eq(6).attr('width', 30);
+                        $('col', sheet).eq(7).attr('width', 30);
+                        //   remove extra spaces
+                        $('c', sheet).each(function() {
+                            var originalText = $(this).find('is t').text();
+                            var cleanedText = originalText.replace(/\s+/g, ' ').trim();
+                            $(this).find('is t').text(cleanedText);
+                        });
+                    }
+                },
+                'colvis'
+            ]
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#category7').change(function() {
+            var search7 = $(this).val();
+            var search4 = $('#category4').val();
+            var search1 = $('#category1').val();
+
+            var filterUrl = '';
+            @if (Auth::user()->role_id == 13 && Request::is('timesheet/teamlist'))
+                filterUrl = '/filter-patnerteam';
+            @elseif (Auth::user()->role_id == 11)
+                filterUrl = '/filter-dataadmin';
+            @endif
+
+            // Send an AJAX request to fetch filtered data based on the selected partner
+            $.ajax({
+                type: 'GET',
+                //   url: '/filter-dataadmin',
+                url: filterUrl,
+                data: {
+                    teamname: search7,
+                    partnersearch: search1,
+                    totalhours: search4
+                },
+                success: function(data) {
+                    // Replace the table body with the filtered data
+                    $('table tbody').html(""); // Clear the table body
+                    if (data.length === 0) {
+                        // If no data is found, display a "No data found" message
+                        $('table tbody').append(
+                            '<tr><td colspan="5" class="text-center">No data found</td></tr>'
+                        );
+                    } else {
+                        $.each(data, function(index, item) {
+
+                            // Create the URL dynamically
+                            var url = '/weeklylist?id=' + item.id +
+                                '&teamid=' + item.teamid +
+                                '&partnerid=' + item.partnerid +
+                                '&startdate=' + item.startdate +
+                                '&enddate=' + item.enddate;
+
+                            // Format created_at date
+                            var formattedDate = moment(item.created_at).format(
+                                'DD-MM-YYYY');
+                            var formattedTime = moment(item.created_at).format(
+                                'hh:mm A');
+
+                            // Add the rows to the table
+                            $('table tbody').append('<tr>' +
+                                '<td><a href="' + url + '">' + item
+                                .team_member +
+                                '</a></td>' +
+                                '<td>' + item.week + '</td>' +
+                                '<td>' + formattedDate + ' ' + formattedTime +
+                                '</td>' +
+                                '<td>' + item.totaldays + '</td>' +
+                                '<td>' + item.totaltime + '</td>' +
+                                //   '<td>' + item.partnername + '</td>' +
+                                '</tr>');
+                        });
+                        //   remove pagination after filter
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+                    }
+                }
+            });
+        });
+    });
+</script>
+{{-- * regarding datatable / regarding filter / regarding basic class  --}}
+{{-- remove basic class and add examplee id --}}
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            "order": [
+                //   [2, "desc"]
+            ],
+            //   searching: false,
+            columnDefs: [{
+                targets: [0, 3, 4],
+                orderable: false
+            }],
+            buttons: []
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            //   dom: 'Bfrtip',
+            //   dom: 'lrtip',
+            //   dom: '<"wrapper"flipt>',
+            dom: '<"top"i>rt<"bottom"flp><"clear">',
+            //   dom: '<lf<t>ip>',
+            //   dom: 'Blfrtip',
+            "order": [
+                [0, "desc"]
+            ],
+            buttons: []
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            dom: 'Bfrtip',
+            "order": [], // Disable initial sorting
+
+            columnDefs: [{
+                    targets: [4],
+                    orderable: false
+                } // Disable sorting for the fifth column (Total Hour)
+            ],
+
+            //   buttons: [{
+            //           extend: 'copyHtml5',
+            //           exportOptions: {
+            //               columns: [0, ':visible']
+            //           }
+            //       },
+            //       {
+            //           extend: 'excelHtml5',
+            //   enabled: false,
+            //           exportOptions: {
+            //               columns: ':visible'
+            //           }
+            //       },
+            //       {
+            //           extend: 'pdfHtml5',
+            //           exportOptions: {
+            //               columns: [0, 1, 2, 5]
+            //           }
+            //       },
+            //       'colvis'
+            //   ]
+        });
+    });
+</script>
 {{-- *  --}}
-{{-- *  --}}
-{{-- *  --}}
+<script>
+    $(function() {
+        $('#client1').on('change', function() {
+            var cid = $(this).val();
+            // alert(category_id);
+            $.ajax({
+                type: "get",
+                url: "{{ url('timesheet/create') }}",
+                data: "cid=" + cid,
+                success: function(res) {
+                    $('#assignment1').html(res);
+                },
+                error: function() {},
+            });
+        });
+    });
+</script>
 {{-- * form on submit / regarding submit   --}}
 <style>
     .dt-buttons {
@@ -27,6 +349,7 @@
                 },
                 {
                     extend: 'excelHtml5',
+                       //   enabled: false,
                     filename: 'Timesheet_Download',
                     exportOptions: {
                         columns: ':visible'
@@ -62,6 +385,7 @@
                 },
                 {
                     extend: 'excelHtml5',
+                    //   enabled: false,
                     filename: 'Timesheet_Download',
                     exportOptions: {
                         columns: ':visible'
@@ -2478,3 +2802,323 @@
           });
       });
   </script> --}}
+
+{{-- * --}}
+{{-- * --}}
+{{-- * --}}
+{{-- * please wait / regarding second --}}
+{{-- @section('backEnd_content')
+    <div class="content-header row align-items-center m-0">
+        <nav aria-label="breadcrumb" class="col-sm-4 order-sm-last mb-3 mb-sm-0 p-0 ">
+            <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
+                <li style="margin-left: 13px;">
+                    <button type="button" id="downloadButton" class="btn btn-outline-primary">Create Zip Folder</button>
+                </li>
+            </ol>
+        </nav>
+        <div class="col-sm-8 header-title p-0">
+            <div class="media">
+                <div class="header-icon text-success mr-3"><i class="typcn typcn-puzzle-outline"></i></div>
+                <div class="media-body">
+                    <h1 class="font-weight-bold">Home</h1>
+                    <small>Assignment Folder</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="body-content">
+        @component('backEnd.components.alert')
+        @endcomponent
+
+        <div class="row">
+            <div id="loadingMessage" style="display:none;">
+                Creating your zip file. Please wait... <span id="countdown">120</span> seconds remaining.
+            </div>
+            <div id="createdzipfile" style="display:none;">
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <a href="{{ route('createdzip', ['assignmentgenerateid' => $assignmentgenerateid]) }}"
+                    class="btn btn-secondary" style="color:white; display:none;" id="downloadzip">Download
+                    your file</a>
+            </div>
+        </div>
+    </div>
+@endsection --}}
+{{-- <script>
+    $(document).ready(function() {
+        // Create Zip Folder button click event
+        $('#downloadButton').click(function(e) {
+            e.preventDefault();
+            var assignmentgenerateid1 = '{{ $assignmentgenerateid }}';
+            $('#loadingMessage').show();
+            // var countdown = 20; // Initial countdown value
+
+            // // Show loading message
+            // $('#loadingMessage').show();
+
+            // // Function to update countdown
+            // function updateCountdown() {
+            //     $('#countdown').text(countdown);
+            //     countdown--;
+
+            //     // If countdown reaches 0, stop updating and hide loading message
+            //     if (countdown < 0) {
+            //         clearInterval(countdownInterval);
+            //         $('#loadingMessage').hide();
+            //     }
+            // }
+
+            // // Start updating countdown every second
+            // var countdownInterval = setInterval(updateCountdown, 1000);
+
+            $.ajax({
+                type: 'GET',
+                url: '/assignmentzipfolder',
+                data: {
+                    assignmentgenerateid: assignmentgenerateid1,
+                },
+                success: function(data) {
+                    // Hide loading message when the request is complete
+                    $('#loadingMessage').hide();
+                    // Display created zip file name
+                    $('#createdzipfile').text('Created Zip File: ' + data).show();
+                    $('#downloadzip').show();
+
+                    // Handle the success response here
+                    // alert(data);
+                },
+                error: function(error) {
+                    // Hide loading message in case of an error
+                    $('#loadingMessage').hide();
+
+                    // Handle any errors here
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script> --}}
+{{-- * regarding jquery --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Download button click event
+        $('#downloadzip').click(function() {
+            // Disable the button to prevent multiple clicks
+            $(this).prop('disabled', true);
+
+            // You can also hide the button if needed
+            // $(this).hide();
+        });
+    });
+</script>
+{{-- *regarding ajax --}}
+<nav aria-label="breadcrumb" class="col-sm-4 order-sm-last mb-3 mb-sm-0 p-0 ">
+    <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
+        <li style="margin-left: 13px;">
+            <button type="button" id="downloadButton" class="btn btn-outline-primary">Create Zip Folder</button>
+        </li>
+    </ol>
+</nav>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Create Zip Folder button click event
+        $('#downloadButton').click(function(e) {
+            e.preventDefault(); // Prevent the default link behavior
+
+            // var assignmentgenerateid = {{ $assignmentgenerateid }};
+            // console.log(assignmentgenerateid);
+            alert('hi');
+            $.ajax({
+                type: 'GET',
+                url: '/assignmentzipfolder',
+                data: {
+                    assignmentgenerateid: assignmentgenerateid,
+                },
+                success: function(data) {
+                    // Handle the success response here
+                },
+                error: function(error) {
+                    // Handle any errors here
+                }
+            });
+        });
+    });
+</script>
+
+{{-- * --}}
+{{-- validation on date --}}
+<script>
+    $(document).ready(function() {
+        $('.leaveDate').on('change', function() {
+            var leaveDate = $(this);
+            var leaveDateValue = leaveDate.val();
+
+            // Use a regular expression to match a four-digit year
+            var yearPattern = /^\d{4}$/;
+
+            if (!yearPattern.test(leaveDateValue)) {
+                alert('Please enter a valid four-digit year');
+                leaveDate.val('');
+            }
+        });
+    });
+</script>
+
+
+{{-- multiple date ho ager ek hi page me tab --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.leaveDate').on('change', function() {
+            var leaveDate = $(this);
+            var leaveDateValue = leaveDate.val();
+            var leaveDateGet = new Date(leaveDateValue);
+            var leaveyear = leaveDateGet.getFullYear();
+            // console.log(startyear);
+            var leaveyearLength = leaveyear.toString().length;
+            if (leaveyearLength > 4) {
+                alert('Enter four digits for the year');
+                leaveDate.val('');
+            }
+        });
+    });
+</script>
+
+
+
+{{-- validation for comparision date and block year for 4 disit --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var startDateInput = $('#startDate');
+        var endDateInput = $('#endDate');
+
+        function compareDates() {
+            var startDate = new Date(startDateInput.val());
+            var endDate = new Date(endDateInput.val());
+
+            if (startDate > endDate) {
+                alert('End date should be greater than or equal to the Start date');
+                endDateInput.val(''); // Clear the end date input
+            }
+        }
+
+        startDateInput.on('input', compareDates);
+        endDateInput.on('blur', compareDates);
+    });
+</script>
+
+{{-- validation for block 4 digit to  year --}}
+<script>
+    $(document).ready(function() {
+        $('#startDate').on('change', function() {
+            var startclear = $('#startDate');
+            var startDateInput1 = $('#startDate').val();
+            var startDate = new Date(startDateInput1);
+            var startyear = startDate.getFullYear();
+            var yearLength = startyear.toString().length;
+            if (yearLength > 4) {
+                alert('Enter four digits for the year');
+                startclear.val('');
+            }
+        });
+        $('#endDate').on('change', function() {
+            var endclear = $('#endDate');
+            var endDateInput1 = $('#endDate').val();
+            var endtDate = new Date(endDateInput1);
+            var endyear = endtDate.getFullYear();
+            var endyearLength = endyear.toString().length;
+            if (endyearLength > 4) {
+                alert('Enter four digits for the year');
+                endclear.val('');
+            }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#startdate').on('change', function() {
+            var startclear = $('#startdate');
+            var startDateInput1 = $('#startdate').val();
+            var startDate = new Date(startDateInput1);
+            var startyear = startDate.getFullYear();
+            var yearLength = startyear.toString().length;
+            if (yearLength > 4) {
+                alert('Enter four digits for the year');
+                startclear.val('');
+            }
+            //   validation for year match
+            var yearvalue = $('#year').val();
+            if (yearvalue != startyear) {
+                alert('Enter Start Date According Year');
+                startclear.val('');
+            }
+        });
+        $('#enddate').on('change', function() {
+            var endclear = $('#enddate');
+            var endDateInput1 = $('#enddate').val();
+            var endtDate = new Date(endDateInput1);
+            var endyear = endtDate.getFullYear();
+            var endyearLength = endyear.toString().length;
+            if (endyearLength > 4) {
+                alert('Enter four digits for the year');
+                endclear.val('');
+            }
+            //   validation for year match
+            var yearvalue = $('#year').val();
+            if (yearvalue != endyear) {
+                alert('Enter End Date According Year');
+                endclear.val('');
+            }
+        });
+    });
+</script>
+
+
+<script>
+    if ($teamname && $start || $end) {
+        $query - > where(function($q) use($teamname, $start, $end) {
+            $q - > where('timesheetreport.teamid', $teamname) -
+                >
+                whereBetween('timesheetreport.startdate', [$start, $end]) -
+                >
+                orWhereBetween('timesheetreport.enddate', [$start, $end]) -
+                >
+                orWhere(function($query) use($start, $end) {
+                    $query - > where('timesheetreport.startdate', '<=', $start) -
+                        >
+                        where('timesheetreport.enddate', '>=', $end);
+                });
+        });
+    }
+</script>
+
+<script>
+    //   remove pagination after filter
+    $('.paging_simple_numbers').remove();
+    $('.dataTables_info').remove();
+</script>
+
+{{-- * --}}
+<div id="profileCompletion" class="alert alert-info" role="alert">
+
+</div>
+<script>
+    $(document).ready(function() {
+        var profileCompletionPercentage = {{ $formattedProfileCompletion }};
+        // alert(profileCompletionPercentage);
+        $('#profileCompletion').text(profileCompletionPercentage + '%');
+    });
+</script>
+
+{{-- ###################################################################### --}}
+{{--  --------------------- 29 sep 2023 joining date--------------- --}}
