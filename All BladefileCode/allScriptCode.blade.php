@@ -1,6 +1,1474 @@
 {{-- *  --}}
+{{--  Start Hare  --}}
 {{-- *  --}}
+{{--  Start Hare  --}}
 {{-- *  --}}
+{{--  Start Hare  --}}
+{{-- *  --}}
+{{--  Start Hare  --}}
+{{-- *  --}}
+{{--  Start Hare  --}}
+{{-- *  --}}
+{{--  Start Hare  --}}
+{{-- *  --}}
+{{--  Start Hare  --}}
+
+<script>
+    $(document).on('change', '[id^=partner]', function() {
+        var partnerValue = $(this).val();
+        var index = $(this).attr('id').slice(-1);
+        if (partnerValue != "" && partnerValue != "Select Partner") {
+            $('.workItem' + index).attr('required', true);
+            $('.location' + index).attr('required', true);
+            $('.hour' + index).attr('required', true);
+        } else {
+            $('.workItem' + index).attr('required', false);
+            $('.location' + index).attr('required', false);
+            $('.hour' + index).attr('required', false);
+        }
+    });
+</script>
+{{-- * regarding replace function /regarding text replace function --}}
+{{--  Start Hare  --}}
+
+<script>
+    function handleClientChange(clientId) {
+        $('#' + clientId).on('change', function() {
+            var cid = $(this).val();
+            var datepickers = $('#datepickers').val();
+
+            if (cid == 33) {
+                var location = 'N/A';
+                var workitem = 'N/A';
+                var time = 0;
+
+                // clientId me hai client,client1,client2,client3,client4
+                // Extract the number from the client ID like 1,2,3,4
+                //   var clientNumber = parseInt(clientId.replace('client', ''));
+                var clientNumber = clientId.replace('clien', '');
+                alert(clientNumber);
+                if (!isNaN(clientNumber)) {
+                    // Check if clientNumber is a valid number
+                    $('.workitemnvalue' + clientNumber).val(workitem);
+                    $('.locationvalue' + clientNumber).val(location);
+                    $('#totalhours').val(time);
+                    $('#hour' + (clientNumber + 1)).prop('readonly', true);
+                } else {
+                    // Default behavior for clientId 'client'
+                    $('.workitemnvalue').val(workitem);
+                    $('.locationvalue').val(location);
+                    $('#totalhours').val(time);
+                    $("#hour1").prop("readonly", true);
+                }
+            }
+
+            $.ajax({
+                type: "get",
+                url: "{{ url('timesheet/create') }}",
+                data: {
+                    cid: cid,
+                    datepickers: datepickers
+                },
+                success: function(res) {
+                    $('#' + clientId.replace('client', 'assignment')).html(res);
+                },
+                error: function() {},
+            });
+        });
+    }
+</script>
+{{-- * sweech case  --}}
+{{--  Start Hare  --}}
+<script>
+    switch (clientId) {
+        case 'client':
+            $('.workitemnvalue').val(workitem);
+            $('.locationvalue').val(location);
+            $("#hour1").prop("readonly", true);
+            break;
+        case 'client1':
+            $('.workitemnvalue1').val(workitem);
+            $('.locationvalue1').val(location);
+            $("#hour2").prop("readonly", true);
+            break;
+        case 'client2':
+        case 'client3':
+        case 'client4':
+            $('.workitemnvalue1').val(workitem);
+            $('.locationvalue1').val(location);
+            $("#hour1").prop("readonly", true);
+            break;
+        default:
+            break;
+    }
+</script>
+{{-- * selecteor / regarding selector/ regarding selecter / regarding jquery selector / regarding jquery selecter --}}
+{{--  Start Hare  --}}
+{{-- for testing 
+https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
+<script>
+    if (cid == 33) {
+        var location = 'N/A';
+        var workitem = 'N/A';
+        var time = 0;
+
+        $('.workitemnvalue1').val(workitem);
+        $('.locationvalue1').val(location);
+        $('#totalhours').val(time);
+        $("#hour1").prop("readonly", true);
+    }
+
+    if (cid == 33) {
+        var location = 'leaave';
+        var workitem = 'leaaveq';
+        $("p").hide();
+        $("[name='workitem']").val(workitem);
+        $("[name='location']").val(workitem);
+        $("#Lastname")
+        $(".intro")
+        $(".intro, #Lastname")
+        $("h1")
+        $("h1, p")
+        $("p:first")
+        $("p:last")
+        $("tr:even")
+        $("tr:odd")
+        $("p:first-child")
+        $("p:first-of-type")
+        $("p:last-child")
+        $("p:last-of-type")
+        $("li:nth-child(1)")
+        $("li:nth-last-child(1)")
+        $("li:nth-of-type(2)")
+        $("li:nth-last-of-type(2)")
+        $("b:only-child")
+        $("h3:only-of-type")
+        $("div > p")
+        $("div p")
+        $("ul + p")
+        $("ul ~ table")
+        $("ul li:eq(0)")
+        $("ul li:gt(0)")
+        $("ul li:lt(2)")
+        $(":header")
+        $(":header:not(h1)")
+        $(":animated")
+        $(":focus")
+        $(":contains(Duck)")
+        $("div:has(p)")
+        $(":empty")
+        $(":parent")
+        $("p:hidden")
+        $("table:visible")
+        $(":root")
+        $("p:lang(it)")
+        $("[id]")
+        $("[id=my-Address]")
+        $("p[id!=my-Address]")
+        $("[id$=ess]")
+        $("[id|=my]")
+        $("[id^=L]")
+        $("[title~=beautiful]")
+        $("[id*=s]")
+        $(":input")
+        $(":text")
+        $(":password")
+        $(":radio")
+        $(":checkbox")
+        $(":submit")
+        $(":reset")
+        $(":button")
+        $(":image")
+        $(":file")
+        $(":enabled")
+        $(":disabled")
+        $(":selected")
+        $(":checked")
+        $("*")
+        $('[id^=partner]')
+    }
+</script>
+
+<pre>
+    | Selector             | Example                    | Selects                                                |
+|----------------------|----------------------------|--------------------------------------------------------|
+| *                    | $("*")                     | All elements                                           |
+| #id                  | $("#lastname")             | The element with id="lastname"                         |
+| .class               | $(".intro")                | All elements with class="intro"                        |
+| .class, .class       | $(".intro, .demo")         | All elements with the class "intro" or "demo"          |
+| element              | $("p")                     | All <p> elements                                       |
+| el1, el2, el3        | $("h1, div, p")            | All <h1>, <div>, and <p> elements                      |
+| :first               | $("p:first")               | The first <p> element                                  |
+| :last                | $("p:last")                | The last <p> element                                   |
+| :even                | $("tr:even")               | All even <tr> elements                                 |
+| :odd                 | $("tr:odd")                | All odd <tr> elements                                  |
+| :first-child         | $("p:first-child")         | All <p> elements that are the first child of their parent |
+| :first-of-type       | $("p:first-of-type")       | All <p> elements that are the first <p> element of their parent |
+| :last-child          | $("p:last-child")          | All <p> elements that are the last child of their parent |
+| :last-of-type        | $("p:last-of-type")        | All <p> elements that are the last <p> element of their parent |
+| :nth-child(n)        | $("p:nth-child(2)")        | All <p> elements that are the 2nd child of their parent |
+| :nth-last-child(n)   | $("p:nth-last-child(2)")   | All <p> elements that are the 2nd child of their parent, counting from the last child |
+| :nth-of-type(n)      | $("p:nth-of-type(2)")      | All <p> elements that are the 2nd <p> element of their parent |
+| :nth-last-of-type(n) | $("p:nth-last-of-type(2)") | All <p> elements that are the 2nd <p> element of their parent, counting from the last child |
+| :only-child          | $("p:only-child")          | All <p> elements that are the only child of their parent |
+| :only-of-type        | $("p:only-of-type")        | All <p> elements that are the only child, of its type, of their parent |
+| parent > child       | $("div > p")               | All <p> elements that are a direct child of a <div> element |
+| parent descendant    | $("div p")                 | All <p> elements that are descendants of a <div> element |
+| element + next       | $("div + p")               | The <p> element that are next to each <div> elements   |
+| element ~ siblings   | $("div ~ p")               | All <p> elements that appear after the <div> element   |
+| :eq(index)           | $("ul li:eq(3)")           | The fourth element in a list (index starts at 0)      |
+| :gt(no)              | $("ul li:gt(3)")           | List elements with an index greater than 3            |
+| :lt(no)              | $("ul li:lt(3)")           | List elements with an index less than 3               |
+| :not(selector)       | $("input:not(:empty)")     | All input elements that are not empty                  |
+| :header              | $(":header")               | All header elements <h1>, <h2>, ...                    |
+| :animated            | $(":animated")             | All animated elements                                  |
+| :focus               | $(":focus")                | The element that currently has focus                   |
+| :contains(text)      | $(":contains('Hello')")    | All elements which contains the text "Hello"          |
+| :has(selector)       | $("div:has(p)")            | All <div> elements that have a <p> element            |
+| :empty               | $(":empty")                | All elements that are empty                            |
+| :parent              | $(":parent")               | All elements that are a parent of another element      |
+| :hidden              | $("p:hidden")              | All hidden <p> elements                                |
+| :visible             | $("table:visible")         | All visible tables                                     |
+| :root                | $(":root")                 | The document's root element                            |
+| :lang(language)      | $("p:lang(de)")            | All <p> elements with a lang attribute value starting with "de" |
+| [attribute]          | $("[href]")                | All elements with a href attribute                     |
+| [attribute=value]    | $("[href='default.htm']")  | All elements with a href attribute value equal to "default.htm" |
+| [attribute!=value]   | $("[href!='default.htm']") | All elements with a href attribute value not equal to "default.htm" |
+| [attribute$=value]   | $("[href$='.jpg']")        | All elements with a href attribute value ending with ".jpg" |
+| [attribute|=value]   | $("[title|='Tomorrow']")   | All elements with a title attribute value equal to 'Tomorrow', or starting with 'Tomorrow' followed by a hyphen |
+| [attribute^=value]   | $("[title^='Tom']")        | All elements with a title attribute value starting with "Tom" |
+| [attribute~=value]   | $("[title~='hello']")      | All elements with a title attribute value containing the specific word "hello" |
+| [attribute*=value]   | $("[title*='hello']")      | All elements with a title attribute value containing the word "hello" |
+| :input               | $(":input")                | All input elements                                     |
+| :text                | $(":text")                 | All input elements with type="text"                    |
+| :password            | $(":password")             | All input elements with type="password"                |
+| :radio               | $(":radio")                | All input elements with type="radio"                   |
+| :checkbox            | $(":checkbox")             | All input elements with type="checkbox"                |
+| :submit              | $(":submit")               | All input elements with type="submit"                  |
+| :reset               | $(":reset")                | All input elements with type="reset"                   |
+| :button              | $(":button")               | All input elements with type="button"                  |
+| :image               | $(":image")                | All input elements with type="image"                   |
+| :file                | $(":file")                 | All input elements with type="file"                    |
+| :enabled             | $(":enabled")              | All enabled input elements                             |
+| :disabled            | $(":disabled")             | All disabled input elements
+| :selected            | $(":selected")             | All selected input elements
+| :checked             | $(":checked")              | All checked input elements
+| like                 | $('[id^=partner]')         |  targets all elements whose id attribute starts with the string "partner".it would match elements like <div id="partner1">, <input id="partnerABC">, <select id="partner_xyz">, and so on.
+</pre>
+
+
+{{-- * val function / insert value / regarding val function   --}}
+{{--  Start Hare  --}}
+<script>
+    if (cid == 33) {
+        //   alert(cid);
+        var location = 'hi';
+        document.getElementById("totalhours").value = location;
+    }
+    if (cid == 33) {
+        alert(cid);
+        var location = 'hi';
+        $('#key').val(location);
+    }
+</script>
+{{-- *  --}}
+
+<script>
+    //   $(document).ready(function() {
+    $("#timesheet-form").submit(function(e) {
+        // Check if the "Client Name" dropdown is selected
+        if ($("#client1").val() != "Select Client" && $("#client1").val() != "") {
+            // If a client is selected, make the following fields required
+            $("#assignment1").prop("required", true);
+            $("#partner1").prop("required", true);
+            $("#assignment2").prop("required", true);
+        }
+    });
+</script>
+{{--  Start Hare  --}}
+{{-- * add html dynamically / regarding dynamically html --}}
+{{--  Start Hare  --}}
+{{-- html --}}
+<div class="row row-sm">
+    <div class="row row-sm">
+        <div class="col-2">
+            <div class="form-group">
+                <label class="font-weight-600">Client Name</label>
+                <select class="language form-control refresh" name="client_id[]" id="client1"
+                    @if (Request::is('timesheet/*/edit')) > <option disabled style="display:block">Select
+                    Client
+                    </option>
+
+                    @foreach ($client as $clientData)
+                    <option value="{{ $clientData->id }}"
+                        {{ $timesheet->client_id == $clientData->id ?? '' ? 'selected="selected"' : '' }}>
+                        {{ $clientData->client_name }}</option>
+                    @endforeach
+
+
+                    @else
+                    <option></option>
+                    <option value="">Select Client</option>
+                    @foreach ($client as $clientData)
+                    <option value="{{ $clientData->id }}">
+                        {{ $clientData->client_name }} ({{ $clientData->client_code }})</option>
+
+                    @endforeach @endif
+                    </select>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label class="font-weight-600">Assignment Name</label>
+                <select class="form-control key refreshoption" name="assignment_id[]" id="assignment1">
+                    @if (!empty($timesheet->assignment_id))
+                        <option value="{{ $timesheet->assignment_id }}">
+                            {{ App / Models / Assignment::where('id', $timesheet->assignment_id)->first()->assignment_name ?? '' }}
+                        </option>
+                    @endif
+                </select>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label class="font-weight-600">Partner *</label>
+                <select class="language form-control refreshoption" id="partner1" name="partner[]">
+                </select>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label class="font-weight-600" style="width:100px;">Work Item</label>
+                <textarea type="text" name="workitem[]" id="key" value="{{ $timesheet->workitem ?? '' }}"
+                    class="form-control key workItem1 refresh" rows="2"></textarea>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label class="font-weight-600" style="width:100px;">Location *</label>
+                <input type="text" name="location[]" id="key" value="{{ $timesheet->location ?? '' }}"
+                    class="form-control key location1 refresh">
+            </div>
+        </div>
+
+        <div class="col-1">
+            <div class="form-group">
+                <label class="font-weight-600">Hour</label>
+                <input type="number" class="form-control hour1 refresh" id="hour2" min="0" name="hour[]"
+                    oninput="calculateTotal(this)" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                    value="0" step="1">
+
+            </div>
+        </div>
+        <div class="col-1">
+            <div class="form-group" style="margin-top: 36px;">
+                <a href="javascript:void(0);" class="add_button" title="Add field"><img
+                        src="{{ url('backEnd/image/add-icon.png') }}" /></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-1">
+        <div class="form-group" style="margin-top: 36px;">
+            <a href="javascript:void(0);" class="add_button" title="Add field"><img
+                    src="{{ url('backEnd/image/add-icon.png') }}" /></a>
+        </div>
+    </div>
+</div>
+
+{{-- ! ok done --}}
+<script>
+    $(document).ready(function() {
+        var maxField = 5; //Input fields increment limitation
+        var addButton = $('.add_button'); //Add button selector
+        var wrapper = $('.field_wrapper'); //Input field wrapper
+        var x = 2;
+
+        $(addButton).click(function() {
+            //Check maximum number of input fields
+            if (x < maxField) {
+                x++; //Increment field counter
+
+                var fieldHTML = `<div class="row row-sm">
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="font-weight-600">Client Name *</label>
+                        <select required class="language form-control refresh" name="client_id[]" id="client${x}">
+                            <option value="">Select Client</option>
+                            @foreach ($client as $clientData)
+                                <option value="{{ $clientData->id }}">
+                                    {{ $clientData->client_name }} ({{ $clientData->client_code }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="font-weight-600">Assignment Name *</label>
+                        <select class="form-control key refreshoption" name="assignment_id[]" id="assignment${x}">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="font-weight-600">Partner *</label>
+                        <select required class="language form-control refreshoption" id="partner${x}" name="partner[]">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="font-weight-600" style="width:100px;">Work Item *</label>
+                        <textarea required required type="text" name="workitem[]" id="key" value="{{ $timesheet->workitem ?? '' }}" class="form-control key refresh" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="font-weight-600" style="width:100px;">Location *</label>
+                        <input required type="text" name="location[]" id="key" value="{{ $timesheet->location ?? '' }}" class="form-control key refresh">
+                    </div>
+                </div>
+                <div class="col-1">
+                    <div class="form-group">
+                        <label class="font-weight-600">Hour *</label>
+                        <input required type="number" class="form-control refresh" id="hour${x}" name="hour[]" min="0" oninput="calculateTotal(this)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0" step="1">
+                        <span style="font-size: 10px;margin-left: 10px;"></span>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <div class="form-group" style="margin-top: 36px;">
+                        <a style="margin-top: 36px;" href="javascript:void(0);" class="remove_button"><img src="{{ url('backEnd/image/remove-icon.png') }}"/></a>
+                    </div>
+                </div>
+            </div>`;
+
+                $(wrapper).append(fieldHTML); //Add field html
+            }
+        });
+
+        //Once remove button is clicked
+        $(wrapper).on('click', '.remove_button', function(e) {
+            e.preventDefault();
+            $(this).parent('div').remove(); //Remove field html
+            x--; //Decrement field counter
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        var maxField = 4;
+        var addButton = $('.add_button');
+        var wrapper = $('.field_wrapper');
+        var x = 1;
+
+        $(addButton).click(function() {
+            if (x < maxField) {
+                x++;
+                var fieldHTML = `<div class="row row-sm">
+              <div class="col-2">
+                  <div class="form-group">
+                      <label class="font-weight-600">Client Name *</label>
+                      <select required class="language form-control refresh" name="client_id[]" id="client${x}">
+                          <option value="">Select Client</option>
+                          @foreach ($client as $clientData)
+                              <option value="{{ $clientData->id }}">
+                                  {{ $clientData->client_name }} ({{ $clientData->client_code }})
+                              </option>
+                          @endforeach
+                      </select>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-group">
+                      <label class="font-weight-600">Assignment Name *</label>
+                      <select class="form-control key refreshoption" name="assignment_id[]" id="assignment${x}">
+                      </select>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-group">
+                      <label class="font-weight-600">Partner *</label>
+                      <select required class="language form-control refreshoption" id="partner${x}" name="partner[]">
+                      </select>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-group">
+                      <label class="font-weight-600" style="width:100px;">Work Item *</label>
+                      <textarea required required type="text" name="workitem[]" id="key" value="{{ $timesheet->workitem ?? '' }}" class="form-control key refresh" rows="2"></textarea>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-group">
+                      <label class="font-weight-600" style="width:100px;">Location *</label>
+                      <input required type="text" name="location[]" id="key" value="{{ $timesheet->location ?? '' }}" class="form-control key refresh">
+                  </div>
+              </div>
+              <div class="col-1">
+                  <div class="form-group">
+                      <label class="font-weight-600">Hour *</label>
+                      <input required type="number" class="form-control refresh" id="hour${x}" name="hour[]" min="0" oninput="calculateTotal(this)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0" step="1">
+                      <span style="font-size: 10px;margin-left: 10px;"></span>
+                  </div>
+              </div>
+              <div class="col-1">
+                  <div class="form-group" style="margin-top: 36px;">
+                      <a style="margin-top: 36px;" href="javascript:void(0);" class="remove_button"><img src="{{ url('backEnd/image/remove-icon.png') }}"/></a>
+                  </div>
+              </div>
+          </div>`;
+
+                $(wrapper).append(fieldHTML);
+            }
+        });
+
+        //Once remove button is clicked
+        $(wrapper).on('click', '.remove_button', function(e) {
+            e.preventDefault();
+            $(this).closest('.row-sm').remove();
+            x--;
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        // Function to handle change event for client select
+        function handleClientChange(clientId) {
+            $('#' + clientId).on('change', function() {
+                var cid = $(this).val();
+                var datepickers = $('#datepickers').val();
+
+                $.ajax({
+                    type: "get",
+                    url: "{{ url('timesheet/create') }}",
+                    data: {
+                        cid: cid,
+                        datepickers: datepickers
+                    },
+                    success: function(res) {
+                        $('#' + clientId.replace('client', 'assignment')).html(res);
+                    },
+                    error: function() {},
+                });
+            });
+        }
+
+        // Function to handle change event for assignment select
+        function handleAssignmentChange(assignmentId) {
+            $('#' + assignmentId).on('change', function() {
+                var assignment = $(this).val();
+
+                $.ajax({
+                    type: "get",
+                    url: "{{ url('timesheet/create') }}",
+                    data: "assignment=" + assignment,
+                    success: function(res) {
+                        $('#' + assignmentId.replace('assignment', 'partner')).html(res);
+                    },
+                    error: function() {},
+                });
+            });
+        }
+
+        // Dynamically add client fields
+        var maxField = 4;
+        var addButton = $('.add_button');
+        var wrapper = $('.field_wrapper');
+        var x = 1;
+
+        $(addButton).click(function() {
+            if (x < maxField) {
+                x++;
+                var fieldHTML = `<div class="row row-sm">
+              <div class="col-2">
+                  <div class="form-group">
+                      <label class="font-weight-600">Client Name *</label>
+                      <select required class="language form-control refresh" name="client_id[]" id="client${x}">
+                          <option value="">Select Client</option>
+                          @foreach ($client as $clientData)
+                              <option value="{{ $clientData->id }}">
+                                  {{ $clientData->client_name }} ({{ $clientData->client_code }})
+                              </option>
+                          @endforeach
+                      </select>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-group">
+                      <label class="font-weight-600">Assignment Name *</label>
+                      <select class="form-control key refreshoption" name="assignment_id[]" id="assignment${x}">
+                      </select>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-group">
+                      <label class="font-weight-600">Partner *</label>
+                      <select required class="language form-control refreshoption" id="partner${x}" name="partner[]">
+                      </select>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-group">
+                      <label class="font-weight-600" style="width:100px;">Work Item *</label>
+                      <textarea required required type="text" name="workitem[]" id="key" value="{{ $timesheet->workitem ?? '' }}" class="form-control key refresh" rows="2"></textarea>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-group">
+                      <label class="font-weight-600" style="width:100px;">Location *</label>
+                      <input required type="text" name="location[]" id="key" value="{{ $timesheet->location ?? '' }}" class="form-control key refresh">
+                  </div>
+              </div>
+              <div class="col-1">
+                  <div class="form-group">
+                      <label class="font-weight-600">Hour *</label>
+                      <input required type="number" class="form-control refresh" id="hour${x}" name="hour[]" min="0" oninput="calculateTotal(this)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0" step="1">
+                      <span style="font-size: 10px;margin-left: 10px;"></span>
+                  </div>
+              </div>
+              <div class="col-1">
+                  <div class="form-group" style="margin-top: 36px;">
+                      <a style="margin-top: 36px;" href="javascript:void(0);" class="remove_button"><img src="{{ url('backEnd/image/remove-icon.png') }}"/></a>
+                  </div>
+              </div>
+          </div>`;
+
+                $(wrapper).append(fieldHTML);
+
+                var clientId = 'client' + x;
+                var assignmentId = 'assignment' + x;
+
+                handleClientChange(clientId);
+                handleAssignmentChange(assignmentId);
+            }
+        });
+
+        handleClientChange('client');
+        handleClientChange('client1');
+        handleAssignmentChange('assignment');
+        handleAssignmentChange('assignment1');
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        // Function to handle change event for client select
+        function handleClientChange(clientId) {
+            $('#' + clientId).on('change', function() {
+                var cid = $(this).val();
+                var datepickers = $('#datepickers').val();
+
+                $.ajax({
+                    type: "get",
+                    url: "{{ url('timesheet/create') }}",
+                    data: {
+                        cid: cid,
+                        datepickers: datepickers
+                    },
+                    success: function(res) {
+                        $('#' + clientId.replace('client', 'assignment')).html(res);
+                    },
+                    error: function() {},
+                });
+            });
+        }
+
+        // Function to handle change event for assignment select
+        function handleAssignmentChange(assignmentId) {
+            $('#' + assignmentId).on('change', function() {
+                var assignment = $(this).val();
+
+                $.ajax({
+                    type: "get",
+                    url: "{{ url('timesheet/create') }}",
+                    data: "assignment=" + assignment,
+                    success: function(res) {
+                        $('#' + assignmentId.replace('assignment', 'partner')).html(res);
+                    },
+                    error: function() {},
+                });
+            });
+        }
+
+        // Dynamically add client fields
+        var maxField = 4;
+        var addButton = $('.add_button');
+        var wrapper = $('.field_wrapper');
+        var x = 1;
+        var h = 2;
+
+        $(addButton).click(function() {
+            if (x < maxField) {
+                x++;
+                h++;
+                var fieldHTML = `<div class="row row-sm">
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="font-weight-600">Client Name *</label>
+                    <select required class="language form-control refresh" name="client_id[]" id="client${x}">
+                        <option value="">Select Client</option>
+                        @foreach ($client as $clientData)
+                            <option value="{{ $clientData->id }}">
+                                {{ $clientData->client_name }} ({{ $clientData->client_code }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="font-weight-600">Assignment Name *</label>
+                    <select class="form-control key refreshoption" name="assignment_id[]" id="assignment${x}">
+                    </select>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="font-weight-600">Partner *</label>
+                    <select required class="language form-control refreshoption" id="partner${x}" name="partner[]">
+                    </select>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="font-weight-600" style="width:100px;">Work Item *</label>
+                    <textarea required required type="text" name="workitem[]" id="key" value="{{ $timesheet->workitem ?? '' }}" class="form-control key refresh" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="font-weight-600" style="width:100px;">Location *</label>
+                    <input required type="text" name="location[]" id="key" value="{{ $timesheet->location ?? '' }}" class="form-control key refresh">
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="form-group">
+                    <label class="font-weight-600">Hour *</label>
+                    <input required type="number" class="form-control refresh" id="hour${h}" name="hour[]" min="0" oninput="calculateTotal(this)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0" step="1">
+                    <span style="font-size: 10px;margin-left: 10px;"></span>
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="form-group" style="margin-top: 36px;">
+                    <a style="margin-top: 36px;" href="javascript:void(0);" class="remove_button"><img src="{{ url('backEnd/image/remove-icon.png') }}"/></a>
+                </div>
+            </div>
+        </div>`;
+
+                $(wrapper).append(fieldHTML);
+
+                var clientId = 'client' + x;
+                var assignmentId = 'assignment' + x;
+
+                handleClientChange(clientId);
+                handleAssignmentChange(assignmentId);
+            }
+        });
+
+        handleClientChange('client');
+        handleClientChange('client1');
+        handleAssignmentChange('assignment');
+        handleAssignmentChange('assignment1');
+    });
+
+    function calculateTotal() {
+        var totalSum = 0;
+        $('input[name^="hour"]').each(function() {
+            totalSum += parseInt($(this).val()) || 0;
+        });
+
+        document.getElementById("totalhours").value = totalSum;
+    }
+</script>
+
+
+{{-- * Regarding date selection  --}}
+{{--  Start Hare  --}}
+<style>
+    td a.ui-state-default {
+        background-color: green !important;
+        color: white !important;
+    }
+
+    td span.ui-state-default {
+        background-color: red !important;
+        color: white !important;
+    }
+</style>
+
+<script>
+    $(function() {
+        var startDate = new Date();
+        var endDate = new Date();
+        endDate.setDate(startDate.getDate() + 6);
+
+        $("#datepickersq").datepicker({
+            minDate: startDate,
+            maxDate: endDate,
+            dateFormat: 'dd-mm-yy'
+        });
+    });
+</script>
+{{--  Start Hare  --}}
+<div class="col-md-5">
+    <p style="float: right;color: white"><b>Select Date : </b> <input type="text" id="datepickersq" name="date"
+            value="{{ date('d-m-Y') }}" readonly></p>
+</div>
+
+<script>
+    $(function() {
+        var startDate = new Date();
+        var endDate = new Date();
+        endDate.setDate(startDate.getDate() + 6);
+
+        $("#datepickersq").datepicker({
+            minDate: startDate,
+            maxDate: endDate,
+            dateFormat: 'dd-mm-yy'
+        });
+    });
+</script>
+{{--  Start Hare  --}}
+<script>
+    $(function() {
+        var startDate = new Date();
+        var endDate = new Date();
+        startDate.setDate(startDate.getDate() - 10);
+        endDate.setDate(startDate.getDate() + 16);
+
+        $("#datepickersq").datepicker({
+            minDate: startDate,
+            maxDate: endDate,
+            dateFormat: 'dd-mm-yy'
+        });
+    });
+</script>
+{{--  Start Hare  --}}
+<script>
+    // Get the input element by its ID
+    const startDateInput = document.getElementById('startdate');
+
+    // Add an event listener to listen for changes in the input value
+    startDateInput.addEventListener('change', function() {
+        // Get the selected date value
+        const selectedDate = new Date(this.value);
+
+        // Format the date to 'yyyy-mm-dd'
+        const year = selectedDate.getFullYear();
+        const month = ('0' + (selectedDate.getMonth() + 1)).slice(-2); // Add leading zero if needed
+        const day = ('0' + selectedDate.getDate()).slice(-2); // Add leading zero if needed
+
+        // Update the input value with the formatted date
+        this.value = year + '-' + month + '-' + day;
+    });
+</script>
+{{--  Start Hare  --}}
+<script>
+    $(function() {
+        $('#datepicker').datepicker({
+            dateFormat: 'dd-mm-yy'
+        });
+    });
+    $(function() {
+        $("#datepickers").datepicker({
+            maxDate: new Date,
+            dateFormat: 'dd-mm-yy'
+        });
+    });
+</script>
+
+
+
+{{-- * Remove extra space  --}}
+{{--  Start Hare  --}}
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            "pageLength": 14,
+            dom: 'Bfrtip',
+            "order": [
+                // [2, "desc"]
+            ],
+
+            columnDefs: [{
+                targets: [0, 1, 3, 4, 5, 6, 7, 8, 9, 10],
+                orderable: false
+            }],
+
+            buttons: [{
+                    extend: 'excelHtml5',
+                    filename: 'Timesheet Save',
+                    // remove extra date from column
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function(data, row, column, node) {
+                                if (column === 1) {
+                                    var cleanedText = $(data).text().trim();
+                                    var dateParts = cleanedText.split(
+                                        '-');
+                                    // Assuming the date format is yyyy-mm-dd
+                                    if (dateParts.length === 3) {
+                                        return dateParts[2] + '-' + dateParts[1] + '-' +
+                                            dateParts[0];
+                                    }
+                                }
+                                if (column === 0 || column === 10) {
+                                    var cleanedText = $(data).text().trim();
+                                    return cleanedText;
+                                }
+                                return data;
+                            }
+                        }
+                    },
+
+                    //  Remove extra space 
+                    customize: function(xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        // remove extra spaces
+                        $('c', sheet).each(function() {
+                            var originalText = $(this).find('is t').text();
+                            var cleanedText = originalText.replace(/\s+/g, ' ')
+                                .trim();
+                            $(this).find('is t').text(cleanedText);
+                        });
+                    }
+                },
+                'colvis'
+            ]
+        });
+    });
+</script>
+{{-- * two table on one page then table implement / column modify / column modification --}}
+{{--  Start Hare  --}}
+
+
+<script>
+    $(document).ready(function() {
+        $('#myTimesheetTable').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                // [0, "desc"]
+            ],
+            columnDefs: [{
+                targets: [0, 2, 3, 4, 5, 6],
+                orderable: false
+            }],
+
+            buttons: [{
+                    extend: 'excelHtml5',
+                    filename: 'My timesheet Request',
+                    //   remove extra date from column
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function(data, row, column, node) {
+                                if (column === 1) {
+                                    var cleanedText = $(data).text().trim();
+                                    var dateParts = cleanedText.split(
+                                        '-');
+                                    // Assuming the date format is yyyy-mm-dd
+                                    if (dateParts.length === 3) {
+                                        return dateParts[2] + '-' + dateParts[1] + '-' +
+                                            dateParts[0];
+                                    }
+                                }
+                                if (column === 0 || column === 3) {
+                                    var cleanedText = $(data).text().trim();
+                                    return cleanedText;
+                                }
+                                return data;
+                            }
+                        }
+                    },
+                },
+                'colvis'
+            ]
+        });
+
+        $('#teamTimesheetTable').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                // [0, "desc"]
+            ],
+            columnDefs: [{
+                targets: [0, 2, 3, 4, 5, 6],
+                orderable: false
+            }],
+            buttons: [{
+                    extend: 'excelHtml5',
+                    filename: 'Team timesheet Request',
+
+                    //   remove extra date from column
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function(data, row, column, node) {
+                                if (column === 1) {
+                                    var cleanedText = $(data).text().trim();
+                                    var dateParts = cleanedText.split(
+                                        '-');
+                                    // Assuming the date format is yyyy-mm-dd
+                                    if (dateParts.length === 3) {
+                                        return dateParts[2] + '-' + dateParts[1] + '-' +
+                                            dateParts[0];
+                                    }
+                                }
+                                if (column === 0 || column === 3) {
+                                    var cleanedText = $(data).text().trim();
+                                    return cleanedText;
+                                }
+                                return data;
+                            }
+                        }
+                    },
+
+                },
+                'colvis'
+            ]
+        });
+    });
+</script>
+{{--  Start Hare  --}}
+<style>
+    .dt-buttons {
+        margin-bottom: -34px;
+    }
+
+    #teamTimesheetTable {
+        width: 100% !important;
+
+    }
+</style>
+<script>
+    $(document).ready(function() {
+        $('#myTimesheetTable').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                [0, "desc"]
+            ],
+
+            buttons: [{
+                    extend: 'excelHtml5',
+                    filename: 'Timesheet_Download',
+
+                },
+                'colvis'
+            ]
+        });
+
+        $('#teamTimesheetTable').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                [0, "desc"]
+            ],
+            buttons: [{
+                    extend: 'excelHtml5',
+                    filename: 'Timesheet_Download',
+
+                },
+                'colvis'
+            ]
+        });
+    });
+</script>
+
+{{-- * hide button  --}}
+{{--  start hare --}}
+<style>
+    .dt-buttons {
+        margin-bottom: -34px;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            // 'l' for the length menu
+            dom: 'Bfrtip',
+            // "order": [
+            //     [0, "ASC"]
+            // ],
+            @if (Auth::user()->role_id == 11 || Auth::user()->role_id == 13)
+                buttons: [{
+                        extend: 'excelHtml5',
+                        filename: 'Team List',
+                    },
+                    'colvis'
+                ]
+            @else
+                buttons: []
+            @endif
+        });
+    });
+</script>
+
+{{--  start har --}}
+
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            "pageLength": 10,
+            "dom": '1Bfrtip',
+            "order": [
+                [1, "desc"]
+            ],
+
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                text: 'Export to Excel',
+                className: 'btn-excel',
+            }, ]
+        });
+
+        $('.btn-excel').hide();
+    });
+</script>
+{{--  start har --}}
+<style>
+    .dt-buttons {
+        margin-bottom: -34px;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            @if (Auth::user()->role_id == 11 || Auth::user()->role_id == 13)
+                // 'l' for the length menu
+                dom: 'lBfrtip',
+                buttons: [{
+                        extend: 'excelHtml5',
+                        filename: 'Team List',
+                    },
+                    'colvis'
+                ]
+            @else
+                buttons: []
+            @endif
+        });
+    });
+</script>
+
+{{-- * accending order on date   --}}
+
+<td> <span style="display: none;">
+        {{ date('Y-m-d', strtotime($timesheetDatas->date)) }}</span>{{ date('d-m-Y', strtotime($timesheetDatas->date)) }}
+</td>
+{{-- understanding code --}}
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            dom: 'Bfrtip',
+            "order": [],
+            searching: false,
+            @if (Auth::user()->role_id == 11 ||
+                    Request::is('adminsearchtimesheet') ||
+                    (Auth::user()->role_id == 13 && Request::is('admintimesheetlist')))
+                columnDefs: [{
+                    targets: [1, 2, 4, 5, 6, 7, 8, 9],
+                    orderable: false
+                }],
+            @else
+                columnDefs: [{
+                    targets: [1, 3, 4, 5, 6, 7, 8, 9],
+                    orderable: false
+                }],
+            @endif
+            buttons: [{
+                    extend: 'excelHtml5',
+                    filename: 'Timesheet_Download',
+                    //   remove extra date from column
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function(data, row, column, node) {
+                                // If the data is a date, extract the date without HTML tags
+                                if (column === 2) {
+                                    // data = <span style="display: none;"> 2024-02-26</span>26-02-2024
+                                    var cleanedText = $(data).text().trim();
+                                    //   2024-02-26
+                                    var dateParts = cleanedText.split(
+                                        '-');
+                                    //   20240226
+                                    //   2,02,40,226
+                                    // Assuming the date format is yyyy-mm-dd
+                                    //   dateParts.length = 3 hai 
+                                    if (dateParts.length === 3) {
+                                        //   return dateParts[2] + '-' + dateParts[1] + '-' +
+                                        //       dateParts[0];
+                                        //  for testing
+                                        //   return dateParts[0];
+                                        //   dateParts[2]= 26
+                                        //   dateParts[1]= 02
+                                        //   dateParts[0]= 2024
+                                    }
+                                }
+                                return data;
+                            }
+                        }
+                    },
+                    //   set width in excell
+                    customize: function(xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                        // set column width
+                        $('col', sheet).eq(0).attr('width', 15);
+                        $('col', sheet).eq(1).attr('width', 15);
+                        $('col', sheet).eq(3).attr('width', 30);
+                        $('col', sheet).eq(4).attr('width', 30);
+                        $('col', sheet).eq(5).attr('width', 30);
+                        $('col', sheet).eq(6).attr('width', 30);
+                        $('col', sheet).eq(7).attr('width', 30);
+
+                        // remove extra spaces
+                        $('c', sheet).each(function() {
+                            var originalText = $(this).find('is t').text();
+                            var cleanedText = originalText.replace(/\s+/g, ' ').trim();
+                            $(this).find('is t').text(cleanedText);
+                        });
+                    }
+                },
+                'colvis'
+            ]
+        });
+    });
+</script>
+
+{{-- clean code  --}}
+
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            dom: 'Bfrtip',
+            "order": [],
+            searching: false,
+            @if (Auth::user()->role_id == 11 ||
+                    Request::is('adminsearchtimesheet') ||
+                    (Auth::user()->role_id == 13 && Request::is('admintimesheetlist')))
+                columnDefs: [{
+                    targets: [1, 2, 4, 5, 6, 7, 8, 9],
+                    orderable: false
+                }],
+            @else
+                columnDefs: [{
+                    targets: [1, 3, 4, 5, 6, 7, 8, 9],
+                    orderable: false
+                }],
+            @endif
+            buttons: [{
+                    extend: 'excelHtml5',
+                    filename: 'Timesheet_Download',
+
+                    //   remove extra date from column
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function(data, row, column, node) {
+                                // If the data is a date, extract the date without HTML tags
+                                if (column === 2) {
+                                    var cleanedText = $(data).text().trim();
+                                    var dateParts = cleanedText.split(
+                                        '-');
+                                    // Assuming the date format is yyyy-mm-dd
+                                    if (dateParts.length === 3) {
+                                        return dateParts[2] + '-' + dateParts[1] + '-' +
+                                            dateParts[0];
+                                    }
+                                }
+                                return data;
+                            }
+                        }
+                    },
+
+                    //   set width in excell
+                    customize: function(xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                        // set column width
+                        $('col', sheet).eq(0).attr('width', 15);
+                        $('col', sheet).eq(1).attr('width', 15);
+                        $('col', sheet).eq(3).attr('width', 30);
+                        $('col', sheet).eq(4).attr('width', 30);
+                        $('col', sheet).eq(5).attr('width', 30);
+                        $('col', sheet).eq(6).attr('width', 30);
+                        $('col', sheet).eq(7).attr('width', 30);
+
+                        // remove extra spaces
+                        $('c', sheet).each(function() {
+                            var originalText = $(this).find('is t').text();
+                            var cleanedText = originalText.replace(/\s+/g, ' ').trim();
+                            $(this).find('is t').text(cleanedText);
+                        });
+                    }
+                },
+                'colvis'
+            ]
+        });
+    });
+</script>
+
+{{-- * on click button  --}}
+<div class="col-1">
+    <div class="form-group" style="margin-top: 36px;">
+        <a href="javascript:void(0);" class="add_button" title="Add field"><img
+                src="{{ url('backEnd/image/add-icon.png') }}" /></a>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var maxField = 10; //Input fields increment limitation
+        var addButton = $('.add_button'); //Add button selector
+        var wrapper = $('.field_wrapper'); //Input field wrapper
+        var x = 1;
+        var fieldHTML = `
+        <div class="row row-sm">
+      <div class="col-2">
+          <div class="form-group">
+              <label class="font-weight-600">Client Name</label>
+              <select class="language form-control refresh" name="client_id[]" id="client4"
+                  @if (Request::is('timesheet/*/edit')) > <option disabled style="display:block">Select
+                  Client
+                  </option>
+
+                  @foreach ($client as $clientData)
+                  <option value="{{ $clientData->id }}"
+                      {{ $timesheet->client_id == $clientData->id ?? '' ? 'selected="selected"' : '' }}>
+                      {{ $clientData->client_name }}</option>
+                  @endforeach
+
+
+                  @else
+                  <option></option>
+                  <option value="">Select Client</option>
+                  @foreach ($client as $clientData)
+                  <option value="{{ $clientData->id }}">
+                      {{ $clientData->client_name }} ({{ $clientData->client_code }})</option>
+
+                  @endforeach @endif
+                  </select>
+          </div>
+      </div>
+      <div class="col-2">
+          <div class="form-group">
+              <label class="font-weight-600">Assignment Name</label>
+              <select class="form-control key refreshoption" name="assignment_id[]" id="assignment4">
+                  @if (!empty($timesheet->assignment_id))
+                      <option value="{{ $timesheet->assignment_id }}">
+                          {{ App / Models / Assignment::where('id', $timesheet->assignment_id)->first()->assignment_name ?? '' }}
+                      </option>
+                  @endif
+              </select>
+              <!-- <select class="form-control key refreshoption" name="assignment_id[]" id="assignment">
+           <option disabled style="display:block">Select
+              Assignment
+              </option>
+              
+          </select> -->
+
+
+
+          </div>
+      </div>
+      <div class="col-2">
+          <div class="form-group">
+              <label class="font-weight-600">Partner *</label>
+              <select class="language form-control refreshoption" id="partner4" name="partner[]">
+              </select>
+          </div>
+      </div>
+      <div class="col-2">
+          <div class="form-group">
+              <label class="font-weight-600" style="width:100px;">Work Item</label>
+              <textarea type="text" name="workitem[]" id="key" value="{{ $timesheet->workitem ?? '' }}"
+                  class="form-control key workItem4 refresh" rows="2"></textarea>
+          </div>
+      </div>
+      <div class="col-2">
+          <div class="form-group">
+              <label class="font-weight-600" style="width:100px;">Location *</label>
+              <input type="text" name="location[]" id="key" value="{{ $timesheet->location ?? '' }}"
+                  class="form-control key Location4 refresh">
+          </div>
+      </div>
+
+      <div class="col-1">
+          <div class="form-group">
+              <label class="font-weight-600">Hour</label>
+              <input type="number" class="form-control hour4 refresh" id="hour5" min="0"
+                  name="hour[]" oninput="calculateTotal(this)"
+                  onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0" step="1">
+
+          </div>
+      </div>
+      <div class="col-1">
+          <div class="form-group" style="margin-top: 36px;">
+              <a href="javascript:void(0);" class="add_button" title="Add field"><img
+                      src="{{ url('backEnd/image/add-icon.png') }}" /></a>
+          </div>
+      </div>
+  </div>
+`;
+
+        //Once add button is clicked
+        $(addButton).click(function() {
+            //Check maximum number of input fields
+            if (x < maxField) {
+                x++; //Increment field counter
+                $(wrapper).append(fieldHTML); //Add field html
+            }
+        });
+
+        //Once remove button is clicked
+        $(wrapper).on('click', '.remove_button', function(e) {
+            e.preventDefault();
+            $(this).parent('div').remove(); //Remove field html
+            x--; //Decrement field counter
+        });
+    });
+</script>
+
+{{-- * regarding pure javascript / regarding javascript   --}}
+
+<script type="text/javascript">
+    function sum() {
+
+        var hour1 = document.getElementById('hour1').value;
+        // alert(hour1);
+        var hour2 = document.getElementById('hour2').value;
+        var hour3 = document.getElementById('hour3').value;
+        var hour4 = document.getElementById('hour4').value;
+        var hour5 = document.getElementById('hour5').value;
+        //  alert(hour2);
+        var result = parseFloat(hour1) + parseFloat(hour2) + parseFloat(hour3) + parseFloat(hour4) + parseFloat(
+            hour5);
+        //alert(result);
+        if (!isNaN(result)) {
+            document.getElementById('totalhours').value = result;
+        }
+    }
+</script>
+{{-- * regarding option tag   --}}
+
+<script>
+    $(function() {
+        $('#datepickers').on('change', function() {
+            var refreshpage = $('.refresh');
+            refreshpage.val('');
+            $('.refreshoption option').remove();
+        });
+    });
+</script>
+
 {{-- * navbar / regarding navbar/ regarding url  --}}
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -237,7 +1705,83 @@
         });
     });
 </script>
-{{-- * regarding datatable / regarding filter / regarding basic class  --}}
+{{-- * regarding datatable / regarding filter / regarding basic class / regarding button  --}}
+
+
+
+{{-- button name in text  --}}
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                //   [0, "DESC"]
+                //   [2, "DESC"]
+            ],
+            layout: {
+                topStart: 'buttons'
+            },
+            buttons: [{
+                extend: 'copy',
+                text: 'Copy to clipboard'
+            }]
+        });
+    });
+</script>
+
+
+{{-- print button  --}}
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                //   [0, "DESC"]
+                //   [2, "DESC"]
+            ],
+            layout: {
+                topStart: 'buttons'
+            },
+            buttons: [{
+                extend: 'print',
+                name: 'print'
+            }]
+        });
+    });
+</script>
+
+{{--  no need to script code only need jquery like  --}}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+{{-- <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script> --}}
+
+<script>
+    // no need to script code only need jquery like 
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                //   [0, "DESC"]
+                //   [2, "DESC"]
+            ],
+            searching: false,
+            buttons: [
+                'colvis',
+                'excel',
+                'print'
+            ]
+        });
+    });
+</script>
+
+
+
+
 {{-- remove basic class and add examplee id --}}
 <script>
     $(document).ready(function() {
@@ -604,6 +2148,39 @@
 
 {{-- * regarding ajax --}}
 {{-- * regarding ajax / table heading replace    --}}
+
+{{-- data dynamically get in select box using ajax  --}}
+<script>
+    $(function() {
+
+        $('#datepickers').on('change', function() {
+            var timesheetdate = $(this).val();
+            //   var datepickers = $('#datepickers').val();
+
+            var refreshpage = $('.refresh');
+            refreshpage.val('');
+            $('.refreshoption option').remove();
+
+            //   alert(datepickers);
+            $.ajax({
+                type: "get",
+                url: "{{ url('timesheet/create') }}",
+                data: {
+                    timesheetdate: timesheetdate
+                },
+                success: function(res) {
+                    $('#client').html(res);
+                    $('#client1').html(res);
+                    $('#client2').html(res);
+                    $('#client3').html(res);
+                    $('#client4').html(res);
+                },
+                error: function() {},
+            });
+        });
+    });
+</script>
+
 <script>
     //** status wise
     $('#status1').change(function() {

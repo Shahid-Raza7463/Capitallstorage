@@ -1,10 +1,95 @@
 <html lang="en">
+{{-- *password   --}}
+wifi check speed
+ping google.com -t
+aiws wifi password is #SarSet%556&4890
+http://127.0.0.1:8000/home
+Azaz~123
+{{-- *   --}}
+{{--  Start Hare --}}
+{{-- *   --}}
+{{--  Start Hare --}}
 
-{{-- *   --}}
-{{-- *   --}}
-{{-- *   --}}
-{{-- *   --}}
-{{-- * regarding comma / regarding key/ regarding foreach  --}}
+{{-- * regarding folder delete  --}}
+{{--  Start Hare --}}
+@if ($assignmentfolderpermission->status == 1)
+    {{-- @php
+    dd($assignmentfolderData->createdby);
+@endphp --}}
+    @if (
+        $assignmentfolderData->createdby == Auth::user()->teammember_id ||
+            Auth::user()->role_id == 13 ||
+            Auth::user()->role_id == 14 ||
+            Auth::user()->role_id == 15)
+        <ul class="navbar-nav flex-row align-items-center ml-auto">
+            <li class="nav-item dropdown user-menus">
+                <a class="foldertoggle" style=" color:white" href="#" data-toggle="dropdown">
+
+                    <i class="ti-more-alt"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-left">
+                    @if ($assignmentfolderData->createdby == Auth::user()->teammember_id || Auth::user()->role_id == 13)
+                        <a style="margin-left: 10px;color:#7a7a7a;" id="editCompany" data-toggle="modal"
+                            data-id="{{ $assignmentfolderData->id }}" data-target="#modaldemo1"
+                            class="dropdown-item">Edit Name</a>
+                    @endif
+
+                    @if (DB::table('assignmentfolderfiles')->where('assignmentfolderfiles.assignmentfolder_id', $assignmentfolderData->id)->where('status', '1')->count() == 0)
+                        @if (
+                            $assignmentfolderData->createdby == Auth::user()->teammember_id ||
+                                Auth::user()->role_id == 13 ||
+                                Auth::user()->role_id == 14 ||
+                                Auth::user()->role_id == 15)
+                            <a style="margin-left: 10px;color:#7a7a7a;"
+                                onclick="return confirm('Are you sure you want to delete this folder?');"
+                                href="{{ url('assignmentfolderdelete', $assignmentfolderData->id) }}"
+                                class="dropdown-item">Delete</a>
+                        @endif
+                    @endif
+                </div>
+
+            </li>
+        </ul>
+    @endif
+@endif
+{{-- * regarding sum  --}}
+{{--  Start Hare --}}
+<div>
+
+    @php
+        $totalHourSum = DB::table('timesheetusers')
+            ->leftJoin('teammembers', 'teammembers.id', '=', 'timesheetusers.createdby')
+            ->where('timesheetusers.assignmentgenerate_id', $teammemberData->assignmentgenerateid)
+            ->where('timesheetusers.createdby', $teammemberData->id)
+            ->sum('timesheetusers.totalhour');
+
+        $totalhour = DB::table('timesheetusers')
+            ->leftJoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+            ->where('timesheetusers.assignmentgenerate_id', $teammemberData->assignmentgenerateid)
+            ->where('timesheetusers.createdby', $teammemberData->id)
+            ->select(DB::raw('SUM(totalhour) as total_hours'))
+            ->get();
+
+        dd($totalHourSum);
+
+        $totalhour = DB::table('timesheetusers')
+            ->leftJoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+            ->where('timesheetusers.assignmentgenerate_id', $teammemberData->assignmentgenerateid)
+            ->where('timesheetusers.createdby', $teammemberData->id)
+            ->select(DB::raw('SUM(totalhour) as total_hours'))
+            ->first();
+
+    @endphp
+</div>
+
+{{-- * regarding comma / regarding key/ regarding foreach /regarding count  --}}
+
+<td>
+    {{ $client_id->client_name ?? '' }}
+    @if (count((array) $client_id->client_name) > 1)
+        ,
+    @endif
+</td>
 
 <td>
     @foreach ($client_id as $key => $item)
@@ -64,6 +149,10 @@
                 {{ $jobDatas->created_at }}</span>
             {{ date('d-m-Y', strtotime($jobDatas->created_at)) }}
             {{ date('h:i A', strtotime($jobDatas->created_at)) }}
+        </td>
+
+        <td><span></span>
+            {{ date('d-m-Y', strtotime($timesheetDatas->date)) }}
         </td>
     </tr>
 </table>
@@ -441,7 +530,8 @@ $request->flash();
     <select class="language form-control" id="year" name="year">
         <option value="">Please Select One</option>
         @for ($year = date('Y'); $year <= 2027; $year++)
-            <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>{{ $year }}
+            <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>
+                {{ $year }}
             </option>
         @endfor
     </select>
@@ -451,7 +541,8 @@ $request->flash();
     <select class="language form-control" id="year" name="year">
         <option value="">Please Select One</option>
         @for ($year = date('Y'); $year <= 2025; $year++)
-            <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>{{ $year }}
+            <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>
+                {{ $year }}
             </option>
         @endfor
     </select>

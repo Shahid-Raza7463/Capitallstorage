@@ -2,11 +2,499 @@
 
 class ZipController extends Controller
 {
+
+  public function store(Request $request) {
+//* temrary
+// Start Hare 
+        // Goes to confirmation page 
+        if ($request->status == 1) {
+
+          $assignmentDatas = DB::table('debtors')
+              ->where('assignmentgenerate_id', $request->clientid)->where('id', $request->debtorid)->update([
+                  'status'         => $request->status,
+                  'updated_at'         =>   date("Y-m-d")
+              ]);
+
+          return view('backEnd.teamconfirm');
+      }
+public function mail(Request $request)
+{
+    // dd($request);
+    //    if($request->description){
+    //     $print =DB::table('templates')->where('description', 'LIKE', '%' . '$name' . '%' )->first();
+    //     dd('hi');
+    //    }
+    //    dd($request);
+    // $request->validate([
+    //     'file' => 'required'
+    // ]);
+
+    try {
+        $data = $request->except(['_token']);
+
+        $debtor = DB::table('debtors')->where('assignmentgenerate_id', $request->clientid)->where('type', $request->type)->where('mailstatus', 0)->get();
+        //  dd($debtor);
+
+        if ($debtor[0]->mailstatus == 0) {
+            $updateit = DB::table('debtors')
+                ->where('assignmentgenerate_id', $request->clientid)->where('type', $request->type)
+                ->update([
+                    'mailstatus'         => 2,
+                    'updated_at'         =>   date("Y-m-d H:i:s")
+                ]);
+        }
+        foreach ($debtor as $debtors) {
+            if ($request->teammember_id) {
+                // cc mail
+                $teammembermail = Teammember::wherein('id', $request->teammember_id)->pluck('emailid')->toArray();
+            }
+            // $description = str_replace('$name', $debtors->name, $request->description); 
+            //  $description = str_replace('44247', $debtors->amount, $request->description);
+            $des = $request->description;
+            $healthy = ["[name]", "[amount]", "[year]", "[date]", "[address]"];
+            $yummy   = ["$debtors->name", "$debtors->amount", "$debtors->year", "$debtors->date", "$debtors->address"];
+            $description = str_replace($healthy, $yummy, $des);
+
+            $data = array(
+                'subject' => $request->subject,
+                //       'fromemail' =>  $request->fromemail,
+                'name' =>  $debtors->name,
+                'email' =>  $debtors->email,
+                'year' =>  $debtors->year,
+                'date' =>  $debtors->date,
+                'amount' =>  $debtors->amount,
+                'clientid' => $debtors->assignmentgenerate_id,
+                'debtorid' => $debtors->id,
+                'description' => $description,
+                'teammembermail' => $teammembermail ?? '',
+                'yes' => 1,
+                'no' => 0
+            );
+
+
+            Mail::send('emails.debtorform', $data, function ($msg) use ($data, $request) {
+                $msg->to($data['email']);
+                //  $msg->from('arihant@kgsomani.com', 'Kgskonnect');
+                // $msg->cc($teammembermail);
+                $msg->subject($data['subject']);
+
+                if ($request->teammember_id) {
+                    $msg->cc($data['teammembermail']);
+                }
+            });
+
+            DB::table('debtors')
+                ->where('assignmentgenerate_id', $debtors->assignmentgenerate_id)->where('id', $debtors->id)->update([
+                    'mailstatus'         => 1,
+                    'updated_at'         =>   date("Y-m-d H:i:s")
+                ]);
+        }
+        $output = array('msg' => 'Mail Send Successfully');
+        return back()->with('success', $output);
+    } catch (Exception $e) {
+        DB::rollBack();
+        Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+        report($e);
+        $output = array('msg' => $e->getMessage());
+        return back()->withErrors($output)->withInput();
+    }
+}
+
+
+public function pendingmail($id)
+{
+    // dd($id);
+    try {
+        $usermail = DB::table('debtors')->where('id', $id)->select('email')->first();
+        // dd($usermail->email);
+        $data = array(
+            'email' => $usermail->email ?? '',
+        );
+        Mail::send('emails.testingmail', $data, function ($msg) use ($data) {
+            $msg->to($data['email']);
+            $msg->subject('Subject goes to hare');
+        });
+        $output = array('msg' => 'Mail Send Successfully');
+        return back()->with('success', $output);
+    } catch (Exception $e) {
+        DB::rollBack();
+        Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+        report($e);
+        $output = array('msg' => $e->getMessage());
+        return back()->withErrors($output)->withInput();
+    }
+}
 //*
+// Start Hare 
 //*
+// Start Hare 
 //*
+// Start Hare 
 //*
+// Start Hare 
+//*
+// Start Hare 
+//*
+// Start Hare 
+//* regarding array access / regarding access
+// Start Hare 
+    dd($assignments[0]->assignmentgenerate_id);
+    dd($assignments[0]->client_id);
+    dd($assignments[0]->assignment_id);
+    dd($assignments[0]->created_at);
+
+    dd($request->id);
+
+//*regarding implode function 
+
+ // $data = array(
+                //     'assignmentid' =>  $assignmentgenerate,
+                //     'clientname' =>  $clientname->client_name,
+                //     'clientcode' =>  $clientname->client_code,
+                //     'assignmentname' =>  $request->assignmentname,
+                //     'assignment_name' =>  $assignment_name,
+                //     'emailid' =>  $teammember->emailid,
+                //     'otherpatner' =>  $teamemailotherpartner,
+                //     'assignmentpartner' =>  $teamemailpartner,
+                //     'teamleader' => $teamleader->map(function ($leader) {
+                //         return $leader->team_member . ' (' . $leader->staffcode . ')';
+                //     })->implode(', '),
+                // );
+                // dd($data);
+//* regarding week days name / days name / regarding months name 
+// Monday
+// Tuesday
+// Wednesday
+// Thursday
+// Friday
+// Saturday
+// Sunday
+
+// January
+// February
+// March	
+// April
+// May	
+// June
+// July	
+// August
+// September	
+// October
+// November	
+// December
+
+//* regarding date compare /  regarding date condition
+
+
+// start hare
+$todaydate = '2024-03-09';
+$date = Carbon::createFromFormat('Y-m-d', $todaydate);
+dd($date);
+
+// start hare
+if ($usertimesheetfirstdate && !empty($usertimesheetfirstdate->date)) {
+  // if error is Not enough data available to satisfy format
+}
+
+// start hare
+$autosubmitdate = Carbon::createFromFormat('Y-m-d', $usertimesheetfirstdate->date ?? '')->addDays(9);
+// $autosubmitdate = Carbon::createFromFormat('Y-m-d', '2024-02-26' ?? '')->addDays(11);
+$todaydate = Carbon::now('Asia/Kolkata');
+
+if ($autosubmitdate->isSameDay($todaydate)) {
+    dd('hi date');
+}
+
+// start hare
+$date = Carbon::createFromFormat('Y-m-d', $usertimesheetfirstdate->date);
+$autosubmitdate = $date->copy()->next(Carbon::SUNDAY)->addDays(3);
+$todaydate = Carbon::now('Asia/Kolkata');
+
+if ($autosubmitdate->isSameDay($todaydate)) {
+    dd('hi date');
+}
+
+// start hare
+$autosubmitdate = Carbon::createFromFormat('Y-m-d', $usertimesheetfirstdate->date ?? '')->addDays(9);
+// $autosubmitdate = Carbon::createFromFormat('Y-m-d', '2024-02-26' ?? '')->addDays(11);
+$todaydate = Carbon::now('Asia/Kolkata');
+if ($autosubmitdate->isSameDay($todaydate)) {
+    dd('hi date');
+}
+//* regarding count function 
+if (!empty($missingDates)) {
+  $count1 = count($missingDates);
+  $missingDatesexist =  DB::table('timesheetusers')
+      // ->where('status', '0')
+      ->whereIn('date', $missingDates)
+      ->where('createdby', 847)
+      ->orderBy('date', 'ASC')
+      ->get();
+  $count2 = $missingDatesexist->count();
+  dd($count1, $count2);
+}
+//* regarding model
+$createdby = Timesheetuser::distinct()->pluck('createdby')->toArray();
+
+//* regarding command / regarding command
+
+// make comand using comand 
+// 1.php artisan make:command SubmittedExamleaveTimesheet
+
+// show command list 
+// 3.php artisan schedule:list
+
+// show command list 
+// 2.php artisan list
+
+// test command in terminal 
+// 4.php artisan command:submittedexamleaveTimesheet
+
+//1. go to command file 
+//2. go to kernel file and register command 
+//3. go to web.php file and create route 
+//4. go to  controller and define function 
+
+class SubmittedExamleaveTimesheet extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'command:submittedexamleaveTimesheet';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description =  'Insert Successfully';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        dd('HI');
+        // return 0;
+    }
+}
+
+
+public function submittedexamleaveTimesheet()
+{
+
+  $exitCode = Artisan::call('command:submittedexamleaveTimesheet')->daily();
+
+  return  redirect('/');
+}
+
+
+
+
+
+//*regarding ajax
+//* regarding ajax / table heading replace 
+// start hare 
+// app\Http\Controllers\TimesheetController.php    function create(Request $request)
+// in same function me ajax call karna hai to 
+  $partner = Teammember::where('role_id', '=', 13)->where('status', '=', 1)->with('title')->get();
+  if ($request->ajax()) {
+    if (isset($request->timesheetdate)) {
+      echo "<option>Select client</option>";
+
+      $selectedDate = \DateTime::createFromFormat('d-m-Y', $request->timesheetdate);
+      $clientss = DB::table('assignmentteammappings')
+        ->leftjoin('assignmentmappings', 'assignmentmappings.id', 'assignmentteammappings.assignmentmapping_id')
+        ->leftjoin('assignmentbudgetings', 'assignmentbudgetings.assignmentgenerate_id', 'assignmentmappings.assignmentgenerate_id')
+        ->leftjoin('clients', 'clients.id', 'assignmentbudgetings.client_id')
+        ->orwhere('assignmentteammappings.teammember_id', auth()->user()->teammember_id)
+        ->whereNotIn('assignmentbudgetings.assignmentname', ['Unallocated', 'Official Travel', 'Off/Holiday', 'Seminar/Conference/Post Qualification Course'])
+        ->where(function ($query) use ($selectedDate) {
+          $query->whereNull('otpverifydate')
+            ->orWhere('otpverifydate', '>=', $selectedDate->modify('-1 day'));
+        })
+        ->select('clients.client_name', 'clients.id', 'clients.client_code')
+        ->orderBy('client_name', 'ASC')
+        // ->distinct()->get();
+        ->get();
+
+      // done default $clients in ajax if need then $clientss add in ajax target $request->cid == 29 || $request->cid == 32 || $request->cid == 33 || $request->cid == 34
+      $clients = DB::table('clients')
+        ->whereIn('id', [29, 32, 33, 34])
+        ->select('clients.client_name', 'clients.id', 'clients.client_code')
+        ->orderBy('client_name', 'ASC')
+        ->distinct()->get();
+
+      $client = $clientss->merge($clients);
+
+      foreach ($client as $clients) {
+        echo "<option value='" . $clients->id . "'>" . $clients->client_name . '( ' . $clients->client_code . ' )' . "</option>";
+      }
+    }
+
+    if (isset($request->cid)) {
+      if (auth()->user()->role_id == 13) {
+        echo "<option>Select Assignment</option>";
+
+        if ($request->cid == 29 || $request->cid == 32 || $request->cid == 33 || $request->cid == 34) {
+          $clients = DB::table('clients')
+            // ->whereIn('id', [29, 32, 33, 34])
+            ->where('id', $request->cid)
+            ->select('clients.client_name', 'clients.id', 'clients.client_code')
+            ->orderBy('client_name', 'ASC')
+            ->distinct()->get();
+          // dd($clients);
+          $id = $clients[0]->id;
+          foreach (DB::table('assignmentbudgetings')->where('client_id', $id)
+            ->leftjoin('assignments', 'assignments.id', 'assignmentbudgetings.assignment_id')
+            ->orderBy('assignment_name')->get() as $sub) {
+            echo "<option value='" . $sub->assignmentgenerate_id . "'>" . $sub->assignment_name . '( ' . $sub->assignmentname . '/' . $sub->assignmentgenerate_id . ' )' . "</option>";
+          }
+        } else {
+          // dd('hi 3');
+
+          $selectedDate = \DateTime::createFromFormat('d-m-Y', $request->datepickers);
+
+          foreach (DB::table('assignmentbudgetings')
+            ->where('assignmentbudgetings.client_id', $request->cid)
+            ->leftJoin('assignments', 'assignments.id', 'assignmentbudgetings.assignment_id')
+            ->leftJoin('assignmentmappings', 'assignmentmappings.assignmentgenerate_id', 'assignmentbudgetings.assignmentgenerate_id')
+            ->where(function ($query) {
+              $query->where('assignmentmappings.leadpartner', auth()->user()->teammember_id)
+                ->orWhere('assignmentmappings.otherpartner', auth()->user()->teammember_id);
+            })
+            ->where(function ($query) use ($selectedDate) {
+              $query->whereNull('otpverifydate')
+                ->orWhere('otpverifydate', '>=', $selectedDate->modify('-1 day'));
+            })
+            ->orderBy('assignment_name')->get() as $sub) {
+            echo "<option value='" . $sub->assignmentgenerate_id . "'>" . $sub->assignment_name . '( ' . $sub->assignmentname . '/' . $sub->assignmentgenerate_id . ' )' . "</option>";
+          }
+        }
+      } else {
+        echo "<option>Select Assignment</option>";
+
+        if ($request->cid == 29 || $request->cid == 32 || $request->cid == 33 || $request->cid == 34) {
+          $clients = DB::table('clients')
+            // ->whereIn('id', [29, 32, 33, 34])
+            ->where('id', $request->cid)
+            ->select('clients.client_name', 'clients.id', 'clients.client_code')
+            ->orderBy('client_name', 'ASC')
+            ->distinct()->get();
+          // dd($clients);
+          $id = $clients[0]->id;
+          foreach (DB::table('assignmentbudgetings')->where('client_id', $id)
+            ->leftjoin('assignments', 'assignments.id', 'assignmentbudgetings.assignment_id')
+            ->orderBy('assignment_name')->get() as $sub) {
+            echo "<option value='" . $sub->assignmentgenerate_id . "'>" . $sub->assignment_name . '( ' . $sub->assignmentname . '/' . $sub->assignmentgenerate_id . ' )' . "</option>";
+          }
+        } else {
+
+
+
+          //  i have add this code after kartic bindal problem 
+          $selectedDate = \DateTime::createFromFormat('d-m-Y', $request->datepickers);
+
+          foreach (DB::table('assignmentbudgetings')
+            ->join('assignmentmappings', 'assignmentmappings.assignmentgenerate_id', 'assignmentbudgetings.assignmentgenerate_id')
+            ->leftjoin('assignments', 'assignments.id', 'assignmentmappings.assignment_id')
+            ->leftjoin('assignmentteammappings', 'assignmentteammappings.assignmentmapping_id', 'assignmentmappings.id')
+            ->where('assignmentbudgetings.client_id', $request->cid)
+            ->where('assignmentteammappings.teammember_id', auth()->user()->teammember_id)
+            //  ->where('assignmentteammappings.status', '!=', 0)
+            // ->whereNull('assignmentteammappings.status')
+            ->where(function ($query) {
+              $query->whereNull('assignmentteammappings.status')
+                ->orWhere('assignmentteammappings.status', '=', 1);
+            })
+            ->where(function ($query) use ($selectedDate) {
+              $query->whereNull('otpverifydate')
+                //   ->orWhere('otpverifydate', '>=', $selectedDate);
+                // // ->orWhere('otpverifydate', '>=', $selectedDate);
+                ->orWhere('otpverifydate', '>=', $selectedDate->modify('-1 day'));
+            })
+            ->orderBy('assignment_name')->get() as $sub) {
+            echo "<option value='" . $sub->assignmentgenerate_id . "'>" . $sub->assignment_name . '( ' . $sub->assignmentname . '/' . $sub->assignmentgenerate_id . ' )' . "</option>";
+          }
+        }
+      }
+    }
+
+    if (isset($request->assignment)) {
+      // dd($request->assignment);
+      if (auth()->user()->role_id == 11) {
+        echo "<option value=''>Select Partner</option>";
+        foreach (DB::table('assignmentmappings')
+
+          ->leftjoin('teammembers', 'teammembers.id', 'assignmentmappings.leadpartner')
+          ->leftjoin('teammembers as team', 'team.id', 'assignmentmappings.otherpartner')
+          ->where('assignmentmappings.assignmentgenerate_id', $request->assignment)
+          ->select('team.team_member as team_member', 'team.id', 'teammembers.id', 'teammembers.team_member')
+          ->get() as $subs) {
+          echo "<option value='" . $subs->id . "'>" . $subs->team_member . "</option>";
+        }
+      } elseif (auth()->user()->role_id == 13) {
+        echo "<option value=''>Select Partner</option>";
+        foreach (DB::table('teammembers')
+          ->where('id', auth()->user()->teammember_id)
+          ->select('teammembers.id', 'teammembers.team_member')
+          ->get() as $subs) {
+          echo "<option value='" . $subs->id . "'>" . $subs->team_member . "</option>";
+        }
+      } else {
+        //die;
+        echo "<option value=''>Select Partner</option>";
+        foreach (DB::table('assignmentmappings')
+
+          ->leftjoin('teammembers', 'teammembers.id', 'assignmentmappings.leadpartner')
+          ->leftjoin('teammembers as team', 'team.id', 'assignmentmappings.otherpartner')
+          ->where('assignmentmappings.assignmentgenerate_id', $request->assignment)
+          ->select('team.team_member as team_member', 'team.id', 'teammembers.id', 'teammembers.team_member')
+          ->get() as $subs) {
+          echo "<option value='" . $subs->id . "'>" . $subs->team_member . "</option>";
+        }
+      }
+    }
+  } else {
+    return view('backEnd.timesheet.create', compact('partner'));
+  }
+  // start hare 
+
+
+//* regarding old data / regarding flash 
+$request->flash()->forget(['year', 'start_date', 'end_date']);
+$request->session()->forget('_old_input');
+
+}
+//* unique validation 
+
+$request->validate([
+  // 'client_id' => "required",
+  'client_id' => 'required|unique:assignmentbudgetings,client_id',
+  'assignment_id' => "required",
+  'teammember_id.*' => "required",
+  'assignmentname' => "required",
+  'type.*' => "required"
+]);
+
 //* regarding date All condition 
+
+
+// Start hare
 public function store(Request $request)
 {
   // app\Http\Controllers\TimesheetController.php
@@ -41,6 +529,69 @@ public function store(Request $request)
         }
       }
     } 
+}
+
+// Start hare  this is date testing / regarding testing
+$selectedDate = \DateTime::createFromFormat('d-m-Y', '05-03-2024');
+dd($selectedDate);
+
+
+// Start hare  compare two difrent date formate like otpverifydate= 2024-02-20 12:38:56   $request->datepickers = 2024-02-20
+$requestDate = \DateTime::createFromFormat('d-m-Y', $request->datepickers);
+
+$var = DB::table('assignmentbudgetings')
+  ->where('client_id', $request->cid)
+  ->where(function ($query) use ($requestDate) {
+    $query->whereNull('otpverifydate')
+          // // ->orWhere('otpverifydate', '<=', $requestDate->modify('+1 day'));
+          // ->orWhere('otpverifydate', '>=', $requestDate->modify('-1 day'));
+      ->orWhere('otpverifydate', '>', $requestDate);
+  })
+  ->leftJoin('assignments', 'assignments.id', 'assignmentbudgetings.assignment_id')
+  ->orderBy('assignment_name')
+  ->get();
+
+dd($var);
+
+// Start hare  increase 1 date and decrease 1 date from date 
+$requestDate = \DateTime::createFromFormat('d-m-Y', $request->datepickers);
+
+$var = DB::table('assignmentbudgetings')
+  ->where('client_id', $request->cid)
+  ->where(function ($query) use ($requestDate) {
+    $query->whereNull('otpverifydate')
+      // ->orWhere('otpverifydate', '<=', $requestDate->modify('+1 day'));
+      ->orWhere('otpverifydate', '>=', $requestDate->modify('-1 day'));
+  })
+  ->leftJoin('assignments', 'assignments.id', 'assignmentbudgetings.assignment_id')
+  ->orderBy('assignment_name')
+  ->get();
+
+
+// Start hare
+$period = CarbonPeriod::create($team->from, $team->to);
+dd($period);
+$datess = [];
+foreach ($period as $date) {
+  $datess[] = $date->format('Y-m-d');
+
+  DB::table('timesheets')->where('date', $date->format('Y-m-d'))
+    ->where('created_by', $team->createdby)->delete();
+  DB::table('timesheetusers')->where('createdby', $team->createdby)
+    ->where('date', $date->format('Y-m-d'))->delete();
+}
+
+// Start hare
+$defaulttimesheetshowdate = DB::table('timesheetusers')
+->where('timesheetusers.createdby', $teamid)
+->whereIn('timesheetusers.status', [1, 2, 3])
+->orderBy('date', 'DESC')
+->first();
+if ($defaulttimesheetshowdate) {
+$to = $defaulttimesheetshowdate->date;
+$fromformate = Carbon::createFromFormat('Y-m-d', $to);
+// Subtract 6 days
+$from = $fromformate->subDays(6)->toDateString();
 }
 
 
@@ -86,7 +637,7 @@ public function assignmentotpstore(Request $request)
 }
 //*  regarding function / function call 
 
-
+// Start hare
 public function store(Request $request)
 {
 
@@ -171,13 +722,122 @@ public function store(Request $request)
 
 }
 
-function sendAssignmentEmail($data)
+public function sendAssignmentEmail($data)
 {
     Mail::send('emails.assignmentassign', $data, function ($msg) use ($data) {
         $msg->to($data['emailid']);
         $msg->subject('VSA New Assignment Assigned || ' . $data['assignmentname'] . ' / ' . $data['assignmentid']);
     });
 }
+
+// Start hare
+public function pendingmail($id)
+{
+    try {
+        $debtor = Debtor::findOrFail($id);
+
+        $mailData = Template::where('type', $debtor->type)->firstOrFail();
+        $description = $this->replacePlaceholders($mailData->description, $debtor);
+
+        $data = [
+            'name' => $debtor->name,
+            'email' => $debtor->email,
+            'year' => $debtor->year,
+            'date' => $debtor->date,
+            'amount' => $debtor->amount,
+            'clientid' => $debtor->assignmentgenerate_id,
+            'debtorid' => $debtor->id,
+            'description' => $description,
+            'yes' => 1,
+            'no' => 0
+        ];
+
+        $this->sendEmail($data);
+
+        return back()->with('success', 'Mail sent successfully');
+    } catch (\Exception $e) {
+        Log::error("Error sending email: " . $e->getMessage());
+        return back()->withErrors(['msg' => 'Failed to send email'])->withInput();
+    }
+}
+
+private function replacePlaceholders($description, $debtor)
+{
+    $placeholders = ["[name]", "[amount]", "[year]", "[date]", "[address]"];
+    $values = [$debtor->name, $debtor->amount, $debtor->year, $debtor->date, $debtor->address];
+
+    return str_replace($placeholders, $values, $description);
+}
+
+private function sendEmail($data)
+{
+    Mail::send('emails.debtorform', $data, function ($message) use ($data) {
+        $message->to($data['email'])->subject('Regarding Pending Confirmation');
+    });
+}
+// Start hare
+public function pendingmail($id)
+{
+    // dd($id);
+    try {
+        $usermail = DB::table('debtors')->where('id', $id)->first();
+
+        // Get mail for Debitor
+        if ($usermail->type == 1) {
+            // dd('debitor');
+            $this->sendEmail($usermail);
+        }
+        // Get mail for crediter
+        elseif ($usermail->type == 2) {
+            // dd('crediter');
+            $this->sendEmail($usermail);
+        }
+        // Get mail for bank
+        else {
+            // dd('bank');
+            $this->sendEmail($usermail);
+        }
+        dd('hi4');
+        $output = array('msg' => 'Mail Send Successfully');
+        return back()->with('success', $output);
+    } catch (Exception $e) {
+        DB::rollBack();
+        Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+        report($e);
+        $output = array('msg' => $e->getMessage());
+        return back()->withErrors($output)->withInput();
+    }
+}
+
+public function sendEmail($usermail)
+{
+    $maildata = DB::table('templates')->where('type', $usermail->type)->first();
+
+    $des = $maildata->description;
+    $healthy = ["[name]", "[amount]", "[year]", "[date]", "[address]"];
+    $yummy   = ["$usermail->name", "$usermail->amount", "$usermail->year", "$usermail->date", "$usermail->address"];
+    $description = str_replace($healthy, $yummy, $des);
+
+
+    $data = array(
+        'name' =>  $usermail->name,
+        'email' =>  $usermail->email,
+        'year' =>  $usermail->year,
+        'date' =>  $usermail->date,
+        'amount' =>  $usermail->amount,
+        'clientid' => $usermail->assignmentgenerate_id,
+        'debtorid' => $usermail->id,
+        'description' => $description,
+        'yes' => 1,
+        'no' => 0
+    );
+    Mail::send('emails.debtorform', $data, function ($msg) use ($data) {
+        $msg->to($data['email']);
+        $msg->subject('Regarding Pending Confirmation');
+    });
+}
+// Start hare
+
 
 
 //* regarding url / regarding route /  regarding path
@@ -296,20 +956,6 @@ public function assignmentotp(Request $request)
 }
 
 
-//*  regarding date 
-$period = CarbonPeriod::create($team->from, $team->to);
-dd($period);
-$datess = [];
-foreach ($period as $date) {
-  $datess[] = $date->format('Y-m-d');
-
-  DB::table('timesheets')->where('date', $date->format('Y-m-d'))
-    ->where('created_by', $team->createdby)->delete();
-  DB::table('timesheetusers')->where('createdby', $team->createdby)
-    ->where('date', $date->format('Y-m-d'))->delete();
-}
-
-
 //* regarding store image/ regarding image store 
         // this code download any folder from public folder 
         public function zipfile(Request $request, $assignmentfolder_id) {
@@ -381,7 +1027,66 @@ $nextweektimesheet = DB::table('timesheetusers')
 ->first();
 
 dd($nextweektimesheet);
+
 //* regarding where clouse / 
+
+->distinct('partner')
+->distinct()
+  // start hare 
+  ->whereJsonContains('timesheetreport.partnerid', auth()->user()->teammember_id)
+     ->whereBetween('startdate', ['2023-12-11', '2024-03-25'])
+  ->whereBetween('created_at', ['2023-09-01 16:45:30', '2023-12-31 16:45:30'])
+  ->whereIn('timesheetusers.status', [1, 2, 3])
+  ->whereNotNull('clients.client_name')
+  ->whereNull('partnerid')
+  // start hare 
+$clientss = DB::table('assignmentmappings')
+->leftjoin('assignmentbudgetings', 'assignmentbudgetings.assignmentgenerate_id', 'assignmentmappings.assignmentgenerate_id')
+->leftjoin('clients', 'clients.id', 'assignmentbudgetings.client_id')
+->where(function ($query) {
+  $query->where('assignmentmappings.leadpartner', auth()->user()->teammember_id)
+    ->orWhere('assignmentmappings.otherpartner', auth()->user()->teammember_id);
+})
+->where('assignmentbudgetings.status', 1)
+->select('clients.client_name', 'clients.id', 'clients.client_code')
+->orderBy('client_name', 'ASC')
+->distinct()
+->distinct()->get();
+  // start hare 
+  ->whereBetween('date', ['2024-03-11', '2024-03-16'])
+
+
+  // start hare 
+foreach (DB::table('assignmentbudgetings')
+->where('assignmentbudgetings.client_id', $request->cid)
+->leftJoin('assignments', 'assignments.id', 'assignmentbudgetings.assignment_id')
+->leftJoin('assignmentmappings', 'assignmentmappings.assignmentgenerate_id', 'assignmentbudgetings.assignmentgenerate_id')
+->where(function ($query) {
+  $query->where('assignmentmappings.leadpartner', auth()->user()->teammember_id)
+    ->orWhere('assignmentmappings.otherpartner', auth()->user()->teammember_id);
+})
+->where(function ($query) use ($selectedDate) {
+  $query->whereNull('otpverifydate')
+    ->orWhere('otpverifydate', '>=', $selectedDate->modify('-1 day'));
+})
+->orderBy('assignment_name')->get() as $sub) {
+echo "<option value='" . $sub->assignmentgenerate_id . "'>" . $sub->assignment_name . '( ' . $sub->assignmentname . '/' . $sub->assignmentgenerate_id . ' )' . "</option>";
+}
+  // start hare 
+$clientss = DB::table('assignmentteammappings')
+->leftjoin('assignmentmappings', 'assignmentmappings.id', 'assignmentteammappings.assignmentmapping_id')
+->leftjoin('assignmentbudgetings', 'assignmentbudgetings.assignmentgenerate_id', 'assignmentmappings.assignmentgenerate_id')
+->leftjoin('clients', 'clients.id', 'assignmentbudgetings.client_id')
+->orwhere('assignmentteammappings.teammember_id', auth()->user()->teammember_id)
+// i have add this line becouse manager contain it but staff not contain it so basically after add this code no contain staff and manager 
+->whereNotIn('assignmentbudgetings.assignmentname', ['Unallocated', 'Official Travel', 'Off/Holiday', 'Seminar/Conference/Post Qualification Course'])
+
+->select('clients.client_name', 'clients.id', 'clients.client_code', 'assignmentbudgetings.*')
+->orderBy('client_name', 'ASC')
+->distinct()->get();
+dd($clientss);
+  // start hare 
+
 $data = DB::table('assignmentbudgetings')
 ->where('assignmentbudgetings.client_id', 123)
 ->leftJoin('assignments', 'assignments.id', 'assignmentbudgetings.assignment_id')
@@ -413,6 +1118,8 @@ foreach (DB::table('assignmentbudgetings')
 ->orderBy('assignment_name')->get() as $sub) {
 echo "<option value='" . $sub->assignmentgenerate_id . "'>" . $sub->assignment_name . '( ' . $sub->assignmentname . '/' . $sub->assignmentgenerate_id . ' )' . "</option>";
 }
+
+  // start hare 
 //* regarding job / job implementation 
 
 // function in controller 
@@ -540,7 +1247,6 @@ $timesheetData = DB::table('timesheetusers')
 ->orderBy('date', 'DESC')
 ->take(7)
 ->get();
-//* regarding date 
     // Default show 7 days data 
     $defaulttimesheetshowdate = DB::table('timesheetusers')
       ->where('timesheetusers.createdby', $teamid)
@@ -871,6 +1577,75 @@ if (!shouldContinue) {
   }
 //* filtering functionality / regarding filter / filter functionality
 
+// convert when clouse to good code 
+
+public function searchingtimesheet(Request $request)
+{
+  // Get all input from form
+  $startDate = $request->input('startdate', null);
+  $endDate = $request->input('enddate', null);
+  $teamId = $request->input('teamid', null);
+  $teammemberId = $request->input('teammemberId', null);
+  $year = $request->input('year', null);
+
+  $teammembers = DB::table('teammembers')
+    ->where('status', 1)
+    ->whereIn('role_id', [14, 15, 13, 11])
+    ->select('team_member', 'id', 'staffcode')
+    ->orderBy('team_member', 'ASC')
+    ->get();
+
+  // For patner
+  if (auth()->user()->role_id == 13) {
+    $query = DB::table('timesheetusers')
+      ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+      ->whereIn('timesheetusers.status', [1, 2, 3])
+      ->leftjoin('clients', 'clients.id', 'timesheetusers.client_id')
+      ->leftjoin('assignments', 'assignments.id', 'timesheetusers.assignment_id')
+      ->leftjoin('teammembers as patnerid', 'patnerid.id', 'timesheetusers.partner')
+      ->select('timesheetusers.*', 'assignments.assignment_name', 'clients.client_name', 'teammembers.team_member', 'patnerid.team_member as patnername')
+      ->orderBy('date', 'DESC');
+
+    if ($startDate && $endDate && $teamId) {
+      $query->where(function ($q) use ($startDate, $endDate, $teamId) {
+        $q->where('timesheetusers.createdby', $teamId)
+          ->where('timesheetusers.date', '>=', $startDate)
+          ->where('timesheetusers.date', '<=', $endDate);
+      });
+    }
+
+    $timesheetData = $query->get();
+    // dd($timesheetData);
+    $request->flash();
+    return view('backEnd.timesheet.timesheetdownload', compact('timesheetData'));
+  }
+  // For staff and manager
+  else {
+
+    $query = DB::table('timesheetusers')
+      ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+      ->whereIn('timesheetusers.status', [1, 2, 3])
+      ->leftjoin('clients', 'clients.id', 'timesheetusers.client_id')
+      ->leftjoin('assignments', 'assignments.id', 'timesheetusers.assignment_id')
+      ->leftjoin('teammembers as patnerid', 'patnerid.id', 'timesheetusers.partner')
+      ->select('timesheetusers.*', 'assignments.assignment_name', 'clients.client_name', 'teammembers.team_member', 'patnerid.team_member as patnername')
+      ->orderBy('date', 'DESC');
+
+    if ($startDate && $endDate && $teamId) {
+      $query->where(function ($q) use ($startDate, $endDate, $teamId) {
+        $q->where('timesheetusers.createdby', $teamId)
+          ->where('timesheetusers.date', '>=', $startDate)
+          ->where('timesheetusers.date', '<=', $endDate);
+      });
+    }
+    $timesheetData = $query->get();
+
+    $request->flash();
+    return view('backEnd.timesheet.timesheetdownload', compact('timesheetData'));
+  }
+}
+
+
 // timesheet filtering function blade code yes
 public function searchingtimesheet(Request $request)
 {
@@ -940,6 +1715,71 @@ public function searchingtimesheet(Request $request)
   return '<h3>Please Choose Searching Data</h3>';
 }
 
+public function searchingtimesheet(Request $request)
+{
+  // dd($request, 'hi1');
+  // Get all input from form
+  $startDate = $request->input('startdate', null);
+  $endDate = $request->input('enddate', null);
+  $teamId = $request->input('teamid', null);
+  $teammemberId = $request->input('teammemberId', null);
+  $year = $request->input('year', null);
+
+  $teammembers = DB::table('teammembers')
+    ->where('status', 1)
+    ->whereIn('role_id', [14, 15, 13, 11])
+    ->select('team_member', 'id', 'staffcode')
+    ->orderBy('team_member', 'ASC')
+    ->get();
+
+  // For patner
+  if (auth()->user()->role_id == 13) {
+    if (($startDate != null && $endDate != null) || $request->year != null) {
+      $timesheetData = DB::table('timesheetusers')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+        // When startDate and endDate exist then run 'when' clouse
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate, $teamId) {
+          // dd('1 one');
+          return $query->where('timesheetusers.createdby', $teamId)
+            ->where('timesheetusers.date', '>=', $startDate)
+            ->where('timesheetusers.date', '<=', $endDate);
+        })
+        ->whereIn('timesheetusers.status', [1, 2, 3])
+        ->leftjoin('clients', 'clients.id', 'timesheetusers.client_id')
+        ->leftjoin('assignments', 'assignments.id', 'timesheetusers.assignment_id')
+        ->leftjoin('teammembers as patnerid', 'patnerid.id', 'timesheetusers.partner')
+        ->select('timesheetusers.*', 'assignments.assignment_name', 'clients.client_name', 'teammembers.team_member', 'patnerid.team_member as patnername')
+        ->orderBy('date', 'DESC')
+        ->get();
+      // dd($timesheetData);
+      $request->flash();
+      return view('backEnd.timesheet.timesheetdownload', compact('timesheetData'));
+    }
+  }
+  // For staff and manager
+  else {
+    if (($startDate != null && $endDate != null) || $request->year != null) {
+      $timesheetData = DB::table('timesheetusers')
+        ->leftjoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+        // When startDate and endDate exist then run 'when' clouse
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate, $teamId) {
+          return $query->where('timesheetusers.createdby', $teamId)
+            ->where('timesheetusers.date', '>=', $startDate)
+            ->where('timesheetusers.date', '<=', $endDate);
+        })
+        ->whereIn('timesheetusers.status', [1, 2, 3])
+        ->leftjoin('clients', 'clients.id', 'timesheetusers.client_id')
+        ->leftjoin('assignments', 'assignments.id', 'timesheetusers.assignment_id')
+        ->leftjoin('teammembers as patnerid', 'patnerid.id', 'timesheetusers.partner')
+        ->select('timesheetusers.*', 'assignments.assignment_name', 'clients.client_name', 'teammembers.team_member', 'patnerid.team_member as patnername')
+        ->orderBy('date', 'DESC')
+        ->get();
+
+      $request->flash();
+      return view('backEnd.timesheet.timesheetdownload', compact('timesheetData'));
+    }
+  }
+}
 
 public function adminsearchtimesheet(Request $request)
 {
@@ -1454,7 +2294,8 @@ if (date('l', strtotime(date('d-m-Y', strtotime($getsixdata->date)))) == 'Monday
 //* date as a string
 if (!empty($missingDates)) {
   $missingDatesString = implode(', ', $missingDates);
-  // "2023-11-13, 2023-11-14"
+  // "2023-11-13, 2023-11-14" like 
+  // "2024-03-11, 2024-03-12, 2024-03-13"
   dd($missingDatesString);
 
   $output = array('msg' => "Timesheet Submit Failed Missing dates: $missingDatesString");
@@ -2107,7 +2948,7 @@ Output:
             ]
           );
 
-    //*  week days in numbric/ regarding months / weeks days / regarding date and time  /regarding date /regarding time
+    //*  week days in numbric/ regarding months / weeks days / regarding date and time  /regarding date / regarding time
 
 //* in blade file 
 
@@ -2236,13 +3077,32 @@ Output:
        // 4 => "February"
  
        $currentDate = now();
+       'created_at' => date('Y-m-d H:i:s'),
        // 2024-01-16 00:46:21.610590
  
        $month = $currentDate->format('F');
        // "January"
        $year = $currentDate->format('Y');
        // "2024"
+       $lastdate = Carbon::createFromFormat('Y-m-d', $usertimesheetfirstdate->date ?? '')->addDays(6);
+       dd($lastdate);
 
+       $currentDate = clone $firstDate;
+      //  find day previous week 
+       $previousMonday = $requestedDate->copy()->previous(Carbon::MONDAY);
+
+      //  find next day 
+       $nextSaturday = $requestedDate->copy()->next(Carbon::SATURDAY);
+       dd($nextSaturday, 'hi88');
+
+      //  today date
+       $todaydate = Carbon::now('Asia/Kolkata');
+       dd($todaydate);
+
+      //  find weeek
+       $week =  date('d-m-Y', strtotime($previousMondayFormatted))  . ' to ' . date('d-m-Y', strtotime($nextSaturdayFormatted));
+
+       $upcomingSunday = (new DateTime($firstDate->format('Y-m-d')))->modify("+$daysToAdd days")->format('Y-m-d');
 
       //* date() function 
       // Formats the current date and time as a string
@@ -2273,6 +3133,8 @@ Output:
        $dayOfWeek = date('l');
        // Custom date and time format (e.g., "December 1, 2023, 3:30 pm")
        $customFormat = date('F j, Y, g:i a'); 
+      //  10:55 am
+       $customFormat = date('g:i a', strtotime($timesheetrequestsData->created_at)); 
 
        date('d-m-Y', strtotime($timesheetrequestsData->created_at))
       //  12-10-2023
@@ -2989,7 +3851,394 @@ if ($savetimesheet) {
 
         return response()->download(('backEnd/image/articlefiles/' . $articlefiles->filesname));
     }
-    //* Download image on click 
+    //* Download image on click
+    
+    //*  insert data in timesheet table / regarding update in table 
+    // Start Hare 
+
+    $date = '08-03-2024';
+    $id = DB::table('timesheets')->insertGetId(
+        [
+            'created_by' => 847,
+            'month'     =>   date('F', strtotime($date)),
+            'date'     =>    date('Y-m-d', strtotime($date)),
+            'created_at'          =>     date('Y-m-d H:i:s'),
+        ]
+    );
+
+    DB::table('timesheetusers')->insert([
+        'date'     =>   date('Y-m-d', strtotime($date)),
+        'client_id'     =>     29,
+        'workitem'     =>     'NA',
+        'location'     =>     'NA',
+        'timesheetid'     =>     $id,
+        'date'     =>     date('Y-m-d', strtotime($date)),
+        'hour'     =>     0,
+        'totalhour' =>      0,
+        'assignment_id'     =>     213,
+        'partner'     =>     887,
+        'createdby' => 847,
+        'created_at'          =>     date('Y-m-d H:i:s'),
+        'updated_at'              =>    date('Y-m-d H:i:s'),
+    ]);
+    dd('inserted');
+
+
+
+
+
+ // Start Hare    
+$nextweektimesheet = DB::table('timesheetusers')
+->where('createdby', auth()->user()->teammember_id)
+->whereBetween('date', ['2023-12-25', '2024-01-13'])
+// ->get();
+->update(['status' => 0]);
+
+$nextweektimesheet = DB::table('timesheets')
+->where('created_by', auth()->user()->teammember_id)
+->whereBetween('date', ['2023-12-25', '2024-01-13'])
+// ->get();
+->update(['status' => 0]);
+// // dd($nextweektimesheet);
+
+$nextweektimesheet = DB::table('timesheetusers')
+->where('createdby', auth()->user()->teammember_id)
+->whereBetween('date', ['2023-12-25', '2023-12-31'])
+->delete();
+
+DB::table('assignmentteammappings')
+->update(['status' => 0]);
+
+dd('hi');
+
+
+// Start Hare 
+$nextweektimesheet = DB::table('timesheetusers')
+->where('createdby', 847)
+->whereBetween('date', ['2024-03-11', '2024-03-20'])
+// ->get();
+->update(['status' => 0]);
+
+
+$nextweektimesheet = DB::table('timesheets')
+->where('created_by', 847)
+->whereBetween('date', ['2024-03-11', '2024-03-20'])
+// ->get();
+->update(['status' => 0]);
+
+$nextweektimesheet = DB::table('timesheetreport')
+->where('teamid', 847)
+->where('startdate', '2024-03-11')
+// ->get();
+->delete();
+
+dd('hi');
+
+
+
+// Start Hare update using condition 
+ // dd($teamid);
+ $assignments = DB::table('assignmentbudgetings')
+ ->whereBetween('created_at', ['2024-01-01 16:45:30', '2024-03-21 16:45:30'])
+ ->select('assignmentgenerate_id', 'client_id', 'assignment_id', 'created_at')
+ ->orderBy('id', 'DESC')
+ ->get();
+
+$date = date('Y-m-d', strtotime($assignments[117]->created_at));
+
+$updatedcode =  DB::table('timesheetusers')
+ // ->whereBetween('date', [$date, '2024-03-22'])
+ // ->whereBetween('date', [$date, '2024-02-07'])
+ ->where('client_id', $assignments[117]->client_id)
+ ->where('assignment_id', $assignments[117]->assignment_id)
+ // ->where('partner', 842)
+ // ->where('createdby', 856)
+ // ->whereNotIn('createdby', [234, 453])
+ // ->get();
+ ->update(['assignmentgenerate_id' => $assignments[117]->assignmentgenerate_id]);
+// ->update(['assignmentgenerate_id' => 'hi']);
+
+dd($updatedcode);
+// dd($assignments);
+
+// dd($assignments[0]->assignmentgenerate_id);
+// dd($assignments[0]->client_id);
+// dd($assignments[0]->assignment_id);
+// dd($assignments[0]->created_at);
+
+
+// Start Hare update for single user
+
+$nextweektimesheet = DB::table('timesheetreport')
+->whereBetween('created_at', ['2023-12-21 20:14:34', '2024-03-25 20:19:53'])
+// ->whereBetween('startdate', ['2023-12-11', '2024-03-25'])
+->whereNull('partnerid')
+->select('teamid', 'startdate', 'enddate', 'totaltime')
+->latest()
+->get();
+// ->count();
+// dd($nextweektimesheet, 'hi');
+
+foreach ($nextweektimesheet as $nextweektimesheets) {
+dd($nextweektimesheets->totaltime);
+dd($nextweektimesheets->enddate);
+dd($nextweektimesheets->startdate);
+dd($nextweektimesheets->teamid);
+
+$timesheetdata = DB::table('timesheetusers')
+  ->whereBetween('date', ['2024-03-04', '2024-03-09'])
+  ->where('createdby', 847)
+  // ->select('createdby', 'partner')
+  ->select('partner')
+  ->distinct()
+  ->get()->toArray();
+
+
+$zipfoldername1 = [];
+foreach ($timesheetdata as $timesheetdatas) {
+  $zipfoldername1[] = $timesheetdatas->partner;
+}
+// dd($zipfoldername1);
+
+// DB::table('timesheetreport')->insert([
+//   'teamid' => 847,
+//   'partnerid' => json_encode($partners), // Convert array to JSON string
+//   'created_at'                =>      date('y-m-d H:i:s'),
+// ]);
+
+$updateddata = DB::table('timesheetreport')
+  ->where('teamid', 847)
+  ->where('startdate', '2024-03-04')
+  ->where('enddate', '2024-03-09')
+  // ->get();
+  ->update(['partnerid' => $zipfoldername1]);
+
+dd($updateddata);
+}
+// Start Hare update for single user
+
+$nextweektimesheet = DB::table('timesheetreport')
+->whereBetween('created_at', ['2023-12-21 20:14:34', '2024-03-25 20:19:53'])
+// ->whereBetween('startdate', ['2023-12-11', '2024-03-25'])
+->whereNull('partnerid')
+->select('teamid', 'startdate', 'enddate', 'totaltime')
+->latest()
+->get();
+// ->count();
+// dd($nextweektimesheet, 'hi');
+
+foreach ($nextweektimesheet as $nextweektimesheets) {
+$timesheetdata = DB::table('timesheetusers')
+  ->whereBetween('date', [$nextweektimesheets->startdate, $nextweektimesheets->enddate])
+  ->where('createdby', $nextweektimesheets->teamid)
+  // ->select('createdby', 'partner')
+  ->select('partner')
+  ->distinct()
+  ->get()->toArray();
+
+
+$zipfoldername1 = [];
+foreach ($timesheetdata as $timesheetdatas) {
+  $zipfoldername1[] = $timesheetdatas->partner;
+}
+// dd($zipfoldername1);
+
+// DB::table('timesheetreport')->insert([
+//   'teamid' => 847,
+//   'partnerid' => json_encode($partners), // Convert array to JSON string
+//   'created_at'                =>      date('y-m-d H:i:s'),
+// ]);
+
+$updateddata = DB::table('timesheetreport')
+  ->where('teamid', 847)
+  ->where('startdate', '2024-03-04')
+  ->where('enddate', '2024-03-09')
+  // ->get();
+  ->update(['partnerid' => $zipfoldername1]);
+
+dd($updateddata);
+}
+
+// Start Hare multiple user it is good code 
+$nextweektimesheet = DB::table('timesheetreport')
+->whereBetween('created_at', ['2023-12-21 20:14:34', '2024-03-25 20:19:53'])
+// ->whereBetween('startdate', ['2023-12-11', '2024-03-25'])
+->whereNull('partnerid')
+->select('teamid', 'startdate', 'enddate', 'totaltime')
+->latest()
+->get();
+// ->count();
+// dd($nextweektimesheet, 'hi');
+
+foreach ($nextweektimesheet as $nextweektimesheets) {
+// dd($nextweektimesheets, 'foreech');
+$timesheetdata = DB::table('timesheetusers')
+  ->whereBetween('date', [$nextweektimesheets->startdate, $nextweektimesheets->enddate])
+  ->where('createdby', $nextweektimesheets->teamid)
+  // ->select('createdby', 'partner')
+  ->select('partner')
+  ->distinct()
+  ->get()->toArray();
+
+
+$zipfoldername1 = [];
+foreach ($timesheetdata as $timesheetdatas) {
+  $zipfoldername1[] = $timesheetdatas->partner;
+}
+// dd($zipfoldername1);
+
+// DB::table('timesheetreport')->insert([
+//   'teamid' => 847,
+//   'partnerid' => json_encode($partners), // Convert array to JSON string
+//   'created_at'                =>      date('y-m-d H:i:s'),
+// ]);
+
+$updateddata = DB::table('timesheetreport')
+  ->where('teamid', $nextweektimesheets->teamid)
+  ->where('startdate', $nextweektimesheets->startdate)
+  ->where('enddate', $nextweektimesheets->enddate)
+  // ->get();
+  ->update(['partnerid' => $zipfoldername1]);
+
+// dd($updateddata);
+}
+
+// Start Hare 
+
+$nextweektimesheet = DB::table('timesheetreport')
+->whereBetween('created_at', ['2023-12-21 20:14:34', '2024-03-25 20:19:53'])
+// ->whereBetween('startdate', ['2023-12-11', '2024-03-25'])
+->whereNull('partnerid')
+->select('id', 'teamid', 'startdate', 'enddate', 'totaltime')
+->latest()
+->get();
+// ->count();
+// dd($nextweektimesheet, 'hi');
+
+foreach ($nextweektimesheet as $nextweektimesheets) {
+// 44444444444444444444444444444444444444444444444444444444444
+// dd($nextweektimesheets, 'hi');
+
+$week =  date('d-m-Y', strtotime($nextweektimesheets->startdate))  . ' to ' . date('d-m-Y', strtotime($nextweektimesheets->enddate));
+
+$co = DB::table('timesheetusers')
+  // ->where('createdby', auth()->user()->teammember_id)
+  ->where('createdby', $nextweektimesheets->teamid)
+  // ->whereBetween('date', [$previousMondayFormatted, $nextSaturdayFormatted])
+  ->whereBetween('date', [$nextweektimesheets->startdate, $nextweektimesheets->enddate])
+  ->select('partner', DB::raw('SUM(hour) as total_hours'), DB::raw('COUNT(DISTINCT timesheetid) as row_count'))
+  ->groupBy('partner')
+  ->get();
+
+foreach ($co as $codata) {
+  DB::table('timesheetreport')->insert([
+    'teamid'       =>     $nextweektimesheets->teamid,
+    'week'       =>     $week,
+    'totaldays'       =>     $codata->row_count,
+    'totaltime' =>  $codata->total_hours,
+    'partnerid'  => $codata->partner,
+    'startdate'  => $nextweektimesheets->startdate,
+    'enddate'  => $nextweektimesheets->enddate,
+    // 'created_at'                =>       date('y-m-d'),
+    'created_at'                =>      date('y-m-d H:i:s'),
+  ]);
+}
+
+$deletedata = DB::table('timesheetreport')
+  ->where('id', $nextweektimesheets->id)
+  // ->get();
+  ->delete();
+
+
+// final updated code 
+
+$nextweektimesheet = DB::table('timesheetreport')
+      ->whereBetween('created_at', ['2023-12-21 20:14:34', '2024-03-25 20:19:53'])
+      // ->whereBetween('startdate', ['2023-12-11', '2024-03-25'])
+      ->whereNull('partnerid')
+      ->select('id', 'teamid', 'startdate', 'enddate', 'totaltime', 'created_at')
+      // ->latest()
+      ->get();
+    // ->count();
+    // dd($nextweektimesheet, 'hi');
+
+    foreach ($nextweektimesheet as $nextweektimesheets) {
+      // 44444444444444444444444444444444444444444444444444444444444
+
+
+      $week =  date('d-m-Y', strtotime($nextweektimesheets->startdate))  . ' to ' . date('d-m-Y', strtotime($nextweektimesheets->enddate));
+
+      $co = DB::table('timesheetusers')
+        // ->where('createdby', auth()->user()->teammember_id)
+        // ->whereBetween('date', [$previousMondayFormatted, $nextSaturdayFormatted])
+        ->where('createdby', $nextweektimesheets->teamid)
+        ->whereBetween('date', [$nextweektimesheets->startdate, $nextweektimesheets->enddate])
+        ->select('partner', DB::raw('SUM(hour) as total_hours'), DB::raw('COUNT(DISTINCT timesheetid) as row_count'))
+        ->groupBy('partner')
+        ->get();
+
+      foreach ($co as $codata) {
+        DB::table('timesheetreport')->insert([
+          'teamid'       =>     $nextweektimesheets->teamid,
+          'week'       =>     $week,
+          'totaldays'       =>     $codata->row_count,
+          'totaltime' =>  $codata->total_hours,
+          'partnerid'  => $codata->partner,
+          'startdate'  => $nextweektimesheets->startdate,
+          'enddate'  => $nextweektimesheets->enddate,
+          // 'created_at'                =>       date('y-m-d'),
+          'created_at'                =>      $nextweektimesheets->created_at,
+        ]);
+      }
+
+
+      $deletedata = DB::table('timesheetreport')
+        ->where('id', $nextweektimesheets->id)
+        // ->get();
+        ->delete();
+
+      // dd($co);
+
+      // 444444444444444444444444444444444444444444444444444444444444444444
+
+
+
+
+
+      // // dd($nextweektimesheets, 'foreech');
+      // $timesheetdata = DB::table('timesheetusers')
+      //   ->whereBetween('date', [$nextweektimesheets->startdate, $nextweektimesheets->enddate])
+      //   ->where('createdby', $nextweektimesheets->teamid)
+      //   // ->select('createdby', 'partner')
+      //   ->select('partner')
+      //   ->distinct()
+      //   ->get()->toArray();
+
+
+      // $zipfoldername1 = [];
+      // foreach ($timesheetdata as $timesheetdatas) {
+      //   $zipfoldername1[] = $timesheetdatas->partner;
+      // }
+      // // dd($zipfoldername1);
+
+      // // DB::table('timesheetreport')->insert([
+      // //   'teamid' => 847,
+      // //   'partnerid' => json_encode($partners), // Convert array to JSON string
+      // //   'created_at'                =>      date('y-m-d H:i:s'),
+      // // ]);
+
+      // $updateddata = DB::table('timesheetreport')
+      //   ->where('teamid', $nextweektimesheets->teamid)
+      //   ->where('startdate', $nextweektimesheets->startdate)
+      //   ->where('enddate', $nextweektimesheets->enddate)
+      //   // ->get();
+      //   ->update(['partnerid' => $zipfoldername1]);
+
+      // // dd($updateddata);
+    }
+
+
+  //  22222222222222222222222222222222
 }
             // ----------------------------- 29 sep 2023 joining date------------------------------------------
 

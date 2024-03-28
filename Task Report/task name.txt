@@ -48,7 +48,7 @@ leave not apply on sunday
 0.apply leave remark column add 
 1.mailing close assignment
 2. problem of sunny sir
-3. sounting assignment on dashboard 
+3. counting assignment on dashboard 
 4.old details on casual leave revert 
 
 
@@ -56,6 +56,18 @@ leave not apply on sunday
 5.knowledge base tab seprated
 6.sireal number missing
 7. redirection fix on apply leave to patner 
+
+seprated timesheet on weeklist
+
+
+
+22222222222222222222222222222222222222222222222222222  march months 22222222222222222222222222
+1. page top margin decrease everywhere 
+2.click on client then extra page comming so remove it 
+3. Teammember List on assignment closed page
+4. timesheet save module only 10 data show ho raha hai 
+5. after search data in excell only serch data will be show
+
 
 
 
