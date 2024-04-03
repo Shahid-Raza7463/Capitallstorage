@@ -71,3 +71,51 @@ seprated timesheet on weeklist
 
 
 
+
+
+
+
+[name]
+
+ 
+
+ 
+
+Reaaaaaag Debitor.qqqqqqq Confirmation of Balance as on [date] 
+
+Dear Sir, 
+We M/s KGS & CO Chartered accountants are the statutory Auditors of M/s ABC for the Financial Year [year]. For the Audit purpose, we require the confirmation of the outstanding balance of the company in your books of account as on [date]. 
+
+We request you to confirm the balance at the place provided below and send the duly signed copy of the same to our address given below. Also share the balance confirmation copy through mail on our mail id office@kgsomani.com 
+
+M/s K G Somani & Co. (Chartered Accountants)
+3rd Floor, Gate no.2, Delite Cinema Building, Asaf Ali Road,
+New Delhi – 110002
+
+An early action would be highly appreciated 
+
+Thanking You, 
+
+Yours Faithfully 
+
+FOR K.G Somani & Co. 
+Chartered Accountants 
+
+             
+
+(Authorised Signatory)
+
+
+
+
+
+
+
+
+basically isme ek bugs ye hai ki jab mai accept and refuse button per click karta hu to ek alrt box aata hai jab mai ok button per click karta hu to mail jata hai aur cancel button per click karta hu to mail nahi jata hai jo ki sah hai ab mai chahta hu ki jab cancel button per click ho to model box open nahi ho 
+
+
+
+
+
+

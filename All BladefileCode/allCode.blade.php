@@ -1,281 +1,404 @@
 <html lang="en">
 {{-- *password   --}}
+
+basically isme ek bugs ye hai ki jab mai accept and refuse button per click karta hu to ek alrt box aata hai jab mai ok
+button per click karta hu to mail jata hai aur cancel button per click karta hu to mail nahi jata hai jo ki sah hai ab
+mai chahta hu ki jab cancel button per click ho to model box open nahi ho
+
+model box fir bhi open ho raha hai cancel ke click per
+
+
+
+
 wifi check speed
 ping google.com -t
 aiws wifi password is #SarSet%556&4890
 http://127.0.0.1:8000/home
 Azaz~123
-{{-- *   --}}
-{{--  Start Hare --}}
-{{-- *   --}}
-{{--  Start Hare --}}
+you are laravel and javascript expert
+you are laravel expert
+http://127.0.0.1:8000/viewassignment/BET100051
 
-{{-- * regarding folder delete  --}}
+{{-- *   --}}
 {{--  Start Hare --}}
-@if ($assignmentfolderpermission->status == 1)
-    {{-- @php
+Debitor
+
+
+[name]
+
+
+
+
+
+Reaaaaaag Debitor.qqqqqqq Confirmation of Balance as on [date]
+
+Dear Sir,
+We M/s KGS & CO Chartered accountants are the statutory Auditors of M/s ABC for the Financial Year [year]. For the Audit
+purpose, we require the confirmation of the outstanding balance of the company in your books of account as on [date].
+
+We request you to confirm the balance at the place provided below and send the duly signed copy of the same to our
+address given below. Also share the balance confirmation copy through mail on our mail id office@kgsomani.com
+
+M/s K G Somani & Co. (Chartered Accountants)
+3rd Floor, Gate no.2, Delite Cinema Building, Asaf Ali Road,
+New Delhi – 110002
+
+An early action would be highly appreciated
+
+Thanking You,
+
+Yours Faithfully
+
+FOR K.G Somani & Co.
+Chartered Accountants
+
+
+
+(Authorised Signatory)
+
+
+
+
+
+creditor
+<p>[name]</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Reg creditor. Confirmation of Balance as on [date]&nbsp;</p>
+<p>Dear Sir,&nbsp;<br>We M/s KGS &amp; CO Chartered accountants are the statutory Auditors of M/s ABC for the Financial
+    Year [year]. For the Audit purpose, we require the confirmation of the outstanding balance of the company in your
+    books of account as on [date].&nbsp;</p>
+<p>We request you to confirm the balance at the place provided below and send the duly signed copy of the same to our
+    address given below. Also share the balance confirmation copy through mail on our mail id office@kgsomani.com&nbsp;
+</p>
+<p>M/s K G Somani &amp; Co. (Chartered Accountants)<br>3rd Floor, Gate no.2, Delite Cinema Building, Asaf Ali
+    Road,<br>New Delhi – 110002</p>
+<p>An early action would be highly appreciated&nbsp;</p>
+<p>Thanking You,&nbsp;</p>
+<p>Yours Faithfully&nbsp;</p>
+<p>FOR K.G Somani &amp; Co.&nbsp;<br>Chartered Accountants&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>
+<p>(Authorised Signatory)</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+bank
+<p>[name]</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Reg Bank. Confirmation of Balance as on [date]&nbsp;</p>
+<p>Dear Sir,&nbsp;<br>We M/s KGS &amp; CO Chartered accountants are the statutory Auditors of M/s ABC for the Financial
+    Year [year]. For the Audit purpose, we require the confirmation of the outstanding balance of the company in your
+    books of account as on [date].&nbsp;</p>
+<p>We request you to confirm the balance at the place provided below and send the duly signed copy of the same to our
+    address given below. Also share the balance confirmation copy through mail on our mail id office@kgsomani.com&nbsp;
+</p>
+<p>M/s K G Somani &amp; Co. (Chartered Accountants)<br>3rd Floor, Gate no.2, Delite Cinema Building, Asaf Ali
+    Road,<br>New Delhi – 110002</p>
+<p>An early action would be highly appreciated&nbsp;</p>
+<p>Thanking You,&nbsp;</p>
+<p>Yours Faithfully&nbsp;</p>
+<p>FOR K.G Somani &amp; Co.&nbsp;<br>Chartered Accountants&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>
+<p>(Authorised Signatory)</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+
+{{-- *   --}}
+
+{{--  Start Hare --}}
+{{-- *   --}}
+{{--  Start Hare --}}
+{{-- *   --}}
+{{--  Start Hare --}}
+{{-- *   --}}
+{{--  Start Hare --}}
+{{-- * regarding mail   --}}
+{{--  Start Hare --}}
+<td>
+    <a href="mailto:{{ $clientdebitdata->email }}">{{ $clientdebitdata->email }}</a>
+</td>
+{{-- * regarding form url / regarding url  --}}
+{{--  Start Hare --}}
+{{--  Start Hare --}}
+<form method="POST" action="{{ url('authnewpassowrd/store/' . $id) }}">
+    {{--  Start Hare --}}
+    <form method="POST"
+        action="{{ url('confirmation?' . 'clientid=' . $clientid . '&&' . 'debtorid=' . $debtorid . '&&' . 'status=' . $status) }}"
+        enctype="multipart/form-data">
+        Route::post('confirmation/', [AssignmentconfirmController::class, 'confirmationConfirm']);
+        {{--  Start Hare --}}
+        {{-- * regarding folder delete  --}}
+        {{--  Start Hare --}}
+        @if ($assignmentfolderpermission->status == 1)
+            {{-- @php
     dd($assignmentfolderData->createdby);
 @endphp --}}
-    @if (
-        $assignmentfolderData->createdby == Auth::user()->teammember_id ||
-            Auth::user()->role_id == 13 ||
-            Auth::user()->role_id == 14 ||
-            Auth::user()->role_id == 15)
-        <ul class="navbar-nav flex-row align-items-center ml-auto">
-            <li class="nav-item dropdown user-menus">
-                <a class="foldertoggle" style=" color:white" href="#" data-toggle="dropdown">
+            @if (
+                $assignmentfolderData->createdby == Auth::user()->teammember_id ||
+                    Auth::user()->role_id == 13 ||
+                    Auth::user()->role_id == 14 ||
+                    Auth::user()->role_id == 15)
+                <ul class="navbar-nav flex-row align-items-center ml-auto">
+                    <li class="nav-item dropdown user-menus">
+                        <a class="foldertoggle" style=" color:white" href="#" data-toggle="dropdown">
 
-                    <i class="ti-more-alt"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-left">
-                    @if ($assignmentfolderData->createdby == Auth::user()->teammember_id || Auth::user()->role_id == 13)
-                        <a style="margin-left: 10px;color:#7a7a7a;" id="editCompany" data-toggle="modal"
-                            data-id="{{ $assignmentfolderData->id }}" data-target="#modaldemo1"
-                            class="dropdown-item">Edit Name</a>
-                    @endif
+                            <i class="ti-more-alt"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-left">
+                            @if ($assignmentfolderData->createdby == Auth::user()->teammember_id || Auth::user()->role_id == 13)
+                                <a style="margin-left: 10px;color:#7a7a7a;" id="editCompany" data-toggle="modal"
+                                    data-id="{{ $assignmentfolderData->id }}" data-target="#modaldemo1"
+                                    class="dropdown-item">Edit Name</a>
+                            @endif
 
-                    @if (DB::table('assignmentfolderfiles')->where('assignmentfolderfiles.assignmentfolder_id', $assignmentfolderData->id)->where('status', '1')->count() == 0)
-                        @if (
-                            $assignmentfolderData->createdby == Auth::user()->teammember_id ||
-                                Auth::user()->role_id == 13 ||
-                                Auth::user()->role_id == 14 ||
-                                Auth::user()->role_id == 15)
-                            <a style="margin-left: 10px;color:#7a7a7a;"
-                                onclick="return confirm('Are you sure you want to delete this folder?');"
-                                href="{{ url('assignmentfolderdelete', $assignmentfolderData->id) }}"
-                                class="dropdown-item">Delete</a>
-                        @endif
-                    @endif
-                </div>
+                            @if (DB::table('assignmentfolderfiles')->where('assignmentfolderfiles.assignmentfolder_id', $assignmentfolderData->id)->where('status', '1')->count() == 0)
+                                @if (
+                                    $assignmentfolderData->createdby == Auth::user()->teammember_id ||
+                                        Auth::user()->role_id == 13 ||
+                                        Auth::user()->role_id == 14 ||
+                                        Auth::user()->role_id == 15)
+                                    <a style="margin-left: 10px;color:#7a7a7a;"
+                                        onclick="return confirm('Are you sure you want to delete this folder?');"
+                                        href="{{ url('assignmentfolderdelete', $assignmentfolderData->id) }}"
+                                        class="dropdown-item">Delete</a>
+                                @endif
+                            @endif
+                        </div>
 
-            </li>
-        </ul>
-    @endif
-@endif
-{{-- * regarding sum  --}}
-{{--  Start Hare --}}
-<div>
-
-    @php
-        $totalHourSum = DB::table('timesheetusers')
-            ->leftJoin('teammembers', 'teammembers.id', '=', 'timesheetusers.createdby')
-            ->where('timesheetusers.assignmentgenerate_id', $teammemberData->assignmentgenerateid)
-            ->where('timesheetusers.createdby', $teammemberData->id)
-            ->sum('timesheetusers.totalhour');
-
-        $totalhour = DB::table('timesheetusers')
-            ->leftJoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
-            ->where('timesheetusers.assignmentgenerate_id', $teammemberData->assignmentgenerateid)
-            ->where('timesheetusers.createdby', $teammemberData->id)
-            ->select(DB::raw('SUM(totalhour) as total_hours'))
-            ->get();
-
-        dd($totalHourSum);
-
-        $totalhour = DB::table('timesheetusers')
-            ->leftJoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
-            ->where('timesheetusers.assignmentgenerate_id', $teammemberData->assignmentgenerateid)
-            ->where('timesheetusers.createdby', $teammemberData->id)
-            ->select(DB::raw('SUM(totalhour) as total_hours'))
-            ->first();
-
-    @endphp
-</div>
-
-{{-- * regarding comma / regarding key/ regarding foreach /regarding count  --}}
-
-<td>
-    {{ $client_id->client_name ?? '' }}
-    @if (count((array) $client_id->client_name) > 1)
-        ,
-    @endif
-</td>
-
-<td>
-    @foreach ($client_id as $key => $item)
-        {{ $item->client_name ?? '' }}
-        @if ($key < count($client_id) - 1 && $item->client_name != null)
-            ,
+                    </li>
+                </ul>
+            @endif
         @endif
-    @endforeach
-</td>
+        {{-- * regarding sum  --}}
+        {{--  Start Hare --}}
+        <div>
 
-<td>
-    @foreach ($client_id as $key => $item)
-        {{ $item->assignment_name ?? '' }}
-        @if ($key < count($client_id) - 1 && $item->assignment_name != null)
-            ,
-        @endif
-    @endforeach
-</td>
+            @php
+                $totalHourSum = DB::table('timesheetusers')
+                    ->leftJoin('teammembers', 'teammembers.id', '=', 'timesheetusers.createdby')
+                    ->where('timesheetusers.assignmentgenerate_id', $teammemberData->assignmentgenerateid)
+                    ->where('timesheetusers.createdby', $teammemberData->id)
+                    ->sum('timesheetusers.totalhour');
 
-<td>
-    @foreach ($client_id as $key => $item)
-        {{ $item->workitem ?? '' }}
-        @if ($key < count($client_id) - 1 && $item->workitem != null)
-            ,
-        @endif
-    @endforeach
-</td>
+                $totalhour = DB::table('timesheetusers')
+                    ->leftJoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+                    ->where('timesheetusers.assignmentgenerate_id', $teammemberData->assignmentgenerateid)
+                    ->where('timesheetusers.createdby', $teammemberData->id)
+                    ->select(DB::raw('SUM(totalhour) as total_hours'))
+                    ->get();
 
-<td>
-    @foreach ($client_id as $key => $item)
-        {{ $item->location ?? '' }}
-        @if ($key < count($client_id) - 1 && $item->location != null)
-            ,
-        @endif
-    @endforeach
-</td>
+                dd($totalHourSum);
 
-<td>
-    @foreach ($client_id as $key => $item)
-        {{ $item->team_member ?? '' }}
-        @if ($key < count($client_id) - 1 && $item->team_member != null)
-            ,
-        @endif
-    @endforeach
-</td>
+                $totalhour = DB::table('timesheetusers')
+                    ->leftJoin('teammembers', 'teammembers.id', 'timesheetusers.createdby')
+                    ->where('timesheetusers.assignmentgenerate_id', $teammemberData->assignmentgenerateid)
+                    ->where('timesheetusers.createdby', $teammemberData->id)
+                    ->select(DB::raw('SUM(totalhour) as total_hours'))
+                    ->first();
 
+            @endphp
+        </div>
 
-{{-- * regarding Ascending / regarding Descending / regarding order /regarding ordering   --}}
+        {{-- * regarding comma / regarding key/ regarding foreach /regarding count  --}}
 
-<table>
-    <tr>
-        <td> <span style="display: none;">
-                {{ date('Y-m-d', strtotime($jobDatas->created_at)) }}</span>{{ $jobDatas->week }}
-        </td>
         <td>
-            <span style="display: none;">
-                {{ $jobDatas->created_at }}</span>
-            {{ date('d-m-Y', strtotime($jobDatas->created_at)) }}
-            {{ date('h:i A', strtotime($jobDatas->created_at)) }}
+            {{ $client_id->client_name ?? '' }}
+            @if (count((array) $client_id->client_name) > 1)
+                ,
+            @endif
         </td>
 
-        <td><span></span>
-            {{ date('d-m-Y', strtotime($timesheetDatas->date)) }}
+        <td>
+            @foreach ($client_id as $key => $item)
+                {{ $item->client_name ?? '' }}
+                @if ($key < count($client_id) - 1 && $item->client_name != null)
+                    ,
+                @endif
+            @endforeach
         </td>
-    </tr>
-</table>
 
-{{-- *   --}}
-<table class="table display table-bordered table-striped table-hover" style = "width:100%">
+        <td>
+            @foreach ($client_id as $key => $item)
+                {{ $item->assignment_name ?? '' }}
+                @if ($key < count($client_id) - 1 && $item->assignment_name != null)
+                    ,
+                @endif
+            @endforeach
+        </td>
 
-</table>
-{{-- * email fotrmate / regarding email  --}}
-{{-- resources\views\backEnd\layouts\includes\leftsidebar.blade.php --}}
-<h3>Dear {{ $name ?? '' }} ,</h3>
-<br>
-<p>This email is to inform you that your assignment has been closed by OTP.</p>
-<p>The OTP is <b>{{ $otp }}</b>. Please enter this OTP in the assignment submission form to close your
-    assignment.
-</p>
+        <td>
+            @foreach ($client_id as $key => $item)
+                {{ $item->workitem ?? '' }}
+                @if ($key < count($client_id) - 1 && $item->workitem != null)
+                    ,
+                @endif
+            @endforeach
+        </td>
 
-<table>
-    <tbody>
+        <td>
+            @foreach ($client_id as $key => $item)
+                {{ $item->location ?? '' }}
+                @if ($key < count($client_id) - 1 && $item->location != null)
+                    ,
+                @endif
+            @endforeach
+        </td>
+
+        <td>
+            @foreach ($client_id as $key => $item)
+                {{ $item->team_member ?? '' }}
+                @if ($key < count($client_id) - 1 && $item->team_member != null)
+                    ,
+                @endif
+            @endforeach
+        </td>
+
+
+        {{-- * regarding Ascending / regarding Descending / regarding order /regarding ordering   --}}
+
+        <table>
+            <tr>
+                <td> <span style="display: none;">
+                        {{ date('Y-m-d', strtotime($jobDatas->created_at)) }}</span>{{ $jobDatas->week }}
+                </td>
+                <td>
+                    <span style="display: none;">
+                        {{ $jobDatas->created_at }}</span>
+                    {{ date('d-m-Y', strtotime($jobDatas->created_at)) }}
+                    {{ date('h:i A', strtotime($jobDatas->created_at)) }}
+                </td>
+
+                <td><span></span>
+                    {{ date('d-m-Y', strtotime($timesheetDatas->date)) }}
+                </td>
+            </tr>
+        </table>
+
+        {{-- *   --}}
+        <table class="table display table-bordered table-striped table-hover" style = "width:100%">
+
+        </table>
+        {{-- * email fotrmate / regarding email  --}}
+        {{-- resources\views\backEnd\layouts\includes\leftsidebar.blade.php --}}
+        <h3>Dear {{ $name ?? '' }} ,</h3>
+        <br>
+        <p>This email is to inform you that your assignment has been closed by OTP.</p>
+        <p>The OTP is <b>{{ $otp }}</b>. Please enter this OTP in the assignment submission form to close your
+            assignment.
+        </p>
+
+        <table>
+            <tbody>
+                <tr>
+                    <td><b>Assignment Name : </b></td>
+                    <td>{{ $assignmentname }}</td>
+                </tr>
+                <tr>
+                    <td><b>Client Name :</b></td>
+                    <td>{{ $client_name }}</td>
+                </tr>
+                <tr>
+                    <td><b>Team Members :</b></td>
+                    @foreach ($assignmentteammember as $teammembers)
+                        <td>{{ $teammembers->team_member }},</td>
+                    @endforeach
+                </tr>
+            <tbody>
+        </table>
+
         <tr>
-            <td><b>Assignment Name : </b></td>
-            <td>{{ $assignmentname }}</td>
-        </tr>
-        <tr>
-            <td><b>Client Name :</b></td>
-            <td>{{ $client_name }}</td>
-        </tr>
-        <tr>
-            <td><b>Team Members :</b></td>
+            <td><b>Team Leaders :</b></td>
             @foreach ($assignmentteammember as $teammembers)
-                <td>{{ $teammembers->team_member }},</td>
+                @if ($teammembers->type == 0)
+                    <td>{{ $teammembers->team_member }},</td>
+                @endif
             @endforeach
         </tr>
-    <tbody>
-</table>
+        <tr>
+            <td><b>Staff:</b></td>
+            @foreach ($assignmentteammember as $teammembers)
+                @if ($teammembers->type == 2)
+                    <td>{{ $teammembers->team_member }},</td>
+                @endif
+            @endforeach
+        </tr>
 
-<tr>
-    <td><b>Team Leaders :</b></td>
-    @foreach ($assignmentteammember as $teammembers)
-        @if ($teammembers->type == 0)
-            <td>{{ $teammembers->team_member }},</td>
-        @endif
-    @endforeach
-</tr>
-<tr>
-    <td><b>Staff:</b></td>
-    @foreach ($assignmentteammember as $teammembers)
-        @if ($teammembers->type == 2)
-            <td>{{ $teammembers->team_member }},</td>
-        @endif
-    @endforeach
-</tr>
+        {{-- * regarding button / open / onclick / on click   --}}
 
-{{-- * regarding button / open / onclick / on click   --}}
-
-<td><b>Status : </b></td>
-<td>
-    @if (Auth::user()->role_id == 13)
-        @if ($assignmentbudgetingDatas->status != 0)
-            <a id="editCompanys" data-id="{{ $assignmentbudgetingDatas->assignmentgenerate_id }}" data-toggle="modal"
-                data-target="#exampleModal134">
+        <td><b>Status : </b></td>
+        <td>
+            @if (Auth::user()->role_id == 13)
+                @if ($assignmentbudgetingDatas->status != 0)
+                    <a id="editCompanys" data-id="{{ $assignmentbudgetingDatas->assignmentgenerate_id }}"
+                        data-toggle="modal" data-target="#exampleModal134">
+                        @if ($assignmentbudgetingDatas->status == 1)
+                            <span class="badge badge-primary">OPEN</span>
+                        @else
+                            <span class="badge badge-danger">CLOSED</span>
+                        @endif
+                    </a>
+                @else
+                    @if ($assignmentbudgetingDatas->status == 1)
+                        <span class="badge badge-primary">OPEN</span>
+                    @else
+                        <span class="badge badge-danger">CLOSED</span>
+                    @endif
+                @endif
+            @else
                 @if ($assignmentbudgetingDatas->status == 1)
                     <span class="badge badge-primary">OPEN</span>
                 @else
                     <span class="badge badge-danger">CLOSED</span>
                 @endif
-            </a>
-        @else
-            @if ($assignmentbudgetingDatas->status == 1)
-                <span class="badge badge-primary">OPEN</span>
-            @else
-                <span class="badge badge-danger">CLOSED</span>
+
             @endif
-        @endif
-    @else
-        @if ($assignmentbudgetingDatas->status == 1)
-            <span class="badge badge-primary">OPEN</span>
-        @else
-            <span class="badge badge-danger">CLOSED</span>
-        @endif
-
-    @endif
-</td>
+        </td>
 
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script>
-    $(function() {
-        $('body').on('click', '#editCompanys', function(event) {
-            //        debugger;
-            var id = $(this).data('id');
-            alert(id);
-            debugger;
-            $.ajax({
-                type: "GET",
-
-                url: "{{ url('assignmentotp') }}",
-                data: "id=" + id,
-                success: function(response) {
-                    // alert(res);
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+            $(function() {
+                $('body').on('click', '#editCompanys', function(event) {
+                    //        debugger;
+                    var id = $(this).data('id');
+                    alert(id);
                     debugger;
-                    $("#assignmentgenerateid").val(response.assignmentgenerate_id);
+                    $.ajax({
+                        type: "GET",
+
+                        url: "{{ url('assignmentotp') }}",
+                        data: "id=" + id,
+                        success: function(response) {
+                            // alert(res);
+                            debugger;
+                            $("#assignmentgenerateid").val(response.assignmentgenerate_id);
 
 
-                    if (response !== null) {
-                        // Show the message that the OTP has been sent to the email
-                        $('#otp-message').html('OTP send to your email please check');
-                    }
-                },
-                error: function() {
+                            if (response !== null) {
+                                // Show the message that the OTP has been sent to the email
+                                $('#otp-message').html('OTP send to your email please check');
+                            }
+                        },
+                        error: function() {
 
-                },
+                        },
+                    });
+                });
             });
-        });
-    });
-</script>
+        </script>
 
 
 
-{{-- * regarding stucture / stucture --}}
+        {{-- * regarding stucture / stucture --}}
 
-<pre>
+        <pre>
 ...........................................................
 .      name      .      email   .    location     .  work .                                                       .
 ...........................................................
@@ -312,7 +435,7 @@ Azaz~123
 
 
 
-<pre>
+        <pre>
 .....................  ..........................................
 .    assin=nment    .  . ....................  ..............   .
 .                   .  . .  notifiction     .  . Birthday   .   .
@@ -341,8 +464,8 @@ Azaz~123
 .                   .  . . .................   .. ...........   .
 .....................  ..........................................
 </pre>
-{{-- file stucture on download  --}}
-<pre>
+        {{-- file stucture on download  --}}
+        <pre>
 - NEW100212.zip
 ----Shahid f
 ------Shahid f
@@ -361,8 +484,8 @@ Azaz~123
 ------larave2.zip
 </pre>
 
-{{-- * filter according email / accrording mail   --}}
-{{-- <div class="col-4">
+        {{-- * filter according email / accrording mail   --}}
+        {{-- <div class="col-4">
                              <div class="form-group">
                                  <label class="font-weight-600">Employee</label>
                                  <select class="language form-control" id="employee1" name="employee">
@@ -383,309 +506,310 @@ Azaz~123
                                  </select>
                              </div>
                          </div> --}}
-<div class="col-4">
-    <div class="form-group">
-        <label class="font-weight-600">Employee</label>
-        <select class="language form-control" id="employee1" name="employee">
-            <option value="">Please Select One</option>
-            @php
-                $displayedValues = [];
-            @endphp
-            @foreach ($teamapplyleaveDatas as $applyleaveDatas)
-                @if (!in_array($applyleaveDatas->emailid, $displayedValues))
-                    <option value="{{ $applyleaveDatas->createdby }}">
-                        {{ $applyleaveDatas->team_member }} ({{ $applyleaveDatas->emailid }})
-                    </option>
+        <div class="col-4">
+            <div class="form-group">
+                <label class="font-weight-600">Employee</label>
+                <select class="language form-control" id="employee1" name="employee">
+                    <option value="">Please Select One</option>
                     @php
-                        $displayedValues[] = $applyleaveDatas->emailid;
+                        $displayedValues = [];
                     @endphp
-                @endif
-            @endforeach
-        </select>
-    </div>
-</div>
+                    @foreach ($teamapplyleaveDatas as $applyleaveDatas)
+                        @if (!in_array($applyleaveDatas->emailid, $displayedValues))
+                            <option value="{{ $applyleaveDatas->createdby }}">
+                                {{ $applyleaveDatas->team_member }} ({{ $applyleaveDatas->emailid }})
+                            </option>
+                            @php
+                                $displayedValues[] = $applyleaveDatas->emailid;
+                            @endphp
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+        </div>
 
-{{-- * regarding isset  --}}
+        {{-- * regarding isset  --}}
 
-@if (isset($message))
-    <div>
-        {{ $message }}
-    </div>
-@endif
-{{-- * regarding button / regarding style   --}}
-<button type="button" id="downloadButton" class="btn btn-outline-primary">Create Zip Folder</button>
-{{-- * date on pdf / regarding pdf/ regarding excell   --}}
+        @if (isset($message))
+            <div>
+                {{ $message }}
+            </div>
+        @endif
+        {{-- * regarding button / regarding style   --}}
+        <button type="button" id="downloadButton" class="btn btn-outline-primary">Create Zip Folder</button>
+        {{-- * date on pdf / regarding pdf/ regarding excell   --}}
 
-<td>
-    <span>{{ $timesheetDatas->team_member ?? '' }}</span>
-    <span style="display: none;">{{ $timesheetDatas->staffcode ?? '' }}</span>
-</td>
+        <td>
+            <span>{{ $timesheetDatas->team_member ?? '' }}</span>
+            <span style="display: none;">{{ $timesheetDatas->staffcode ?? '' }}</span>
+        </td>
 
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                [1, "asc"]
-            ],
+        <script>
+            $(document).ready(function() {
+                $('#examplee').DataTable({
+                    dom: 'Bfrtip',
+                    "order": [
+                        [1, "asc"]
+                    ],
 
-            buttons: [
+                    buttons: [
 
-                {
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: [0, ':visible']
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    filename: 'Assignment Report List',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
+                        {
+                            extend: 'copyHtml5',
+                            exportOptions: {
+                                columns: [0, ':visible']
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            filename: 'Assignment Report List',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
 
-                {
-                    extend: 'pdfHtml5',
-                    filename: 'Assignment Report List',
-                    // which column do you want to on pdf page
-                    exportOptions: {
-                        columns: [0, 1, 2, 4, 10]
-                    },
-                    // add date on pdf page
-                    // customize: function(doc) {
-                    //     var now = new Date();
-                    //     var formattedDate = now.toLocaleString();
-                    //     doc.content.splice(1, 0, {
-                    //         text: 'Generated on: ' + formattedDate,
-                    //         // alignment: 'center',
-                    //         margin: [0, 0, 0, 10]
+                        {
+                            extend: 'pdfHtml5',
+                            filename: 'Assignment Report List',
+                            // which column do you want to on pdf page
+                            exportOptions: {
+                                columns: [0, 1, 2, 4, 10]
+                            },
+                            // add date on pdf page
+                            // customize: function(doc) {
+                            //     var now = new Date();
+                            //     var formattedDate = now.toLocaleString();
+                            //     doc.content.splice(1, 0, {
+                            //         text: 'Generated on: ' + formattedDate,
+                            //         // alignment: 'center',
+                            //         margin: [0, 0, 0, 10]
 
-                    //     });
-                    // }
+                            //     });
+                            // }
 
-                },
-                // column visibility
-                'colvis'
-            ]
-        });
-    });
-</script>
-{{-- * old value / regarding old value / regarding option tag    --}}
-{{-- add this code before return view blade file in controller --}}
-$request->flash();
-<td>
-    <div class="form-group">
-        <input type="date" class="form-control" id="startdate" name="startdate" value="{{ old('startdate') }}">
-    </div>
-</td>
-<td>
-    <div class="form-group">
-        <input type="date" class="form-control" id="enddate" name="enddate" value="{{ old('enddate') }}">
-    </div>
-</td>
-<td>
-    {{-- <div class="form-group">
+                        },
+                        // column visibility
+                        'colvis'
+                    ]
+                });
+            });
+        </script>
+        {{-- * old value / regarding old value / regarding option tag    --}}
+        {{-- add this code before return view blade file in controller --}}
+        $request->flash();
+        <td>
+            <div class="form-group">
+                <input type="date" class="form-control" id="startdate" name="startdate"
+                    value="{{ old('startdate') }}">
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
+                <input type="date" class="form-control" id="enddate" name="enddate" value="{{ old('enddate') }}">
+            </div>
+        </td>
+        <td>
+            {{-- <div class="form-group">
         <select class="language form-control" id="year" name="year">
             <option value="">Please Select One</option>
             <option value="2024">2024</option>
             <option value="2023">2023</option>
         </select>
     </div> --}}
-    <div class="form-group">
-        <select class="language form-control" id="year" name="year">
-            <option value="">Please Select One</option>
-            <option value="2024" {{ old('year') == '2024' ? 'selected' : '' }}>2024
-            </option>
-            <option value="2023" {{ old('year') == '2023' ? 'selected' : '' }}>2023
-            </option>
-        </select>
-    </div>
-</td>
+            <div class="form-group">
+                <select class="language form-control" id="year" name="year">
+                    <option value="">Please Select One</option>
+                    <option value="2024" {{ old('year') == '2024' ? 'selected' : '' }}>2024
+                    </option>
+                    <option value="2023" {{ old('year') == '2023' ? 'selected' : '' }}>2023
+                    </option>
+                </select>
+            </div>
+        </td>
 
-@foreach ($teammembers as $teammember)
-    @if (!in_array($teammember->staffcode, $displayedValues))
-        {{-- <option value="{{ $teammember->id }}"> --}}
-        <option value="{{ $teammember->id }}" {{ old('teammemberId') == $teammember->id ? 'selected' : '' }}>
-            {{ $teammember->team_member }} ({{ $teammember->staffcode }})
-        </option>
-        @php
-            $displayedValues[] = $teammember->staffcode;
-        @endphp
-    @endif
-@endforeach
+        @foreach ($teammembers as $teammember)
+            @if (!in_array($teammember->staffcode, $displayedValues))
+                {{-- <option value="{{ $teammember->id }}"> --}}
+                <option value="{{ $teammember->id }}" {{ old('teammemberId') == $teammember->id ? 'selected' : '' }}>
+                    {{ $teammember->team_member }} ({{ $teammember->staffcode }})
+                </option>
+                @php
+                    $displayedValues[] = $teammember->staffcode;
+                @endphp
+            @endif
+        @endforeach
 
-{{-- *   --}}
-<div class="form-group">
-    <select class="language form-control" id="year" name="year">
-        <option value="">Please Select One</option>
-        @for ($year = 2023; $year <= 2027; $year++)
-            <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>
-                {{ $year }}</option>
-        @endfor
-    </select>
-</div>
+        {{-- *   --}}
+        <div class="form-group">
+            <select class="language form-control" id="year" name="year">
+                <option value="">Please Select One</option>
+                @for ($year = 2023; $year <= 2027; $year++)
+                    <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>
+                        {{ $year }}</option>
+                @endfor
+            </select>
+        </div>
 
-<div class="form-group">
-    <select class="language form-control" id="year" name="year">
-        <option value="">Please Select One</option>
-        @for ($year = date('Y'); $year <= 2027; $year++)
-            <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>
-                {{ $year }}
-            </option>
-        @endfor
-    </select>
-</div>
+        <div class="form-group">
+            <select class="language form-control" id="year" name="year">
+                <option value="">Please Select One</option>
+                @for ($year = date('Y'); $year <= 2027; $year++)
+                    <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>
+                        {{ $year }}
+                    </option>
+                @endfor
+            </select>
+        </div>
 
-<div class="form-group">
-    <select class="language form-control" id="year" name="year">
-        <option value="">Please Select One</option>
-        @for ($year = date('Y'); $year <= 2025; $year++)
-            <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>
-                {{ $year }}
-            </option>
-        @endfor
-    </select>
-</div>
+        <div class="form-group">
+            <select class="language form-control" id="year" name="year">
+                <option value="">Please Select One</option>
+                @for ($year = date('Y'); $year <= 2025; $year++)
+                    <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>
+                        {{ $year }}
+                    </option>
+                @endfor
+            </select>
+        </div>
 
 
 
-{{-- * basic class/ regarding basic class/ regarding table/ regarding ordering /regarding heading / regarding table /regarding th tag   --}}
-<!--Page Active Scripts(used by this page)-->
-{{-- <script src="{{ url('backEnd/plugins/datatables/dataTables.min.js') }}"></script> --}}
-<script src="{{ url('backEnd/plugins/datatables/data-basic.active.js') }}"></script>
-above code exist in
-resources\views\backEnd\layouts\includes\js.blade.php
+        {{-- * basic class/ regarding basic class/ regarding table/ regarding ordering /regarding heading / regarding table /regarding th tag   --}}
+        <!--Page Active Scripts(used by this page)-->
+        {{-- <script src="{{ url('backEnd/plugins/datatables/dataTables.min.js') }}"></script> --}}
+        <script src="{{ url('backEnd/plugins/datatables/data-basic.active.js') }}"></script>
+        above code exist in
+        resources\views\backEnd\layouts\includes\js.blade.php
 
-<table id="examplee" class="table display table-bordered table-striped table-hover">
-    <thead>
+        <table id="examplee" class="table display table-bordered table-striped table-hover">
+            <thead>
 
-        <tr>
-            <th style="display: none;">id</th>
+                <tr>
+                    <th style="display: none;">id</th>
 
-            <th>Employee Name</th>
-            <th>Date</th>
-            <th>Day</th>
-            <th>Client Name</th>
-            <th>Assignment Name</th>
+                    <th>Employee Name</th>
+                    <th>Date</th>
+                    <th>Day</th>
+                    <th>Client Name</th>
+                    <th>Assignment Name</th>
 
-            <th>Work Item</th>
-            <th>Location</th>
-            <th>Partner</th>
-            {{-- <th>Hour</th> --}}
-            <th> Hour</th>
-            <th>Status</th>
+                    <th>Work Item</th>
+                    <th>Location</th>
+                    <th>Partner</th>
+                    {{-- <th>Hour</th> --}}
+                    <th> Hour</th>
+                    <th>Status</th>
 
-            {{-- @if (Auth::user()->role_id == 11 || Auth::user()->teammember_id != $timesheetData[0]->createdby)
+                    {{-- @if (Auth::user()->role_id == 11 || Auth::user()->teammember_id != $timesheetData[0]->createdby)
                 <th>Action</th>
             @endif --}}
-        </tr>
-    </thead>
-</table>
+                </tr>
+            </thead>
+        </table>
 
-<script>
-    $(document).ready(function() {
-        // Initialize DataTables with default sorting on the "Date" column
-        $('#examplee').DataTable({
-            "order": [
-                [2, "asc"]
-            ], // 2 is the index of the "Date" column, "asc" for ascending order
-            "columnDefs": [{
-                "targets": [0],
-                "orderable": false
-            }, ]
-        });
-    });
-</script>
+        <script>
+            $(document).ready(function() {
+                // Initialize DataTables with default sorting on the "Date" column
+                $('#examplee').DataTable({
+                    "order": [
+                        [2, "asc"]
+                    ], // 2 is the index of the "Date" column, "asc" for ascending order
+                    "columnDefs": [{
+                        "targets": [0],
+                        "orderable": false
+                    }, ]
+                });
+            });
+        </script>
 
-@foreach ($myapplyleaveDatas as $applyleaveDatas)
-    @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
-        <th>Action</th>
-    @endif
-@endforeach
+        @foreach ($myapplyleaveDatas as $applyleaveDatas)
+            @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
+                <th>Action</th>
+            @endif
+        @endforeach
 
-@foreach ($client_id as $item)
-    @if ($loop->iteration == 1)
-        {{ $item->client_name ?? '' }}
-    @endif
-@endforeach
+        @foreach ($client_id as $item)
+            @if ($loop->iteration == 1)
+                {{ $item->client_name ?? '' }}
+            @endif
+        @endforeach
 
-@foreach ($client_id as $item)
-    @if ($loop->first)
-        {{ $item->client_name ?? '' }}a
-    @elseif ($loop->last)
-        {{ $item->client_name ?? '' }}b
-    @endif
-@endforeach
+        @foreach ($client_id as $item)
+            @if ($loop->first)
+                {{ $item->client_name ?? '' }}a
+            @elseif ($loop->last)
+                {{ $item->client_name ?? '' }}b
+            @endif
+        @endforeach
 
-@foreach ($client_id as $item)
-    @if ($loop->iteration == 1)
-        @if ($loop->first)
-            {{ $item->client_name ?? '' }}
+        @foreach ($client_id as $item)
+            @if ($loop->iteration == 1)
+                @if ($loop->first)
+                    {{ $item->client_name ?? '' }}
+                @endif
+            @endif
+            @if ($loop->iteration == 2)
+                @if ($loop->first)
+                    {{ $item->client_name ?? '' }}b
+                @endif
+            @endif
+        @endforeach
+
+
+        {{-- * Permission / regarding permission / 0 error     --}}
+
+
+
+        @if ($permissiontimesheet)
+            <li>
+                <a class="btn btn-info" href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Download</a>
+            </li>
         @endif
-    @endif
-    @if ($loop->iteration == 2)
-        @if ($loop->first)
-            {{ $item->client_name ?? '' }}b
+
+        @if ($permissiontimesheet && $permissiontimesheet->teamid !== null)
+            <li>
+                <a class="btn btn-info" href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Download</a>
+            </li>
         @endif
-    @endif
-@endforeach
 
 
-{{-- * Permission / regarding permission / 0 error     --}}
+        public function indexlist($id)
+        {
+        //dd($id);
+        $assignmentfolder = Assignmentfolder::where('assignmentgenerateid', $id)->get();
+
+        $assignmentfolderpermission = DB::table('assignmentbudgetings')->where('assignmentgenerate_id', $id)->first();
+        return view('backEnd.assignmentfolder.index', compact('assignmentfolder', 'id', 'assignmentfolderpermission'));
+        }
+
+        @if ($assignmentfolderpermission->status == 1)
+            <li style="margin-left: 13px;"><a class="btn btn-success" style="color:white;" data-toggle="modal"
+                    data-target="#exampleModal1">Add Folder</a></li>
+        @endif
+
+        {{-- * empty /regarding empty   --}}
+
+        @if (!empty($permissiontimesheet->teamid))
+            <li><a href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Timesheet
+                    Report</a></li>
+        @endif
 
 
-
-@if ($permissiontimesheet)
-    <li>
-        <a class="btn btn-info" href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Download</a>
-    </li>
-@endif
-
-@if ($permissiontimesheet && $permissiontimesheet->teamid !== null)
-    <li>
-        <a class="btn btn-info" href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Download</a>
-    </li>
-@endif
+        @if ($assignmentfolder->isNotEmpty())
+            <li style="margin-left: 13px;">
+                <a href="{{ route('zipfolder', ['assignmentgenerateid' => $assignmentfolder[0]->assignmentgenerateid]) }}"
+                    class="btn btn-secondary" style="color:white;">Download Folder</a>
+            </li>
+        @endif
 
 
-public function indexlist($id)
-{
-//dd($id);
-$assignmentfolder = Assignmentfolder::where('assignmentgenerateid', $id)->get();
-
-$assignmentfolderpermission = DB::table('assignmentbudgetings')->where('assignmentgenerate_id', $id)->first();
-return view('backEnd.assignmentfolder.index', compact('assignmentfolder', 'id', 'assignmentfolderpermission'));
-}
-
-@if ($assignmentfolderpermission->status == 1)
-    <li style="margin-left: 13px;"><a class="btn btn-success" style="color:white;" data-toggle="modal"
-            data-target="#exampleModal1">Add Folder</a></li>
-@endif
-
-{{-- * empty /regarding empty   --}}
-
-@if (!empty($permissiontimesheet->teamid))
-    <li><a href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Timesheet
-            Report</a></li>
-@endif
-
-
-@if ($assignmentfolder->isNotEmpty())
-    <li style="margin-left: 13px;">
-        <a href="{{ route('zipfolder', ['assignmentgenerateid' => $assignmentfolder[0]->assignmentgenerateid]) }}"
-            class="btn btn-secondary" style="color:white;">Download Folder</a>
-    </li>
-@endif
-
-
-{{-- @if ($assignmentfolder)
+        {{-- @if ($assignmentfolder)
     <li style="margin-left: 13px;">
         <a href="{{ route('zipfolder', ['assignmentgenerateid' => $assignmentfolder[0]->assignmentgenerateid]) }}"
             class="btn btn-secondary" style="color:white;">Download Folder</a>
     </li>
 @endif --}}
-{{-- @forelse ($assignmentfolder as $folder)
+        {{-- @forelse ($assignmentfolder as $folder)
     <li style="margin-left: 13px;">
         <a href="{{ route('zipfolder', ['assignmentgenerateid' => $folder->assignmentgenerateid]) }}"
             class="btn btn-secondary" style="color:white;">Download Folder</a>
@@ -698,105 +822,105 @@ return view('backEnd.assignmentfolder.index', compact('assignmentfolder', 'id', 
 
 
 
-{{-- * progress bar / persentage/  --}}
-<div class="details-form-field form-group row">
-    <label for="name" class="col-sm-3 col-form-label font-weight-600">File upload:</label>
-    <div class="col-sm-9 d-flex justify-content-center align-items-center">
-        <div class="progress">
-            <div class="bar"></div>
-            <div class="percent">0%</div>
+        {{-- * progress bar / persentage/  --}}
+        <div class="details-form-field form-group row">
+            <label for="name" class="col-sm-3 col-form-label font-weight-600">File upload:</label>
+            <div class="col-sm-9 d-flex justify-content-center align-items-center">
+                <div class="progress">
+                    <div class="bar"></div>
+                    <div class="percent">0%</div>
+                </div>
+                <div id="status"></div>
+            </div>
         </div>
-        <div id="status"></div>
-    </div>
-</div>
 
-<!-- jQuery CDN -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- jQuery Form Plugin CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script> --}}
+        <!-- jQuery CDN -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- jQuery Form Plugin CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script> --}}
 
-{{-- for dd karne ke liye is script ko comment kar de tabhi dd kar payenge function me --}}
-<script type="text/javascript">
-    var bar = $('.bar');
-    var percent = $('.percent');
+        {{-- for dd karne ke liye is script ko comment kar de tabhi dd kar payenge function me --}}
+        <script type="text/javascript">
+            var bar = $('.bar');
+            var percent = $('.percent');
 
-    $('form').ajaxForm({
-        beforeSend: function() {
-            var percentVal = '0%';
-            bar.width(percentVal);
-            percent.html(percentVal);
-        },
-        uploadProgress: function(event, position, total, percentComplete) {
-            console.log(percentComplete);
-            var percentVal = percentComplete + '%';
-            bar.width(percentVal);
-            percent.html(percentVal);
-            console.log(percentVal);
-        },
-        complete: function(xhr) {
-            var folderId = "{{ $foldername->id }}";
-            window.location = "{{ url('assignmentfolderfiles') }}/" + folderId;
-            // window.location = "{{ url('/') }}/test";
-        }
-    });
-</script>
-{{-- * regarding request/ regarding url / regarding route / regarding permission   --}}
+            $('form').ajaxForm({
+                beforeSend: function() {
+                    var percentVal = '0%';
+                    bar.width(percentVal);
+                    percent.html(percentVal);
+                },
+                uploadProgress: function(event, position, total, percentComplete) {
+                    console.log(percentComplete);
+                    var percentVal = percentComplete + '%';
+                    bar.width(percentVal);
+                    percent.html(percentVal);
+                    console.log(percentVal);
+                },
+                complete: function(xhr) {
+                    var folderId = "{{ $foldername->id }}";
+                    window.location = "{{ url('assignmentfolderfiles') }}/" + folderId;
+                    // window.location = "{{ url('/') }}/test";
+                }
+            });
+        </script>
+        {{-- * regarding request/ regarding url / regarding route / regarding permission   --}}
 
-<nav aria-label="breadcrumb" class="col-sm-4 order-sm-last mb-3 mb-sm-0 p-0 ">
-    @if (
-        !(Auth::user()->role_id == 13 && Request::is('timesheet/teamlist')) &&
-            (Auth::user()->role_id == 14 || Auth::user()->role_id == 15 || Auth::user()->role_id == 13))
-        <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
-            @if ($permissiontimesheet && $permissiontimesheet->teamid !== null)
-                <li>
-                    <a class="btn btn-info"
-                        href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Download</a>
-                </li>
+        <nav aria-label="breadcrumb" class="col-sm-4 order-sm-last mb-3 mb-sm-0 p-0 ">
+            @if (
+                !(Auth::user()->role_id == 13 && Request::is('timesheet/teamlist')) &&
+                    (Auth::user()->role_id == 14 || Auth::user()->role_id == 15 || Auth::user()->role_id == 13))
+                <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
+                    @if ($permissiontimesheet && $permissiontimesheet->teamid !== null)
+                        <li>
+                            <a class="btn btn-info"
+                                href="{{ url('mytimesheetlist', $permissiontimesheet->teamid) }}">Download</a>
+                        </li>
+                    @endif
+                </ol>
             @endif
-        </ol>
-    @endif
-    @if (Auth::user()->role_id == 11 || (Auth::user()->role_id == 13 && Request::is('timesheet/teamlist')))
-        <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
-            <li>
-                <a class="btn btn-info" href="{{ url('admintimesheetlist') }}">Download</a>
-            </li>
-        </ol>
-    @endif
-</nav>
+            @if (Auth::user()->role_id == 11 || (Auth::user()->role_id == 13 && Request::is('timesheet/teamlist')))
+                <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
+                    <li>
+                        <a class="btn btn-info" href="{{ url('admintimesheetlist') }}">Download</a>
+                    </li>
+                </ol>
+            @endif
+        </nav>
 
-@if (Request::is('adminsearchtimesheet') || Request::is('mytimesheetlist/*') || Request::is('searchingtimesheet'))
-    <button type="submit" class="btn btn-success">Search</button>
-@endif
+        @if (Request::is('adminsearchtimesheet') || Request::is('mytimesheetlist/*') || Request::is('searchingtimesheet'))
+            <button type="submit" class="btn btn-success">Search</button>
+        @endif
 
 
-<div class="media-body">
-    @if (Request::is('admintimesheetlist') || Request::is('adminsearchtimesheet'))
-        <h1 class="font-weight-bold">Team Timesheet Report</h1>
-    @elseif(Request::is('mytimesheetlist/*') || Request::is('searchingtimesheet'))
-        <h1 class="font-weight-bold">Timesheet Report</h1>
-    @endif
-    <small>Team Workbook List</small>
-</div>
-<div>
-    @if (Request::is('mytimesheetlist/*'))
-        <button type="submit" class="btn btn-success">Search</button>
-    @endif
-    @if (Request::is('searchingtimesheet'))
-        <button type="submit" class="btn btn-success">Searchaa</button>
-    @endif
-</div>
+        <div class="media-body">
+            @if (Request::is('admintimesheetlist') || Request::is('adminsearchtimesheet'))
+                <h1 class="font-weight-bold">Team Timesheet Report</h1>
+            @elseif(Request::is('mytimesheetlist/*') || Request::is('searchingtimesheet'))
+                <h1 class="font-weight-bold">Timesheet Report</h1>
+            @endif
+            <small>Team Workbook List</small>
+        </div>
+        <div>
+            @if (Request::is('mytimesheetlist/*'))
+                <button type="submit" class="btn btn-success">Search</button>
+            @endif
+            @if (Request::is('searchingtimesheet'))
+                <button type="submit" class="btn btn-success">Searchaa</button>
+            @endif
+        </div>
 
-<div>
+        <div>
 
-    <form method="post" action="{{ url('timesheetrequest/update', $applyleave->id) }}"
-        enctype="multipart/form-data">
+            <form method="post" action="{{ url('timesheetrequest/update', $applyleave->id) }}"
+                enctype="multipart/form-data">
 
-        <form method="post" action="{{ route('applyleave.update', $applyleave->id) }}"
-            enctype="multipart/form-data">
+                <form method="post" action="{{ route('applyleave.update', $applyleave->id) }}"
+                    enctype="multipart/form-data">
 
 
-            <select class="language form-control" name="client_id[]" id="client{{ $i }}"
-                @if (Request::is('timesheet/*/edit')) > <option disabled style="display:block">Select
+                    <select class="language form-control" name="client_id[]" id="client{{ $i }}"
+                        @if (Request::is('timesheet/*/edit')) > <option disabled style="display:block">Select
 Client
 </option>
 @if (Request::is('timesheet/edit/*'))
@@ -807,368 +931,371 @@ Client
     @else
         <option value="Non Billable">Non Billable</option>
         <option value="Billable">Billable</option> @endif
-                @endif
-                @endif
-                @if (Request::is('timesheet/*/edit')) >
+                        @endif
+                        @endif
+                        @if (Request::is('timesheet/*/edit')) >
         @if ($timesheet->billable_status == 'Billable')
             <option value="Billable">Billable</option>
             <option value="Non Billable">Non Billable</option>
         @else
             <option value="Non Billable">Non Billable</option>
             <option value="Billable">Billable</option> @endif
-                @endif
-                @endif
-</div>
-{{-- * regarding date and time    --}}
-<small class="text-muted">
-    {{ \Carbon\Carbon::parse($birthday->dateofbirth)->format('d M') }}
-    {{-- 14 jan output --}}
-</small>
+                        @endif
+                        @endif
+        </div>
+        {{-- * regarding date and time    --}}
+        <small class="text-muted">
+            {{ \Carbon\Carbon::parse($birthday->dateofbirth)->format('d M') }}
+            {{-- 14 jan output --}}
+        </small>
 
-<td>{{ date('d-m-Y', strtotime($jobDatas->created_at)) }}
-    {{ date('h:i A', strtotime($jobDatas->created_at)) }}</td>
+        <td>{{ date('d-m-Y', strtotime($jobDatas->created_at)) }}
+            {{ date('h:i A', strtotime($jobDatas->created_at)) }}</td>
 
-{{-- 25-11-2023 12:00 AM --}}
-
-
-
-{{-- * regarding ajax / table heading replace    --}}
-<script>
-    //** status wise
-    $('#status1').change(function() {
-        var status1 = $(this).val();
-        var employee1 = $('#employee1').val();
-        var leave1 = $('#leave1').val();
-        $.ajax({
-            type: 'GET',
-            url: '/filtering-applyleve',
-            data: {
-                status: status1,
-                employee: employee1,
-                leave: leave1
-            },
-            success: function(data) {
-                // Replace the table body with the filtered data
-                //  $('table tbody').html("");
-                $('table thead, table tbody').html("");
-                // Clear the table body
-                if (data.length === 0) {
-                    // If no data is found, display a "No data found" message
-                    $('table tbody').append(
-                        '<tr><td colspan="8" class="text-center">No data found</td></tr>'
-                    );
-                } else {
-
-                    // Add existing table heading
-                    $('table thead').append(
-                        '<tr>' +
-                        '<th style="display: none;">id</th>' +
-                        '<th>Employee</th>' +
-                        '<th>Date of Requestaaaaa</th>' +
-                        '<th>Status</th>' +
-                        '<th>Leave Type</th>' +
-                        '<th>Leave Period</th>' +
-                        '<th>Days</th>' +
-                        '<th>Approver</th>' +
-                        '<th>Reason for Leave</th>' +
-                        '</tr>'
-                    );
-
-                    $.each(data, function(index, item) {
-
-                        // Create the URL dynamically
-                        var url = '/applyleave/' + item.id;
-
-                        var createdAt = new Date(item.created_at)
-                            .toLocaleDateString('en-GB', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric'
-                            });
-                        var fromDate = new Date(item.from)
-                            .toLocaleDateString('en-GB', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric'
-                            });
-                        var toDate = new Date(item.to)
-                            .toLocaleDateString('en-GB', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric'
-                            });
-
-                        var holidays = Math.floor((new Date(item.to) -
-                            new Date(item.from)) / (24 * 60 * 60 *
-                            1000)) + 1;
-
-                        // Add the rows to the table
-                        $('table tbody').append('<tr>' +
-                            '<td><a href="' + url + '">' + item
-                            .team_member +
-                            '</a></td>' +
-                            '<td>' + createdAt + '</td>' +
-                            '<td>' + getStatusBadge(item.status) + '</td>' +
-                            '<td>' + item.name + '</td>' +
-                            '<td>' + fromDate + ' to ' + toDate +
-                            '</td>' +
-                            '<td>' + holidays + '</td>' +
-                            '<td>' + item.approvernames + '</td>' +
-                            '<td style="width: 7rem;text-wrap: wrap;">' +
-                            item.reasonleave + '</td>' +
-                            '</tr>');
-                    });
+        {{-- 25-11-2023 12:00 AM --}}
 
 
 
-                    // Function to handle the status badge
-                    function getStatusBadge(status) {
-                        if (status == 0) {
-                            return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
-                        } else if (status == 1) {
-                            return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
-                        } else if (status == 2) {
-                            return '<span class="badge badge-danger">Rejected</span>';
+        {{-- * regarding ajax / table heading replace    --}}
+        <script>
+            //** status wise
+            $('#status1').change(function() {
+                var status1 = $(this).val();
+                var employee1 = $('#employee1').val();
+                var leave1 = $('#leave1').val();
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        // Replace the table body with the filtered data
+                        //  $('table tbody').html("");
+                        $('table thead, table tbody').html("");
+                        // Clear the table body
+                        if (data.length === 0) {
+                            // If no data is found, display a "No data found" message
+                            $('table tbody').append(
+                                '<tr><td colspan="8" class="text-center">No data found</td></tr>'
+                            );
                         } else {
-                            return '';
+
+                            // Add existing table heading
+                            $('table thead').append(
+                                '<tr>' +
+                                '<th style="display: none;">id</th>' +
+                                '<th>Employee</th>' +
+                                '<th>Date of Requestaaaaa</th>' +
+                                '<th>Status</th>' +
+                                '<th>Leave Type</th>' +
+                                '<th>Leave Period</th>' +
+                                '<th>Days</th>' +
+                                '<th>Approver</th>' +
+                                '<th>Reason for Leave</th>' +
+                                '</tr>'
+                            );
+
+                            $.each(data, function(index, item) {
+
+                                // Create the URL dynamically
+                                var url = '/applyleave/' + item.id;
+
+                                var createdAt = new Date(item.created_at)
+                                    .toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    });
+                                var fromDate = new Date(item.from)
+                                    .toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    });
+                                var toDate = new Date(item.to)
+                                    .toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    });
+
+                                var holidays = Math.floor((new Date(item.to) -
+                                    new Date(item.from)) / (24 * 60 * 60 *
+                                    1000)) + 1;
+
+                                // Add the rows to the table
+                                $('table tbody').append('<tr>' +
+                                    '<td><a href="' + url + '">' + item
+                                    .team_member +
+                                    '</a></td>' +
+                                    '<td>' + createdAt + '</td>' +
+                                    '<td>' + getStatusBadge(item.status) + '</td>' +
+                                    '<td>' + item.name + '</td>' +
+                                    '<td>' + fromDate + ' to ' + toDate +
+                                    '</td>' +
+                                    '<td>' + holidays + '</td>' +
+                                    '<td>' + item.approvernames + '</td>' +
+                                    '<td style="width: 7rem;text-wrap: wrap;">' +
+                                    item.reasonleave + '</td>' +
+                                    '</tr>');
+                            });
+
+
+
+                            // Function to handle the status badge
+                            function getStatusBadge(status) {
+                                if (status == 0) {
+                                    return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
+                                } else if (status == 1) {
+                                    return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
+                                } else if (status == 2) {
+                                    return '<span class="badge badge-danger">Rejected</span>';
+                                } else {
+                                    return '';
+                                }
+                            }
+
+                            //   remove pagination after filter
+                            $('.paging_simple_numbers').remove();
+                            $('.dataTables_info').remove();
+                            // Change id aatribute dynamically in ajax
+                            $('#examplee').attr('id', 'examplee1');
+                            $('#examplee').removeAttr('id');
                         }
                     }
+                });
+            });
+        </script>
+        {{-- * regarding anchor tag   --}}
 
-                    //   remove pagination after filter
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    // Change id aatribute dynamically in ajax
-                    $('#examplee').attr('id', 'examplee1');
-                    $('#examplee').removeAttr('id');
-                }
-            }
-        });
-    });
-</script>
-{{-- * regarding anchor tag   --}}
+        <a style="margin-left: 10px;color:#7a7a7a;"
+            onclick="return confirm('Are you sure you want to delete this folder?');"
+            href="{{ url('assignmentfolderdelete', $assignmentfolderData->id) }}" class="dropdown-item">Delete</a>
 
-<a style="margin-left: 10px;color:#7a7a7a;" onclick="return confirm('Are you sure you want to delete this folder?');"
-    href="{{ url('assignmentfolderdelete', $assignmentfolderData->id) }}" class="dropdown-item">Delete</a>
+        <a href="{{ route('zipfolder', ['assignmentgenerateid' => $assignmentfolder[0]->assignmentgenerateid]) }}"
+            class="btn btn-secondary"
+            onclick="return confirm('Are you sure you want to download all folders totaling {{ $totalFileSizeMB > 1024 ? round($totalFileSizeMB / 1024, 2) . ' GB' : $totalFileSizeMB . ' MB' }}?');"
+            style="color:white;">Download</a>
 
-<a href="{{ route('zipfolder', ['assignmentgenerateid' => $assignmentfolder[0]->assignmentgenerateid]) }}"
-    class="btn btn-secondary"
-    onclick="return confirm('Are you sure you want to download all folders totaling {{ $totalFileSizeMB > 1024 ? round($totalFileSizeMB / 1024, 2) . ' GB' : $totalFileSizeMB . ' MB' }}?');"
-    style="color:white;">Download</a>
-
-<tbody>
-    @foreach ($assignmentmappingData as $assignmentmappingDatas)
-        <tr>
-            <td> <a
-                    href="{{ url('/yearwise?' . 'year=' . $assignmentmappingDatas->year . '&&' . 'clientid=' . $id) }}"><i
-                        class="far fa-calendar"></i> <b>FY
-                        {{ $assignmentmappingDatas->year }}</b>
-                </a>
-            </td>
-        </tr>
-        <td> <a href="{{ url('holiday/delete', $holidayDatas->id) }}" class="btn btn-info-soft btn-sm"><i
-                    class="fa fa-trash"></i></a>
-        </td>
-        <a href="{{ route('holiday.edit', $holidayDatas->id) }}">
-            {{ $holidayDatas->holidayname }}</a>
-    @endforeach
-</tbody>
-
-
-
-<tbody>
-    @foreach ($assignmentmappingData as $assignmentmappingDatas)
-        <tr>
-            <td> <a
-                    href="{{ url('/yearwise?' . 'year=' . $assignmentmappingDatas->year . '&&' . 'clientid=' . $id) }}"><i
-                        class="far fa-calendar"></i> <b>FY
-                        {{ $assignmentmappingDatas->year }}</b></a></td>
-        </tr>
-    @endforeach
-</tbody>
-{{-- * redirection in javascript / setTimeout function   --}}
-
-if (!shouldContinue) {
-// Redirect to a specific URL when the user clicks Cancel
-window.location.href = "{{ url('/teammember') }}";
-window.location.href = '{{ route('home') }}';
-
-setTimeout(function() {
-// Redirect to the desired route
-window.location.href = "{{ url('/teammember') }}";
-}, 1000);
-return;
-}
-{{-- * serial number /S.N / sereal number /  sereal number    --}}
-
-@php
-    $serialNumber = 1;
-@endphp
-
-@foreach ($teamapplyleaveDatas as $applyleaveDatas)
-    <tr>
-        <td style="display: none;">{{ $applyleaveDatas->id }}</td>
-        <td>{{ $serialNumber++ }}</td>
-        {{-- * td width increase ior decrease   --}}
-        <td>
-            <div style="width: 11rem;">{{ $applyleaveDatas->reasonleave ?? '' }}
-            </div>
-        </td>
-    </tr>
-@endforeach
-{{-- * filtering functionality / regarding filter / filter functionality   --}}
-
-{{-- filtering functionality using table layout --}}
-<form method="post" action="{{ url('searchingtimesheet') }}" enctype="multipart/form-data" class="form-inline">
-    @csrf
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Teamid</th>
-                <th>Year</th>
-                <th>Action</th>
-            </tr>
-        </thead>
         <tbody>
-            <tr style=" background-color: white;">
-                <td>
-                    <div class="form-group">
-                        <input type="date" class="form-control" id="start" name="start">
-                    </div>
+            @foreach ($assignmentmappingData as $assignmentmappingDatas)
+                <tr>
+                    <td> <a
+                            href="{{ url('/yearwise?' . 'year=' . $assignmentmappingDatas->year . '&&' . 'clientid=' . $id) }}"><i
+                                class="far fa-calendar"></i> <b>FY
+                                {{ $assignmentmappingDatas->year }}</b>
+                        </a>
+                    </td>
+                </tr>
+                <td> <a href="{{ url('holiday/delete', $holidayDatas->id) }}" class="btn btn-info-soft btn-sm"><i
+                            class="fa fa-trash"></i></a>
                 </td>
-                <td>
-                    <div class="form-group">
-                        <input type="date" class="form-control" id="end" name="end">
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group">
-                        @php
-
-                            $displayedValues = [];
-                        @endphp
-                        @foreach ($timesheetData as $timesheetDatas)
-                            @if (!in_array($timesheetDatas->createdby, $displayedValues))
-                                <input type="text" class="form-control" id="teamid" name="teamid"
-                                    value="{{ $timesheetDatas->createdby }}">
-                                @php
-                                    $displayedValues[] = $timesheetDatas->createdby;
-                                @endphp
-                            @endif
-                        @endforeach
-                    </div>
-                </td>
-                <td>
-                    {{-- ! get year digit only  --}}
-                    <div class="form-group">
-                        <select class="language form-control" id="category7" name="year">
-                            <option value="">Please Select One</option>
-                            @php
-                                $displayedYears = [];
-                            @endphp
-                            @foreach ($timesheetData as $timesheetDatas)
-                                @php
-                                    $year = \Carbon\Carbon::parse($timesheetDatas->date)->year;
-                                @endphp
-                                @if (!in_array($year, $displayedYears))
-                                    <option value="{{ $year }}">
-                                        {{ $year }}
-                                    </option>
-                                    @php
-                                        $displayedYears[] = $year;
-                                    @endphp
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-success">Search</button>
-                </td>
-            </tr>
+                <a href="{{ route('holiday.edit', $holidayDatas->id) }}">
+                    {{ $holidayDatas->holidayname }}</a>
+            @endforeach
         </tbody>
-    </table>
-</form>
 
-{{-- filtering functionality --}}
-<form method="post" action="{{ url('searchingtimesheet') }}" enctype="multipart/form-data" class="form-inline">
-    @csrf
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Year</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                {{-- <th>Teamid</th> --}}
-                <th>Action</th>
-            </tr>
-        </thead>
+
+
         <tbody>
-            <tr style=" background-color: white;">
+            @foreach ($assignmentmappingData as $assignmentmappingDatas)
+                <tr>
+                    <td> <a
+                            href="{{ url('/yearwise?' . 'year=' . $assignmentmappingDatas->year . '&&' . 'clientid=' . $id) }}"><i
+                                class="far fa-calendar"></i> <b>FY
+                                {{ $assignmentmappingDatas->year }}</b></a></td>
+                </tr>
+            @endforeach
+        </tbody>
+        {{-- * redirection in javascript / setTimeout function   --}}
+
+        if (!shouldContinue) {
+        // Redirect to a specific URL when the user clicks Cancel
+        window.location.href = "{{ url('/teammember') }}";
+        window.location.href = '{{ route('home') }}';
+
+        setTimeout(function() {
+        // Redirect to the desired route
+        window.location.href = "{{ url('/teammember') }}";
+        }, 1000);
+        return;
+        }
+        {{-- * serial number /S.N / sereal number /  sereal number    --}}
+
+        @php
+            $serialNumber = 1;
+        @endphp
+
+        @foreach ($teamapplyleaveDatas as $applyleaveDatas)
+            <tr>
+                <td style="display: none;">{{ $applyleaveDatas->id }}</td>
+                <td>{{ $serialNumber++ }}</td>
+                {{-- * td width increase ior decrease   --}}
                 <td>
-                    {{-- <div class="form-group">
+                    <div style="width: 11rem;">{{ $applyleaveDatas->reasonleave ?? '' }}
+                    </div>
+                </td>
+            </tr>
+        @endforeach
+        {{-- * filtering functionality / regarding filter / filter functionality   --}}
+
+        {{-- filtering functionality using table layout --}}
+        <form method="post" action="{{ url('searchingtimesheet') }}" enctype="multipart/form-data"
+            class="form-inline">
+            @csrf
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Teamid</th>
+                        <th>Year</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style=" background-color: white;">
+                        <td>
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="start" name="start">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="end" name="end">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                @php
+
+                                    $displayedValues = [];
+                                @endphp
+                                @foreach ($timesheetData as $timesheetDatas)
+                                    @if (!in_array($timesheetDatas->createdby, $displayedValues))
+                                        <input type="text" class="form-control" id="teamid" name="teamid"
+                                            value="{{ $timesheetDatas->createdby }}">
+                                        @php
+                                            $displayedValues[] = $timesheetDatas->createdby;
+                                        @endphp
+                                    @endif
+                                @endforeach
+                            </div>
+                        </td>
+                        <td>
+                            {{-- ! get year digit only  --}}
+                            <div class="form-group">
+                                <select class="language form-control" id="category7" name="year">
+                                    <option value="">Please Select One</option>
+                                    @php
+                                        $displayedYears = [];
+                                    @endphp
+                                    @foreach ($timesheetData as $timesheetDatas)
+                                        @php
+                                            $year = \Carbon\Carbon::parse($timesheetDatas->date)->year;
+                                        @endphp
+                                        @if (!in_array($year, $displayedYears))
+                                            <option value="{{ $year }}">
+                                                {{ $year }}
+                                            </option>
+                                            @php
+                                                $displayedYears[] = $year;
+                                            @endphp
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-success">Search</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+
+        {{-- filtering functionality --}}
+        <form method="post" action="{{ url('searchingtimesheet') }}" enctype="multipart/form-data"
+            class="form-inline">
+            @csrf
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        {{-- <th>Teamid</th> --}}
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style=" background-color: white;">
+                        <td>
+                            {{-- <div class="form-group">
                                               <select class="language form-control" id="year" name="year">
                                                   <option value="">Please Select One</option>
                                                   <option value="2024">2024</option>
                                                   <option value="2023">2023</option>
                                               </select>
                                           </div> --}}
-                    <div class="form-group">
-                        <select class="language form-control" id="year" name="year">
-                            <option value="">Please Select One</option>
-                            <option value="2024" {{ old('year') == '2024' ? 'selected' : '' }}>2024
-                            </option>
-                            <option value="2023" {{ old('year') == '2023' ? 'selected' : '' }}>2023
-                            </option>
-                        </select>
-                    </div>
+                            <div class="form-group">
+                                <select class="language form-control" id="year" name="year">
+                                    <option value="">Please Select One</option>
+                                    <option value="2024" {{ old('year') == '2024' ? 'selected' : '' }}>2024
+                                    </option>
+                                    <option value="2023" {{ old('year') == '2023' ? 'selected' : '' }}>2023
+                                    </option>
+                                </select>
+                            </div>
 
-                </td>
+                        </td>
 
-                <td>
-                    <div class="form-group">
-                        <input type="date" class="form-control" id="startdate" name="startdate"
-                            value="{{ old('startdate') }}">
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <input type="date" class="form-control" id="enddate" name="enddate"
-                            value="{{ old('enddate') }}">
-                    </div>
-                </td>
-                <td style="display: none">
-                    <div class="form-group">
-                        @php
-
-                            $displayedValues = [];
-                        @endphp
-                        @foreach ($timesheetData as $timesheetDatas)
-                            @if (!in_array($timesheetDatas->createdby, $displayedValues))
-                                <input type="hidden" class="form-control" id="teamid" name="teamid"
-                                    value="{{ $timesheetDatas->createdby }}">
+                        <td>
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="startdate" name="startdate"
+                                    value="{{ old('startdate') }}">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="enddate" name="enddate"
+                                    value="{{ old('enddate') }}">
+                            </div>
+                        </td>
+                        <td style="display: none">
+                            <div class="form-group">
                                 @php
-                                    $displayedValues[] = $timesheetDatas->createdby;
+
+                                    $displayedValues = [];
                                 @endphp
-                            @endif
-                        @endforeach
-                    </div>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-success">Search</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</form>
+                                @foreach ($timesheetData as $timesheetDatas)
+                                    @if (!in_array($timesheetDatas->createdby, $displayedValues))
+                                        <input type="hidden" class="form-control" id="teamid" name="teamid"
+                                            value="{{ $timesheetDatas->createdby }}">
+                                        @php
+                                            $displayedValues[] = $timesheetDatas->createdby;
+                                        @endphp
+                                    @endif
+                                @endforeach
+                            </div>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-success">Search</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
 
 
 
-{{-- filtering functionality --}}
+        {{-- filtering functionality --}}
 
-{{-- ! runnig for patner --}}
-{{-- <div class="row row-sm">
+        {{-- ! runnig for patner --}}
+        {{-- <div class="row row-sm">
                           <div class="col-2">
                               <div class="form-group">
                                   <label class="font-weight-600">All Partner</label>
@@ -1241,45 +1368,45 @@ return;
                               </div>
                           </div>
                       </div> --}}
-<div class="row row-sm">
-    <div class="col-3">
-        <div class="form-group">
-            <label class="font-weight-600">Team Name</label>
-            <select class="language form-control" id="category7" name="teamname">
-                <option value="">Please Select One</option>
-                @php
-
-                    $displayedValues = [];
-                @endphp
-                @foreach ($get_date as $jobDatas)
-                    @if (!in_array($jobDatas->team_member, $displayedValues))
-                        <option value="{{ $jobDatas->teamid }}">
-                            {{ $jobDatas->team_member }}
-                        </option>
+        <div class="row row-sm">
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="font-weight-600">Team Name</label>
+                    <select class="language form-control" id="category7" name="teamname">
+                        <option value="">Please Select One</option>
                         @php
-                            $displayedValues[] = $jobDatas->team_member;
+
+                            $displayedValues = [];
                         @endphp
-                    @endif
-                @endforeach
-            </select>
-        </div>
-    </div>
+                        @foreach ($get_date as $jobDatas)
+                            @if (!in_array($jobDatas->team_member, $displayedValues))
+                                <option value="{{ $jobDatas->teamid }}">
+                                    {{ $jobDatas->team_member }}
+                                </option>
+                                @php
+                                    $displayedValues[] = $jobDatas->team_member;
+                                @endphp
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
 
 
-    <div class="col-3">
-        <div class="form-group">
-            <label class="font-weight-600">Start Date</label>
-            <input type="date" class="form-control" id="start" name="start">
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="font-weight-600">Start Date</label>
+                    <input type="date" class="form-control" id="start" name="start">
 
-        </div>
-    </div>
-    <div class="col-3">
-        <div class="form-group">
-            <label class="font-weight-600">End Date</label>
-            <input type="date" class="form-control" name="end" id="end">
-        </div>
-    </div>
-    {{-- <div class="col-3">
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="font-weight-600">End Date</label>
+                    <input type="date" class="form-control" name="end" id="end">
+                </div>
+            </div>
+            {{-- <div class="col-3">
                             <div class="form-group">
                                 <label class="font-weight-600">Total Timesheet Filled Day</label>
                                 <select class="language form-control" id="category3" name="totaldays">
@@ -1301,28 +1428,28 @@ return;
                             </div>
                         </div> --}}
 
-    <div class="col-3">
-        <div class="form-group">
-            <label class="font-weight-600">Total Hour</label>
-            <select class="language form-control" id="category4" name="totalhours">
-                <option value="">Please Select One</option>
-                @php
-                    $displayedValues = [];
-                @endphp
-                @foreach ($get_date as $jobData)
-                    @if (!in_array($jobData->totaltime, $displayedValues))
-                        <option value="{{ $jobData->totaltime }}">
-                            {{ $jobData->totaltime }}
-                        </option>
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="font-weight-600">Total Hour</label>
+                    <select class="language form-control" id="category4" name="totalhours">
+                        <option value="">Please Select One</option>
                         @php
-                            $displayedValues[] = $jobData->totaltime;
+                            $displayedValues = [];
                         @endphp
-                    @endif
-                @endforeach
-            </select>
-        </div>
-    </div>
-    {{-- <div class="col-2">
+                        @foreach ($get_date as $jobData)
+                            @if (!in_array($jobData->totaltime, $displayedValues))
+                                <option value="{{ $jobData->totaltime }}">
+                                    {{ $jobData->totaltime }}
+                                </option>
+                                @php
+                                    $displayedValues[] = $jobData->totaltime;
+                                @endphp
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            {{-- <div class="col-2">
                             <div class="form-group">
                                 <label class="font-weight-600">Partner</label>
                                 <select class="language form-control" id="category1" name="partnersearch">
@@ -1342,7 +1469,7 @@ return;
                                     @endforeach
                                 </select> --}}
 
-    {{-- <select class="language form-control" id="category1" name="partnersearch">
+            {{-- <select class="language form-control" id="category1" name="partnersearch">
                                   <option value="">Please Select One</option>
                                   @foreach ($partner as $teammemberData)
                                       <option value="{{ $teammemberData->id }}">
@@ -1350,493 +1477,645 @@ return;
                                       </option>
                                   @endforeach
                               </select> --}}
-    {{-- 
+            {{-- 
                             </div>
                         </div> --}}
-</div>
+        </div>
 
 
 
 
-{{-- * condition on foreach loop / outside of foreach loop / notification / message   --}}
+        {{-- * condition on foreach loop / outside of foreach loop / notification / message   --}}
 
-@php
-    $hasUnreadNotification = false;
-    foreach ($clientnotification as $clientnotificationdata) {
-        if ($clientnotificationdata->readstatus == 0) {
-            $hasUnreadNotification = true;
-            break;
-        }
-    }
-@endphp
+        @php
+            $hasUnreadNotification = false;
+            foreach ($clientnotification as $clientnotificationdata) {
+                if ($clientnotificationdata->readstatus == 0) {
+                    $hasUnreadNotification = true;
+                    break;
+                }
+            }
+        @endphp
 
-<li class="nav-item dropdown notification">
-    <a class="nav-link dropdown-toggle {{ $hasUnreadNotification ? 'badge-dot' : '' }}" href="#"
-        data-toggle="dropdown">
-        <i class="typcn typcn-bell"></i>
-    </a>
-    <div class="dropdown-menu dropdown-menu-right">
-        <h6 class="notification-title">Notifications</h6>
-        <p class="notification-text">You have {{ count($clientnotification) }} unread notification</p>
-        <div class="notification-list">
-            @foreach ($clientnotification as $clientnotificationdata)
-                <div class="media new">
-                    <a href="{{ url('notification/' . $clientnotificationdata->id) }}"
-                        style="color: {{ $clientnotificationdata->readstatus == 1 ? 'Black' : 'red' }}">
-                    </a>
-                </div>
-                <!--/.media -->
-            @endforeach
+        <li class="nav-item dropdown notification">
+            <a class="nav-link dropdown-toggle {{ $hasUnreadNotification ? 'badge-dot' : '' }}" href="#"
+                data-toggle="dropdown">
+                <i class="typcn typcn-bell"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <h6 class="notification-title">Notifications</h6>
+                <p class="notification-text">You have {{ count($clientnotification) }} unread notification</p>
+                <div class="notification-list">
+                    @foreach ($clientnotification as $clientnotificationdata)
+                        <div class="media new">
+                            <a href="{{ url('notification/' . $clientnotificationdata->id) }}"
+                                style="color: {{ $clientnotificationdata->readstatus == 1 ? 'Black' : 'red' }}">
+                            </a>
+                        </div>
+                        <!--/.media -->
+                    @endforeach
 
-</li>
+        </li>
 
 
-{{-- * table heading hide / action hide / any column hide according condition    --}}
+        {{-- * table heading hide / action hide / any column hide according condition    --}}
 
-<thead>
-    <tr>
-        <th>Date of Request</th>
-        <th>Employee</th>
-        <th>Leave Type</th>
-        <th>Approver</th>
-        <th>Reason for Leave</th>
-        <th> Leave Period</th>
-        <th>Days</th>
-        <th>Status</th>
+        <thead>
+            <tr>
+                <th>Date of Request</th>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>Approver</th>
+                <th>Reason for Leave</th>
+                <th> Leave Period</th>
+                <th>Days</th>
+                <th>Status</th>
+                @foreach ($myapplyleaveDatas as $applyleaveDatas)
+                    @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
+                        <th>Action</th>
+                    @endif
+                @endforeach
+            </tr>
+        </thead>
         @foreach ($myapplyleaveDatas as $applyleaveDatas)
-            @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
-                <th>Action</th>
-            @endif
+            <td>
+                @if ($applyleaveDatas->status == 0)
+                    <span class="badge badge-pill badge-warning">Created</span>
+                @elseif($applyleaveDatas->status == 1)
+                    <span class="badge badge-success">Approved</span>
+                @elseif($applyleaveDatas->status == 2)
+                    <span class="badge badge-danger">Rejected</span>
+                @endif
+            </td>
+            <td>
+                @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
+                    <button class="btn btn-danger" data-toggle="modal"
+                        style="height: 16px; width: auto; border-radius: 7px; display: flex; align-items: center; justify-content: center;font-size: 11px;"
+                        data-target="#requestModal{{ $applyleaveDatas->id }}">Request</button>
+                @endif
+            </td>
         @endforeach
-    </tr>
-</thead>
-@foreach ($myapplyleaveDatas as $applyleaveDatas)
-    <td>
-        @if ($applyleaveDatas->status == 0)
-            <span class="badge badge-pill badge-warning">Created</span>
-        @elseif($applyleaveDatas->status == 1)
-            <span class="badge badge-success">Approved</span>
-        @elseif($applyleaveDatas->status == 2)
-            <span class="badge badge-danger">Rejected</span>
-        @endif
-    </td>
-    <td>
-        @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
-            <button class="btn btn-danger" data-toggle="modal"
-                style="height: 16px; width: auto; border-radius: 7px; display: flex; align-items: center; justify-content: center;font-size: 11px;"
-                data-target="#requestModal{{ $applyleaveDatas->id }}">Request</button>
-        @endif
-    </td>
-@endforeach
 
 
 
-{{-- * excell and pdf download / table asc and desc order   --}}
+        {{-- * excell and pdf download / table asc and desc order   --}}
 
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
 
-<style>
-    .dt-buttons {
-        margin-bottom: -34px;
-    }
-</style>
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                [2, "desc"]
-            ],
-            buttons: [{
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: [0, ':visible']
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    filename: 'Timesheet Download',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    filename: 'Timesheet Download',
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5]
-                    }
-                },
-                'colvis'
-            ]
-        });
-    });
-</script>
+        <style>
+            .dt-buttons {
+                margin-bottom: -34px;
+            }
+        </style>
+        <script>
+            $(document).ready(function() {
+                $('#examplee').DataTable({
+                    dom: 'Bfrtip',
+                    "order": [
+                        [2, "desc"]
+                    ],
+                    buttons: [{
+                            extend: 'copyHtml5',
+                            exportOptions: {
+                                columns: [0, ':visible']
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            filename: 'Timesheet Download',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            filename: 'Timesheet Download',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5]
+                            }
+                        },
+                        'colvis'
+                    ]
+                });
+            });
+        </script>
 
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            "pageLength": 30,
-            dom: 'Bfrtip',
-            "order": [
-                [1, "asc"]
-            ],
+        <script>
+            $(document).ready(function() {
+                $('#examplee').DataTable({
+                    "pageLength": 30,
+                    dom: 'Bfrtip',
+                    "order": [
+                        [1, "asc"]
+                    ],
 
-            buttons: [
+                    buttons: [
 
-                {
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: [0, ':visible']
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    filename: 'Timesheet Download',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 5]
-                    }
-                },
-                'colvis'
-            ]
-        });
-    });
-</script>
-{{-- hide excell button ya othser button --}}
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            "pageLength": 10,
-            "dom": 'Bfrtip',
-            "order": [
-                [1, "desc"]
-            ],
+                        {
+                            extend: 'copyHtml5',
+                            exportOptions: {
+                                columns: [0, ':visible']
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            filename: 'Timesheet Download',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            exportOptions: {
+                                columns: [0, 1, 2, 5]
+                            }
+                        },
+                        'colvis'
+                    ]
+                });
+            });
+        </script>
+        {{-- hide excell button ya othser button --}}
+        <script>
+            $(document).ready(function() {
+                $('#examplee').DataTable({
+                    "pageLength": 10,
+                    "dom": 'Bfrtip',
+                    "order": [
+                        [1, "desc"]
+                    ],
 
-            buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: ':visible'
-                },
-                text: 'Export to Excel',
-                className: 'btn-excel',
-            }, ]
-        });
+                    buttons: [{
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+                        text: 'Export to Excel',
+                        className: 'btn-excel',
+                    }, ]
+                });
 
-        $('.btn-excel').hide();
-    });
-</script>
-{{-- * first element   --}}
-<td>
-    @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
-        <button class="btn btn-danger" data-toggle="modal"
-            style="height: 16px; width: auto; border-radius: 7px; display: flex; align-items: center; justify-content: center;font-size: 11px;"
-            data-target="#requestModal{{ $applyleaveDatas->id }}">Request</button>
-    @endif
-</td>
-{{-- * 2 column in one row  --}}
+                $('.btn-excel').hide();
+            });
+        </script>
+        {{-- * first element   --}}
+        <td>
+            @if ($applyleaveDatas->leavetype == 11 && $applyleaveDatas->status == 1 && $loop->first)
+                <button class="btn btn-danger" data-toggle="modal"
+                    style="height: 16px; width: auto; border-radius: 7px; display: flex; align-items: center; justify-content: center;font-size: 11px;"
+                    data-target="#requestModal{{ $applyleaveDatas->id }}">Request</button>
+            @endif
+        </td>
+        {{-- * 2 column in one row  --}}
 
-<tr>
-    <td><b>Leave : </b></td>
-    <td>{{ $applyleave->name }}</td>
-    <td><b>Raised By :</b></td>
-    <td>{{ $applyleave->team_member }}</td>
-</tr>
-{{-- * persentage display   --}}
+        <tr>
+            <td><b>Leave : </b></td>
+            <td>{{ $applyleave->name }}</td>
+            <td><b>Raised By :</b></td>
+            <td>{{ $applyleave->team_member }}</td>
+        </tr>
+        {{-- * persentage display   --}}
 
-<td>
+        <td>
 
-    @php
-        $totalFields = 26; // 30 column
-        $filledFields = 0;
+            @php
+                $totalFields = 26; // 30 column
+                $filledFields = 0;
 
-        $filledFields += !empty($teammemberData->id) ? 1 : 0;
-        $filledFields += !empty($teammemberData->team_member) ? 1 : 0;
-        $filledFields += !empty($teammemberData->profilepic) ? 1 : 0;
-        $filledFields += !empty($teammemberData->staffcode) ? 1 : 0;
-        $filledFields += !empty($teammemberData->role->rolename) ? 1 : 0;
-        $filledFields += !empty($teammemberData->designation) ? 1 : 0;
-        $filledFields += !empty($teammemberData->mobile_no) ? 1 : 0;
-        $filledFields += !empty($teammemberData->dateofbirth) ? 1 : 0;
-        $filledFields += !empty($teammemberData->joining_date) ? 1 : 0;
-        $filledFields += !empty($teammemberData->department) ? 1 : 0;
-        $filledFields += !empty($teammemberData->emailid) ? 1 : 0;
-        $filledFields += !empty($teammemberData->personalemail) ? 1 : 0;
-        $filledFields += !empty($teammemberData->communicationaddress) ? 1 : 0;
-        $filledFields += !empty($teammemberData->permanentaddress) ? 1 : 0;
-        $filledFields += !empty($teammemberData->adharcardnumber) ? 1 : 0;
-        $filledFields += !empty($teammemberData->aadharupload) ? 1 : 0;
-        $filledFields += !empty($teammemberData->pancardno) ? 1 : 0;
-        $filledFields += !empty($teammemberData->panupload) ? 1 : 0;
-        $filledFields += !empty($teammemberData->emergencycontactnumber) ? 1 : 0;
-        $filledFields += !empty($teammemberData->nameofbank) ? 1 : 0;
-        $filledFields += !empty($teammemberData->bankaccountnumber) ? 1 : 0;
-        $filledFields += !empty($teammemberData->ifsccode) ? 1 : 0;
-        $filledFields += !empty($teammemberData->mothername) ? 1 : 0;
-        $filledFields += !empty($teammemberData->mothernumber) ? 1 : 0;
-        $filledFields += !empty($teammemberData->cancelcheque) ? 1 : 0;
-        $filledFields += !empty($teammemberData->fathername) ? 1 : 0;
-        $filledFields += !empty($teammemberData->fathernumber) ? 1 : 0;
+                $filledFields += !empty($teammemberData->id) ? 1 : 0;
+                $filledFields += !empty($teammemberData->team_member) ? 1 : 0;
+                $filledFields += !empty($teammemberData->profilepic) ? 1 : 0;
+                $filledFields += !empty($teammemberData->staffcode) ? 1 : 0;
+                $filledFields += !empty($teammemberData->role->rolename) ? 1 : 0;
+                $filledFields += !empty($teammemberData->designation) ? 1 : 0;
+                $filledFields += !empty($teammemberData->mobile_no) ? 1 : 0;
+                $filledFields += !empty($teammemberData->dateofbirth) ? 1 : 0;
+                $filledFields += !empty($teammemberData->joining_date) ? 1 : 0;
+                $filledFields += !empty($teammemberData->department) ? 1 : 0;
+                $filledFields += !empty($teammemberData->emailid) ? 1 : 0;
+                $filledFields += !empty($teammemberData->personalemail) ? 1 : 0;
+                $filledFields += !empty($teammemberData->communicationaddress) ? 1 : 0;
+                $filledFields += !empty($teammemberData->permanentaddress) ? 1 : 0;
+                $filledFields += !empty($teammemberData->adharcardnumber) ? 1 : 0;
+                $filledFields += !empty($teammemberData->aadharupload) ? 1 : 0;
+                $filledFields += !empty($teammemberData->pancardno) ? 1 : 0;
+                $filledFields += !empty($teammemberData->panupload) ? 1 : 0;
+                $filledFields += !empty($teammemberData->emergencycontactnumber) ? 1 : 0;
+                $filledFields += !empty($teammemberData->nameofbank) ? 1 : 0;
+                $filledFields += !empty($teammemberData->bankaccountnumber) ? 1 : 0;
+                $filledFields += !empty($teammemberData->ifsccode) ? 1 : 0;
+                $filledFields += !empty($teammemberData->mothername) ? 1 : 0;
+                $filledFields += !empty($teammemberData->mothernumber) ? 1 : 0;
+                $filledFields += !empty($teammemberData->cancelcheque) ? 1 : 0;
+                $filledFields += !empty($teammemberData->fathername) ? 1 : 0;
+                $filledFields += !empty($teammemberData->fathernumber) ? 1 : 0;
 
-        $profileCompletionPercentage = ($filledFields / $totalFields) * 100;
-        $formattedProfileCompletion = number_format($profileCompletionPercentage, 2);
-    @endphp
-    @if ($formattedProfileCompletion == 100)
-        <span class="badge badge-pill badge-success"
-            style="width: 71px;
+                $profileCompletionPercentage = ($filledFields / $totalFields) * 100;
+                $formattedProfileCompletion = number_format($profileCompletionPercentage, 2);
+            @endphp
+            @if ($formattedProfileCompletion == 100)
+                <span class="badge badge-pill badge-success"
+                    style="width: 71px;
             height: 26px;
             font-size: 17px;">{{ $formattedProfileCompletion }}</span>
-    @else
-        <span class="badge badge-pill badge-danger"
-            style="width: 71px;
+            @else
+                <span class="badge badge-pill badge-danger"
+                    style="width: 71px;
             height: 26px;
             font-size: 17px;">{{ $formattedProfileCompletion }}</span>
-    @endif
-</td>
-{{-- * badge  --}}
-<td>
-    @if ($timesheetrequestsData->status == 0)
-        <span class="badge badge-pill badge-warning">Created</span>
-    @elseif($timesheetrequestsData->status == 1)
-        <span class="badge badge-pill badge-success">Approved</span>
-    @else
-        <span class="badge badge-pill badge-danger">Rejected</span>
-    @endif
-</td>
-{{-- * direct mail    --}}
+            @endif
+        </td>
+        {{-- * badge  --}}
+        <td>
+            @if ($timesheetrequestsData->status == 0)
+                <span class="badge badge-pill badge-warning">Created</span>
+            @elseif($timesheetrequestsData->status == 1)
+                <span class="badge badge-pill badge-success">Approved</span>
+            @else
+                <span class="badge badge-pill badge-danger">Rejected</span>
+            @endif
+        </td>
+        {{-- * direct mail    --}}
 
-<td><a href="mailto:{{ $teammemberData->emailid }}">{{ $teammemberData->emailid ?? '' }}</a>
-</td>
-{{-- * get data from database   --}}
+        <td><a href="mailto:{{ $teammemberData->emailid }}">{{ $teammemberData->emailid ?? '' }}</a>
+        </td>
+        {{-- * get data from database   --}}
 
-<td>{{ App\Models\Teammember::select('team_member')->where('id', $applyleave->approver)->first()->team_member ?? '' }}
-</td>
-{{-- * holiday routes   --}}
-{{-- Route::resource('/holiday', HolidayController::class);
+        <td>{{ App\Models\Teammember::select('team_member')->where('id', $applyleave->approver)->first()->team_member ?? '' }}
+        </td>
+        {{-- * holiday routes   --}}
+        {{-- Route::resource('/holiday', HolidayController::class);
     
     above route related it and this anchor tag hit edit function in resource route
     <a href="{{ route('holiday.edit', $holidayDatas->id) }}">{{ $holidayDatas->holidayname }}</a> --}}
 
 
-{{--
+        {{--
         Route::get('/holidays', [HolidayController::class, 'holidays']);
         Route::get('holiday/delete/{id}', [HolidayController::class, 'destroy']); --}}
-<tbody>
-    @foreach ($holidayDatas as $holidayDatas)
-        <tr>
-            <td style="display: none;">{{ $holidayDatas->id }}</td>
-            <td>
-                @if (Auth::user()->role_id == 18 || Auth::user()->role_id == 11)
-                    <a href="{{ route('holiday.edit', $holidayDatas->id) }}">
-                        {{ $holidayDatas->holidayname }}</a>
-                @else
-                    {{ $holidayDatas->holidayname }}
-                @endif
-            </td>
-            <td>{{ date('F d,Y', strtotime($holidayDatas->startdate)) }}</td>
+        <tbody>
+            @foreach ($holidayDatas as $holidayDatas)
+                <tr>
+                    <td style="display: none;">{{ $holidayDatas->id }}</td>
+                    <td>
+                        @if (Auth::user()->role_id == 18 || Auth::user()->role_id == 11)
+                            <a href="{{ route('holiday.edit', $holidayDatas->id) }}">
+                                {{ $holidayDatas->holidayname }}</a>
+                        @else
+                            {{ $holidayDatas->holidayname }}
+                        @endif
+                    </td>
+                    <td>{{ date('F d,Y', strtotime($holidayDatas->startdate)) }}</td>
 
+                    @if (Auth::user()->role_id == 18)
+                        <td> <a href="{{ url('holiday/delete', $holidayDatas->id) }}"
+                                class="btn btn-info-soft btn-sm"><i class="fa fa-trash"></i></a>
+                        </td>
+                    @endif
+
+                </tr>
+            @endforeach
+        </tbody>
+
+        {{-- * button in select box/ select box button /   --}}
+        <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
+            <li class="breadcrumb-item">
+                <div class="btn-group mb-2 mr-1">
+                    <button type="button" class="btn btn-info-soft btn-sm dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Choose Year
+                    </button>
+                    <div class="dropdown-menu">
+                        <a style="color: #37A000" class="dropdown-item"
+                            href="{{ url('/holidays?' . 'year=' . '2023') }}">2023</a>
+                        <a style="color: #37A000" class="dropdown-item"
+                            href="{{ url('/holidays?' . 'year=' . '2022') }}">2022</a>
+
+
+                    </div>
+                </div>
+            </li>
+            {{-- For hr  --}}
             @if (Auth::user()->role_id == 18)
-                <td> <a href="{{ url('holiday/delete', $holidayDatas->id) }}" class="btn btn-info-soft btn-sm"><i
-                            class="fa fa-trash"></i></a>
-                </td>
+                <li class="breadcrumb-item"><a href="{{ url('holiday/create') }}">Add Holidays</a></li>
+                <li class="breadcrumb-item active">+</li>
             @endif
+        </ol>
 
-        </tr>
-    @endforeach
-</tbody>
+        {{-- * check days ant time  --}}
 
-{{-- * button in select box/ select box button /   --}}
-<ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
-    <li class="breadcrumb-item">
-        <div class="btn-group mb-2 mr-1">
-            <button type="button" class="btn btn-info-soft btn-sm dropdown-toggle" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                Choose Year
-            </button>
-            <div class="dropdown-menu">
-                <a style="color: #37A000" class="dropdown-item"
-                    href="{{ url('/holidays?' . 'year=' . '2023') }}">2023</a>
-                <a style="color: #37A000" class="dropdown-item"
-                    href="{{ url('/holidays?' . 'year=' . '2022') }}">2022</a>
+        @if (
+            (now()->isSunday() && now()->hour >= 18) ||
+                now()->isMonday() ||
+                now()->isTuesday() ||
+                now()->isWednesday() ||
+                now()->isThursday() ||
+                now()->isFriday() ||
+                (now()->isSaturday() && now()->hour <= 18))
+        @endif
+        {{-- *   --}}
+
+        {{-- * dd with mesaage/ check dd output    --}}
+        dd('hi', $previoussavechck);
+
+        {{-- *  regarding warning message/ regarding message/ regarding success message --}}
+        {{-- start hare --}}
+        @if (session('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
+        {{-- start hare --}}
+        if ($request->status == $usermail->status) {
+        return back()->withErrors(['error' => 'You have allready Submitted'])->withInput();
+        }
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                {{-- <ul> --}}
+                @foreach ($errors->all() as $error)
+                    {{-- <li>{{ $error }}</li> --}}
+                    <p>{{ $error }}</p>
+                @endforeach
+                {{-- </ul> --}}
+            </div>
+        @endif
+        {{-- start hare --}}
+        @if ($errors->any())
+            {{-- <div class="alert alert-danger"> --}}
+            @foreach ($errors->all() as $error)
+                <p class="text-danger">{{ $error }}</p>
+            @endforeach
+            {{-- </div> --}}
+        @endif
+        d-flex align-items-center justify-content-center text-center h-100vh
+        bg-white
+        backEnd/image/unnamed.jpg'
+        {{-- * model rule / $fillable  --}}
+        model
+        protected $table = "assignmentteammappings";
+        protected $fillable = [
+        'status',
+        ];
+
+        {{-- * mailtrap config  --}}
+
+        MAIL_MAILER=smtp
+        MAIL_HOST=smtp.mailtrap.io
+        MAIL_PORT=2525
+        MAIL_USERNAME=2250e92771fcb7
+        MAIL_PASSWORD=ac27bd097eacaa
+        MAIL_ENCRYPTION=tls
+        MAIL_FROM_ADDRESS=kgsomani@gmail.com
+        MAIL_FROM_NAME="${APP_NAME}"
 
 
+        {{-- * name route / route name --}}
+        Route::resource('form', RegisterController::class)->names([
+        'index' => 'addUser.index',
+        'create' => 'addUser.create',
+        'store' => 'addUser.store',
+        'show' => 'addUser.show',
+        'edit' => 'addUser.edit',
+        'update' => 'addUser.update',
+        'destroy' => 'addUser.destroy',
+        ]);
+
+        {{-- * modal box / regarding model box / regarding popup box / regarding pop up box    --}}
+        {{-- ? model box 1 --}}
+
+        <button style="margin-left:11px;height: 35px;" data-toggle="modal" data-target="#exampleModal12"
+            class="btn btn-danger">
+            Reject</button>
+
+        <!-- Small modal -->
+        <div class="modal fade" id="exampleModal12" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel4" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background:#37A000">
+                        <h5 style="color: white" class="modal-title font-weight-600" id="exampleModalLabel1">Reason
+                            For
+                            Rejection</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" action="{{ url('applyleave/update', $applyleave->id) }}"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="row row-sm">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <textarea rows="6" name="remark" class="form-control" placeholder=""></textarea>
+                                        <input hidden type="text" id="example-date-input" name="status"
+                                            value="2" class="form-control" placeholder="Enter Location">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" style="float: right" class="btn btn-success">Save </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </li>
-    {{-- For hr  --}}
-    @if (Auth::user()->role_id == 18)
-        <li class="breadcrumb-item"><a href="{{ url('holiday/create') }}">Add Holidays</a></li>
-        <li class="breadcrumb-item active">+</li>
-    @endif
-</ol>
 
-{{-- * check days ant time  --}}
-
-@if (
-    (now()->isSunday() && now()->hour >= 18) ||
-        now()->isMonday() ||
-        now()->isTuesday() ||
-        now()->isWednesday() ||
-        now()->isThursday() ||
-        now()->isFriday() ||
-        (now()->isSaturday() && now()->hour <= 18))
-@endif
-{{-- *   --}}
-
-{{-- * dd with mesaage/ check dd output    --}}
-dd('hi', $previoussavechck);
-{{-- *  success message display --}}
-
-@if (session('message'))
-    <div class="alert alert-success">
-        {{ session('message') }}
-    </div>
-@endif
-
-{{-- * model rule / $fillable  --}}
-model
-protected $table = "assignmentteammappings";
-protected $fillable = [
-'status',
-];
-
-{{-- * mailtrap config  --}}
-
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.mailtrap.io
-MAIL_PORT=2525
-MAIL_USERNAME=2250e92771fcb7
-MAIL_PASSWORD=ac27bd097eacaa
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=kgsomani@gmail.com
-MAIL_FROM_NAME="${APP_NAME}"
-
-
-{{-- * name route / route name --}}
-Route::resource('form', RegisterController::class)->names([
-'index' => 'addUser.index',
-'create' => 'addUser.create',
-'store' => 'addUser.store',
-'show' => 'addUser.show',
-'edit' => 'addUser.edit',
-'update' => 'addUser.update',
-'destroy' => 'addUser.destroy',
-]);
-
-{{-- * modal box / regarding model box / regarding popup box / regarding pop up box    --}}
-{{-- ? model box 1 --}}
-
-<button style="margin-left:11px;height: 35px;" data-toggle="modal" data-target="#exampleModal12"
-    class="btn btn-danger">
-    Reject</button>
-
-<!-- Small modal -->
-<div class="modal fade" id="exampleModal12" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background:#37A000">
-                <h5 style="color: white" class="modal-title font-weight-600" id="exampleModalLabel1">Reason For
-                    Rejection</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+        {{-- ? model box 2 --}}
+        <div class="row">
+            <div class="col">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">
+                    Launch demo modal
                 </button>
-            </div>
-            <form method="post" action="{{ url('applyleave/update', $applyleave->id) }}"
-                enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="row row-sm">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <textarea rows="6" name="remark" class="form-control" placeholder=""></textarea>
-                                <input hidden type="text" id="example-date-input" name="status" value="2"
-                                    class="form-control" placeholder="Enter Location">
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            {{-- modal-body --}}
+                            <div class="modal-body">
+
+                                <div>
+                                    <label for="">Name</label>
+                                    <input type="text" class="form-control">
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" style="float: right" class="btn btn-success">Save </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-{{-- ? model box 2 --}}
-<div class="row">
-    <div class="col">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Launch demo modal
-        </button>
-
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    {{-- modal-body --}}
-                    <div class="modal-body">
-
-                        <div>
-                            <label for="">Name</label>
-                            <input type="text" class="form-control">
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-{{-- * remove dublication / reapet data / dublicate data --}}
+        {{-- ? model box 3 --}}
+        <a id="editCompanyyyy" data-toggle="modal" data-id="{{ $timesheetrequestsData->id }}"
+            data-target="#exampleModal112" title="Send Reminder">
+            <span class="typcn typcn-bell" style="font-size: large;color: green;"></span>
+        </a>
 
-1.use ->distinct()->get();
-2. below code
-<div class="col-3">
-    <div class="form-group">
-        <label class="font-weight-600">Total Hour</label>
-        <select class="language form-control" id="category4" name="totalhours">
-            <option value="">Please Select One</option>
-            @php
-                $displayedValues = [];
-            @endphp
-            @foreach ($get_date as $jobData)
-                @if (!in_array($jobData->totaltime, $displayedValues))
-                    <option value="{{ $jobData->totaltime }}">
-                        {{ $jobData->totaltime }}
-                    </option>
+        {{-- request reminder modal --}}
+        <div class="modal fade" id="exampleModal112" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel4" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header" style="background: #218838;">
+                        <h5 style="color:white;" class="modal-title font-weight-600" id="exampleModalLabel4">Request
+                            Reminder
+                            list</h5>
+                        <div>
+                            <ul>
+                                @foreach ($errors->all() as $e)
+                                    <li style="color:red;">{{ $e }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table id="reminderTable" class="table display table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Reminder Count</th>
+                                        <th>Last Reminder Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="timesheetTableBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-success sendReminderBtn"> Send Reminder</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        {{-- ? model box 4 --}}
+
+        <td>
+            @if ($clientdebitdata->status == 0)
+                <span class="badge badge-pill badge-danger">Not Confirmed</span>
+            @elseif($clientdebitdata->status == 2)
+                <span class="badge badge-pill badge-Warning">Draft</span>
+            @elseif($clientdebitdata->status == 3)
+                <a href="{{ url('pending/mail', $clientdebitdata->id) }}"
+                    onclick="return confirm('Are you sure you want to send notification?');">
+                    <span class="badge badge-pill badge-info">Pending</span></a>
+            @else
+                <span class="badge badge-pill badge-success">Confirmed</span>
+            @endif
+            <a class="editCompanyyyy" data-toggle="modal" data-id="{{ $clientdebitdata->id }}"
+                data-target="#exampleModal112{{ $loop->index }}" title="Send Reminder">
+                <span class="typcn typcn-bell" style="font-size: large;color: green;"></span>
+            </a>
+
+            {{-- asa request reminder modal --}}
+            <div class="modal fade" id="exampleModal112{{ $loop->index }}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel4" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background: #218838;">
+                            <h5 style="color:white;" class="modal-title font-weight-600" id="exampleModalLabel4">Send
+                                Reminder
+                                list</h5>
+                            <div>
+                                <ul>
+                                    @foreach ($errors->all() as $e)
+                                        <li style="color:red;">{{ $e }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="table-responsive">
+                                <table id="reminderTable"
+                                    class="table display table-bordered table-striped table-hover">
+                                    <thead>
+                                        <tr style="background-color: #b6acae;">
+                                            <th>Reminder Count</th>
+                                            <th>Last Reminder Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="timesheetTableBody">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="{{ url('pending/mail', $clientdebitdata->id) }}"
+                                class="btn btn-success sendReminderBtn"> Send
+                                Reminder</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </td>
+
+        {{-- ? model box 3 --}}
+        {{-- ? model box 3 --}}
+        {{-- ? model box 3 --}}
+        {{-- ? model box 3 --}}
+
+        {{-- * remove dublication / reapet data / dublicate data --}}
+
+        1.use ->distinct()->get();
+        2. below code
+        <div class="col-3">
+            <div class="form-group">
+                <label class="font-weight-600">Total Hour</label>
+                <select class="language form-control" id="category4" name="totalhours">
+                    <option value="">Please Select One</option>
                     @php
-                        $displayedValues[] = $jobData->totaltime;
+                        $displayedValues = [];
                     @endphp
-                @endif
-            @endforeach
-        </select>
-    </div>
-</div>
+                    @foreach ($get_date as $jobData)
+                        @if (!in_array($jobData->totaltime, $displayedValues))
+                            <option value="{{ $jobData->totaltime }}">
+                                {{ $jobData->totaltime }}
+                            </option>
+                            @php
+                                $displayedValues[] = $jobData->totaltime;
+                            @endphp
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+        </div>
 
 
 
@@ -1846,20 +2125,20 @@ Route::resource('form', RegisterController::class)->names([
 
 
 
-{{-- * <!-- image open through link / storage image --> --}}
-// !runnig code download image
-// public function downloadAll(Request $request)
-// {
+        {{-- * <!-- image open through link / storage image --> --}}
+        // !runnig code download image
+        // public function downloadAll(Request $request)
+        // {
 
-// $articlefiles = DB::table('assignmentfolderfiles')->where('createdby', auth()->user()->id)->first();
+        // $articlefiles = DB::table('assignmentfolderfiles')->where('createdby', auth()->user()->id)->first();
 
-// return response()->download(('backEnd/image/articlefiles/' . $articlefiles->filesname));
-// }
+        // return response()->download(('backEnd/image/articlefiles/' . $articlefiles->filesname));
+        // }
 
 
-{{-- * <!-- image open through link / storage image --> --}}
-zip download in laravel
-{{-- public function download()
+        {{-- * <!-- image open through link / storage image --> --}}
+        zip download in laravel
+        {{-- public function download()
     {
         $zip = new ZipArchive();
         $file_name = 'shahid.zip';
@@ -1880,233 +2159,235 @@ zip download in laravel
 
 
 
-{{-- * <!-- image open through link / storage image --> --}}
-<div class="table-responsive">
-    <table id="examplee" class="table display table-bordered table-striped table-hover basic">
-        <thead>
-            <tr>
-                <th>Particular</th>
-                <th>File</th>
-                <th>Created By</th>
-                <th>Date</th>
-                @if ($assignmentbudgeting->status == 1)
-                    <th>Action</th>
-                @endif
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($assignmentfolderfile as $assignmentfolderData)
-                <tr>
+        {{-- * <!-- image open through link / storage image --> --}}
+        <div class="table-responsive">
+            <table id="examplee" class="table display table-bordered table-striped table-hover basic">
+                <thead>
+                    <tr>
+                        <th>Particular</th>
+                        <th>File</th>
+                        <th>Created By</th>
+                        <th>Date</th>
+                        @if ($assignmentbudgeting->status == 1)
+                            <th>Action</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($assignmentfolderfile as $assignmentfolderData)
+                        <tr>
 
-                    <td>{{ $assignmentfolderData->particular }}</td>
-                    <td>
-                        <a target="_blank"
-                            href="{{ asset('storage/image/task/' . $assignmentfolderData->filesname) }}">
-                            {{ $assignmentfolderData->filesname ?? '' }}
-                        </a>
-                    </td>
-                    <td>{{ $assignmentfolderData->team_member }} ( {{ $assignmentfolderData->staffcode }}
-                        )</td>
-                    <td>{{ date('F d,Y', strtotime($assignmentfolderData->created_at)) }}
-                        {{ date('h:i A', strtotime($assignmentfolderData->created_at)) }} </td>
-                    @if ($assignmentbudgeting->status == 1)
-                        <td> <a href="{{ url('/bulkfile/delete/' . $assignmentfolderData->id) }}"
-                                onclick="return confirm('Are you sure you want to delete this item?');"
-                                class="btn btn-danger-soft btn-sm"><i class="far fa-trash-alt"></i></a>
-                        </td>
-                    @endif
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-{{-- * <!-- Modal for success message --> --}}
-<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="successModalLabel">Success</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Display success message here -->
-                <p id="successMessage"></p>
-            </div>
+                            <td>{{ $assignmentfolderData->particular }}</td>
+                            <td>
+                                <a target="_blank"
+                                    href="{{ asset('storage/image/task/' . $assignmentfolderData->filesname) }}">
+                                    {{ $assignmentfolderData->filesname ?? '' }}
+                                </a>
+                            </td>
+                            <td>{{ $assignmentfolderData->team_member }} ( {{ $assignmentfolderData->staffcode }}
+                                )</td>
+                            <td>{{ date('F d,Y', strtotime($assignmentfolderData->created_at)) }}
+                                {{ date('h:i A', strtotime($assignmentfolderData->created_at)) }} </td>
+                            @if ($assignmentbudgeting->status == 1)
+                                <td> <a href="{{ url('/bulkfile/delete/' . $assignmentfolderData->id) }}"
+                                        onclick="return confirm('Are you sure you want to delete this item?');"
+                                        class="btn btn-danger-soft btn-sm"><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-    </div>
-</div>
-
-<!-- Display success message for user -->
-@if (session('message'))
-    <script>
-        // Set the success message to the modal content
-        document.getElementById('successMessage').innerText = "{{ session('message') }}";
-
-        // Show the modal
-        $('#successModal').modal('show');
-    </script>
-@endif
-
-
-{{-- * <!-- Modal for success message --> --}}
-@if (Auth::user()->role_id == 13 ||
-        $assignmentbudgetingDatas->type == 0 ||
-        $assignmentbudgetingDatas->status == 1 ||
-        ($assignmentbudgetingDatas->type != 0 && $assignmentbudgetingDatas->status == 0))
-    <div class="row">
-
-        {{-- sucess message --}}
-        <div id="successModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
+        {{-- * <!-- Modal for success message --> --}}
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    {{-- <div class="modal-header">
-                <h5 class="modal-title">Success Message</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div> --}}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="successModalLabel">Success</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <div class="modal-body">
+                        <!-- Display success message here -->
                         <p id="successMessage"></p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-7">
-            <div class="card" style="box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2);height:250px;">
-                <div class="card-body">
 
-                    <div class="card-head">
-                        <b>UDIN List</b>
-                        @if (
-                            (Auth::user()->role_id != 11 && $assignmentbudgetingDatas->type == 0 && $assignmentbudgetingDatas->status == 1) ||
-                                (Auth::user()->role_id == 14 && $assignmentbudgetingDatas->status == 1))
-                            <a data-toggle="modal" data-target="#exampleModal12" style="float:right;width:20px;"><img
-                                    src="{{ url('backEnd/image/add-icon.png') }}" /></a>
-                        @endif
+        <!-- Display success message for user -->
+        @if (session('message'))
+            <script>
+                // Set the success message to the modal content
+                document.getElementById('successMessage').innerText = "{{ session('message') }}";
+
+                // Show the modal
+                $('#successModal').modal('show');
+            </script>
+        @endif
+
+
+        {{-- * <!-- Modal for success message --> --}}
+        @if (Auth::user()->role_id == 13 ||
+                $assignmentbudgetingDatas->type == 0 ||
+                $assignmentbudgetingDatas->status == 1 ||
+                ($assignmentbudgetingDatas->type != 0 && $assignmentbudgetingDatas->status == 0))
+            <div class="row">
+
+                {{-- sucess message --}}
+                <div id="successModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            {{-- <div class="modal-header">
+                <h5 class="modal-title">Success Message</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div> --}}
+                            <div class="modal-body">
+                                <p id="successMessage"></p>
+                            </div>
+                        </div>
                     </div>
-                    <hr>
-                    <div class="table-responsive example">
-                        <table class="table display table-bordered table-striped table-hover ">
-                            <thead>
-                                <tr>
-                                    <th>UDIN</th>
-                                    <th>Partner</th>
-                                    <th>Created by</th>
-                                    <th>Created Date</th>
-                                    @if (
-                                        (Auth::user()->role_id != 11 && $assignmentbudgetingDatas->type == 0 && $assignmentbudgetingDatas->status == 1) ||
-                                            (Auth::user()->role_id == 14 && $assignmentbudgetingDatas->status == 1))
-                                        <th>Action</th>
-                                    @endif
-                                </tr>
-                            </thead>
-                            <tbody>
+                </div>
+                <div class="col-md-7">
+                    <div class="card" style="box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2);height:250px;">
+                        <div class="card-body">
 
-                                @foreach ($udinDatas as $udinData)
-                                    <tr>
-                                        <td>{{ $udinData->udin }}</td>
-                                        <td>{{ App\Models\Teammember::where('id', $udinData->partner)->select('team_member')->pluck('team_member')->first() }}
-                                        </td>
-                                        <td>{{ $udinData->team_member }} ( {{ $udinData->rolename ?? '' }}
-                                            )</td>
-                                        <td>{{ date('d-m-Y', strtotime($udinData->created)) }},
-                                            {{ date('H:i A', strtotime($udinData->created)) }}</td>
+                            <div class="card-head">
+                                <b>UDIN List</b>
+                                @if (
+                                    (Auth::user()->role_id != 11 && $assignmentbudgetingDatas->type == 0 && $assignmentbudgetingDatas->status == 1) ||
+                                        (Auth::user()->role_id == 14 && $assignmentbudgetingDatas->status == 1))
+                                    <a data-toggle="modal" data-target="#exampleModal12"
+                                        style="float:right;width:20px;"><img
+                                            src="{{ url('backEnd/image/add-icon.png') }}" /></a>
+                                @endif
+                            </div>
+                            <hr>
+                            <div class="table-responsive example">
+                                <table class="table display table-bordered table-striped table-hover ">
+                                    <thead>
+                                        <tr>
+                                            <th>UDIN</th>
+                                            <th>Partner</th>
+                                            <th>Created by</th>
+                                            <th>Created Date</th>
+                                            @if (
+                                                (Auth::user()->role_id != 11 && $assignmentbudgetingDatas->type == 0 && $assignmentbudgetingDatas->status == 1) ||
+                                                    (Auth::user()->role_id == 14 && $assignmentbudgetingDatas->status == 1))
+                                                <th>Action</th>
+                                            @endif
+                                        </tr>
+                                    </thead>
+                                    <tbody>
 
-                                        @if (
-                                            (Auth::user()->role_id != 11 && $assignmentbudgetingDatas->type == 0 && $assignmentbudgetingDatas->status == 1) ||
-                                                (Auth::user()->role_id == 14 && $assignmentbudgetingDatas->status == 1))
-                                            <td>
-                                                <form
-                                                    action="{{ route('uidindata.delete', ['id' => $udinData->udin]) }}"
-                                                    method="post" class="form1">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="deleteButton btn btn-sm btn-danger mx-2"
-                                                        style="height: 21px; width: 3rem; font-size: 8px;">
-                                                        Delete
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        @endif
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                        @foreach ($udinDatas as $udinData)
+                                            <tr>
+                                                <td>{{ $udinData->udin }}</td>
+                                                <td>{{ App\Models\Teammember::where('id', $udinData->partner)->select('team_member')->pluck('team_member')->first() }}
+                                                </td>
+                                                <td>{{ $udinData->team_member }} ( {{ $udinData->rolename ?? '' }}
+                                                    )</td>
+                                                <td>{{ date('d-m-Y', strtotime($udinData->created)) }},
+                                                    {{ date('H:i A', strtotime($udinData->created)) }}</td>
+
+                                                @if (
+                                                    (Auth::user()->role_id != 11 && $assignmentbudgetingDatas->type == 0 && $assignmentbudgetingDatas->status == 1) ||
+                                                        (Auth::user()->role_id == 14 && $assignmentbudgetingDatas->status == 1))
+                                                    <td>
+                                                        <form
+                                                            action="{{ route('uidindata.delete', ['id' => $udinData->udin]) }}"
+                                                            method="post" class="form1">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="deleteButton btn btn-sm btn-danger mx-2"
+                                                                style="height: 21px; width: 3rem; font-size: 8px;">
+                                                                Delete
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                @endif
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-@endif
-
-<!--Success message on Deleted -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Display success message for user
-        @if (session('message'))
-            // Use JavaScript to display the success message in the modal
-            $('#successMessage').text("{{ session('message') }}");
-            $('#successModal').modal('show');
         @endif
-    });
-</script>
-<!--Success message on Deleted end-->
 
-
-{{-- ###################################################################### --}}
-{{-- * get data from database in blade file --}}
-<div class="row">
-    @foreach ($assignmentfolder as $assignmentfolderData)
-        {{-- three dot like .... --}}
-        <div class="col-md-6 col-lg-3">
-            @if ($assignmentfolderpermission->status == 1)
-                @if ($assignmentfolderData->createdby == Auth::user()->teammember_id || Auth::user()->role_id == 13)
-                    <ul class="navbar-nav flex-row align-items-center ml-auto">
-                        <li class="nav-item dropdown user-menus">
-                            <a class="foldertoggle" style=" color:white" href="#" data-toggle="dropdown">
-                                <!--<img src="assets/dist/img/user2-160x160.png" alt="">-->
-                                <i class="ti-more-alt"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-left">
-                                <a style="margin-left: 10px;color:#7a7a7a;" id="editCompany" data-toggle="modal"
-                                    data-id="{{ $assignmentfolderData->id }}" data-target="#modaldemo1"
-                                    class="dropdown-item">Edit Name</a>
-
-                                @if (DB::table('assignmentfolderfiles')->where('assignmentfolderfiles.assignmentfolder_id', $assignmentfolderData->id)->where('status', '1')->count() == 0)
-                                    <a style="margin-left: 10px;color:#7a7a7a;"
-                                        onclick="return confirm('Are you sure you want to delete this folder?');"
-                                        href="{{ url('assignmentfolderdelete', $assignmentfolderData->id) }}"
-                                        class="dropdown-item">Delete</a>
-                                @endif
-                            </div>
-                            <!--/.dropdown-menu -->
-                        </li>
-                    </ul>
+        <!--Success message on Deleted -->
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // Display success message for user
+                @if (session('message'))
+                    // Use JavaScript to display the success message in the modal
+                    $('#successMessage').text("{{ session('message') }}");
+                    $('#successModal').modal('show');
                 @endif
-            @endif
-            <a href="{{ url('assignmentfolderfiles', $assignmentfolderData->id) }}">
+            });
+        </script>
+        <!--Success message on Deleted end-->
 
-                <div class="p-2  text-white rounded mb-3 p-3 shadow-sm text-center"
-                    style="background: @if ($loop->iteration % 2 == 0) #37A000; @else #06386A; @endif">
-                    <div class="header-pretitle fs-11 font-weight-bold text-uppercase"
-                        style="color: white;font-size: 11px!important;">
-                        {{ strlen($assignmentfolderData->assignmentfoldersname) > 26 ? substr($assignmentfolderData->assignmentfoldersname, 0, 26) : $assignmentfolderData->assignmentfoldersname }}
-                    </div>
 
-                    <div class="fs-32 text-monospace">
-                        {{ DB::table('assignmentfolderfiles')->where('assignmentfolderfiles.assignmentfolder_id', $assignmentfolderData->id)->where('status', '1')->count() }}
-                    </div>
-                    <small>Data</small>
+        {{-- ###################################################################### --}}
+        {{-- * get data from database in blade file --}}
+        <div class="row">
+            @foreach ($assignmentfolder as $assignmentfolderData)
+                {{-- three dot like .... --}}
+                <div class="col-md-6 col-lg-3">
+                    @if ($assignmentfolderpermission->status == 1)
+                        @if ($assignmentfolderData->createdby == Auth::user()->teammember_id || Auth::user()->role_id == 13)
+                            <ul class="navbar-nav flex-row align-items-center ml-auto">
+                                <li class="nav-item dropdown user-menus">
+                                    <a class="foldertoggle" style=" color:white" href="#"
+                                        data-toggle="dropdown">
+                                        <!--<img src="assets/dist/img/user2-160x160.png" alt="">-->
+                                        <i class="ti-more-alt"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-left">
+                                        <a style="margin-left: 10px;color:#7a7a7a;" id="editCompany"
+                                            data-toggle="modal" data-id="{{ $assignmentfolderData->id }}"
+                                            data-target="#modaldemo1" class="dropdown-item">Edit Name</a>
 
+                                        @if (DB::table('assignmentfolderfiles')->where('assignmentfolderfiles.assignmentfolder_id', $assignmentfolderData->id)->where('status', '1')->count() == 0)
+                                            <a style="margin-left: 10px;color:#7a7a7a;"
+                                                onclick="return confirm('Are you sure you want to delete this folder?');"
+                                                href="{{ url('assignmentfolderdelete', $assignmentfolderData->id) }}"
+                                                class="dropdown-item">Delete</a>
+                                        @endif
+                                    </div>
+                                    <!--/.dropdown-menu -->
+                                </li>
+                            </ul>
+                        @endif
+                    @endif
+                    <a href="{{ url('assignmentfolderfiles', $assignmentfolderData->id) }}">
+
+                        <div class="p-2  text-white rounded mb-3 p-3 shadow-sm text-center"
+                            style="background: @if ($loop->iteration % 2 == 0) #37A000; @else #06386A; @endif">
+                            <div class="header-pretitle fs-11 font-weight-bold text-uppercase"
+                                style="color: white;font-size: 11px!important;">
+                                {{ strlen($assignmentfolderData->assignmentfoldersname) > 26 ? substr($assignmentfolderData->assignmentfoldersname, 0, 26) : $assignmentfolderData->assignmentfoldersname }}
+                            </div>
+
+                            <div class="fs-32 text-monospace">
+                                {{ DB::table('assignmentfolderfiles')->where('assignmentfolderfiles.assignmentfolder_id', $assignmentfolderData->id)->where('status', '1')->count() }}
+                            </div>
+                            <small>Data</small>
+
+                        </div>
+                    </a>
                 </div>
-            </a>
+            @endforeach
         </div>
-    @endforeach
-</div>
-{{-- ###################################################################### --}}
-{{--  --------------------- 29 sep 2023 joining date--------------- --}}
+        {{-- ###################################################################### --}}
+        {{--  --------------------- 29 sep 2023 joining date--------------- --}}
 
 </html>

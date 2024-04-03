@@ -6,7 +6,7 @@
 {{--  Start Hare --}}
 {{-- * --}}
 {{--  Start Hare --}}
-
+$("#otpmessage1", "#otpmessage3", "#otpmessage", "#otpmessage2").text('');
 {{-- resources\views\backEnd\timesheet\create.blade.php
 find  $('#partner1').on('change', function() { --}}
 <script>

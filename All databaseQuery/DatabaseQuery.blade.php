@@ -4,11 +4,21 @@
 
 {{-- * --}}
 {{-- * --}}
-{{-- * --}}
-43 done 20
-75 done 21
-
-
+{{-- * regarding like query --}}
+{{-- on chatgpy --}}
+{{-- give me all LIKE related quey with uses description 
+in form of table like  1 column heading will be query and 2 column will be description 
+i want to copy above table and paste inside vs code  --}}
+<pre>
+| Query                                                         | Description                                                                                                                        |
+|---------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| `SELECT * FROM table WHERE column LIKE 'pattern';`           | Selects all rows from the specified table where the specified column matches the given pattern.                                    |
+| `SELECT * FROM table WHERE column LIKE 'prefix%';`           | Selects all rows from the specified table where the specified column starts with the given prefix.                                |
+| `SELECT * FROM table WHERE column LIKE '%suffix';`           | Selects all rows from the specified table where the specified column ends with the given suffix.                                  |
+| `SELECT * FROM table WHERE column LIKE '%pattern%';`         | Selects all rows from the specified table where the specified column contains the given pattern anywhere within the column value.  |
+| `SELECT * FROM table WHERE column LIKE 'pattern' COLLATE utf8_general_ci;` | Performs a case-insensitive match by specifying a case-insensitive collation. Selects all rows where the column matches the pattern without considering case. |
+| `SELECT * FROM table WHERE column LIKE '_x%';`              | Selects all rows from the specified table where the specified column starts with any character followed by 'x' and then any sequence of characters. |
+</pre>
 {{--  Start Hare --}}
 SELECT * FROM `assignmentbudgetings` WHERE `created_at` BETWEEN '2024-01-01 16:45:30.000000' AND '2024-03-20
 16:45:30.000000' ORDER BY `id` DESC

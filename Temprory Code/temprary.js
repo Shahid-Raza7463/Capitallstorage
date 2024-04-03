@@ -1,17 +1,35 @@
 
 // 222222222222222222222222222222222222222222222222222222222222
+"_token" => "7LVhXcbERLT7bdTo2z6uVD7nwx3Rm8ZvJAFXKE11"
+"subject" => "i want to contact"
+"type" => "1"
+"clientid" => "BET100051"
+"description
+http://127.0.0.1:8000/debtorconfirm?clientid=BET100051&&debtorid=13&&status=1
+#parameters: array: 2[▼
+"_token" => "Llihh0MMHwx1MiDTiUVTgeLpm4iLmjFhKXgEftho"
+"email" => "sunnygupta@vsa.co.in"
+  ]
+#parameters: array: 3[▼
+"clientid" => "BET100051"
+"debtorid" => "13"
+"status" => "1"
+  ]
 
-
+Route:: get('/authreset/newpassword/{id}', [App\Http\Controllers\Auth\LoginController:: class, 'newPassword']);
 // 222222222222222222222222222222222222222222222222222222222222
-{{-- @php
-    DB::table('debtors')
-        ->where('assignmentgenerate_id', $clientid)
-        ->where('id', $debtorid)
-        ->update([
-            'mailstatus' => 5,
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]);
-@endphp --}}
+{
+    {
+        -- @php
+        DB:: table('debtors')
+            -> where('assignmentgenerate_id', $clientid)
+            -> where('id', $debtorid)
+            -> update([
+                'mailstatus' => 5,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+        @endphp--}
+}
 3150
 bhasker
     // 222222222222222222222222222222222222222222222222222222222222

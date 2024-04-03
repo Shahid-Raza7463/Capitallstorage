@@ -6,12 +6,85 @@
 {{--  Start Hare  --}}
 {{-- *  --}}
 {{--  Start Hare  --}}
+<script>
+    function saveForm() {
+        document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
+    }
+
+    function saveForm2() {
+        var template = $('#template').val();
+        if (template == '') {
+            alert('Please Select Confirmation Type');
+        } else {
+            //   document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
+            var url = "{{ url('/maildraft') }}";
+
+            // Perform the URL hit
+            window.location.href = url;
+
+        }
+    }
+</script>
+{{-- * regarding form  --}}
+{{--  Start Hare  --}}
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-primary" onclick="saveForm()">Save</button>
+    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure?');">Send</button>
+</div>
+<script>
+    function saveForm() {
+        document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
+    }
+
+    //   function sendMail() {
+    //       document.getElementById('detailsForm').action = "{{ url('/confirmation/mail') }}";
+    //   }
+</script>
 {{-- *  --}}
 {{--  Start Hare  --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(function() {
+        $('#template').on('change', function() {
+            var template_id = $(this).val();
+
+            $.ajax({
+                type: "GET",
+                url: "{{ url('confirmationtem') }}",
+                data: "template_id=" + template_id,
+                success: function(response) {
+                    var desc = response.description;
+
+                    // Check if "desc" exists in the response and is not empty before setting
+                    if (desc && desc.trim() !== "") {
+                        $('#summernote').summernote('code',
+                            desc); // Update Summernote content
+                    }
+                },
+                error: function() {
+
+                },
+            });
+            $('#subcentre_id').html('');
+        });
+    });
+</script>
 {{-- *  --}}
 {{--  Start Hare  --}}
-{{-- *  --}}
-{{--  Start Hare  --}}
+<script>
+    function saveForm() {
+        if (confirm('Are you sure?')) {
+            document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
+            return true; // Form will be submitted
+        }
+        return false; // Form submission canceled
+    }
+    //   function sendMail() {
+    //       document.getElementById('detailsForm').action = "{{ url('/confirmation/mail') }}";
+    //   }
+</script>
 
 <script>
     $(document).on('change', '[id^=partner]', function() {
@@ -102,7 +175,7 @@
             break;
     }
 </script>
-{{-- * selecteor / regarding selector/ regarding selecter / regarding jquery selector / regarding jquery selecter --}}
+{{-- * selecteor / regarding selector/ regarding selecter / regarding jquery selector / regarding jquery selecter / regarding target --}}
 {{--  Start Hare  --}}
 {{-- for testing 
 https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
@@ -2165,6 +2238,7 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
             $.ajax({
                 type: "get",
                 url: "{{ url('timesheet/create') }}",
+                // url: '/timesheetrequest/reminder/list',
                 data: {
                     timesheetdate: timesheetdate
                 },
@@ -4529,7 +4603,7 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
         });
     });
 </script>
-
+balanceconfirmationreminder
 {{-- * --}}
 {{-- validation on date --}}
 <script>
@@ -4686,6 +4760,7 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
 </script>
 
 {{-- * --}}
+{{-- * --}}
 <div id="profileCompletion" class="alert alert-info" role="alert">
 
 </div>
@@ -4696,6 +4771,75 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
         $('#profileCompletion').text(profileCompletionPercentage + '%');
     });
 </script>
+{{-- * --}}
+
+    {{-- <script>
+        $(function() {
+            $('body').on('click', '#editCompany', function(event) {
+                //        debugger;
+                var id = $(this).data('id');
+                alert(id);
+                // debugger;
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('confirmationauthotp') }}",
+                    data: "id=" + id,
+                    success: function(response) {
+                        // console.log('data is:', error);
+                        // console.log(response);
+                        // debugger;
+                        // $("#mailotp").val(response);
+                        // $("#otpmessage").val(response);
+                        // $("#otpmessage").text(response.otpsuccessmessage);
+                        $("#otpmessage").text(response.otpsuccessmessage);
+                        $("#debitid").val(response.debitid);
+                        $("#assignmentgenerate_id").val(response.assignmentgenerate_id);
+                        $("#type").val(response.type);
+                        $("#status").val(response.status);
+
+                    },
+                    error: function(error) {
+                        console.error('Error fetching data:', error);
+                    },
+                });
+            });
+        });
+    </script> --}}
+    {{-- <script>
+        $(function() {
+            $('body').on('click', '#editCompany2', function(event) {
+                //        debugger;
+                var id = $(this).data('id');
+                // debugger;
+                alert(id);
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('confirmationauthotp2') }}",
+                    data: "id=" + id,
+                    success: function(response) {
+                        // console.log('data is:', error);
+                        // console.log(response);
+                        // debugger;
+                        // $("#mailotp").val(response);
+                        // $("#otpmessage").val(response);
+                        // $("#otpmessage").text(response.otpsuccessmessage);
+                        $("#otpmessage").text(response.otpsuccessmessage);
+                        $("#debitid").val(response.debitid);
+                        $("#assignmentgenerate_id").val(response.assignmentgenerate_id);
+                        $("#type").val(response.type);
+                        $("#status").val(response.status);
+
+                    },
+                    error: function(error) {
+                        console.error('Error fetching data:', error);
+                    },
+                });
+            });
+        });
+    </script> --}}
+
+
+
 
 {{-- ###################################################################### --}}
 {{--  --------------------- 29 sep 2023 joining date--------------- --}}

@@ -71,6 +71,7 @@ Schema::dropIfExists('timesheetupdatelogs');
 
 
 222222222222
+php artisan make:migration create_balanceconfirmationreminder_table
 php artisan make:migration modify_leanth_to_networks_table      
 php artisan make:migration add_foreign_to_user_details_table    
 php artisan make:migration drop_foreign_to_user_details_table                               

@@ -1,0 +1,60 @@
+15/3
+1.page design fixed on time sheet request list for partner
+
+2.client want to display only Excel button
+
+3.client want to only accending order date wise on time sheet request list
+
+4.some modification inside downloaded Excel on time sheet request list
+
+5.client want to remove PDF copy button on time sheet save page
+
+6.ordering date wise on time sheet save page
+
+7.remove all comma on time sheet save page and inside Excel
+
+
+16/03
+
+1.data fix inside Excel on team time sheet report
+2.all comma remove ordering fixed and fix data inside excell on my time sheet page
+
+18/03
+1.input box default should be 2 on add time sheet
+2.client want to add input box after click add icon
+3. Client want to set default data when ofholidays selected
+
+
+19/03
+
+1. Client want to modify email content when new team member added and assignment create
+2. Client want to total hour and partner name on view assignment module
+3. All code upload on server
+4. Client want to add team member in assignment according like partner on admin
+
+20/3
+
+1. Fix date format default on team timesheet  report
+2. Assignment generate ID insert in time sheet user table
+
+21/03
+
+1. Assignment generate ID insert in time sheet user table
+2. Assignment folder delete problem fixed ( no any problem explain)
+
+22/03
+
+1.Assignment generate ID insert in time sheet user table
+2. Time sheet save delete bugs fixed
+
+26/03
+
+1. Time sheet save delete bugs fixed
+2. Client want to display lost data on partner team time sheet (2024)
+
+3. Documentation done
+
+27/03
+
+1. Revert live problem fixed
+2. Balance confirmation

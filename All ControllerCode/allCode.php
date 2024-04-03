@@ -4,126 +4,6 @@ class ZipController extends Controller
 {
 
   public function store(Request $request) {
-//* temrary
-// Start Hare 
-        // Goes to confirmation page 
-        if ($request->status == 1) {
-
-          $assignmentDatas = DB::table('debtors')
-              ->where('assignmentgenerate_id', $request->clientid)->where('id', $request->debtorid)->update([
-                  'status'         => $request->status,
-                  'updated_at'         =>   date("Y-m-d")
-              ]);
-
-          return view('backEnd.teamconfirm');
-      }
-public function mail(Request $request)
-{
-    // dd($request);
-    //    if($request->description){
-    //     $print =DB::table('templates')->where('description', 'LIKE', '%' . '$name' . '%' )->first();
-    //     dd('hi');
-    //    }
-    //    dd($request);
-    // $request->validate([
-    //     'file' => 'required'
-    // ]);
-
-    try {
-        $data = $request->except(['_token']);
-
-        $debtor = DB::table('debtors')->where('assignmentgenerate_id', $request->clientid)->where('type', $request->type)->where('mailstatus', 0)->get();
-        //  dd($debtor);
-
-        if ($debtor[0]->mailstatus == 0) {
-            $updateit = DB::table('debtors')
-                ->where('assignmentgenerate_id', $request->clientid)->where('type', $request->type)
-                ->update([
-                    'mailstatus'         => 2,
-                    'updated_at'         =>   date("Y-m-d H:i:s")
-                ]);
-        }
-        foreach ($debtor as $debtors) {
-            if ($request->teammember_id) {
-                // cc mail
-                $teammembermail = Teammember::wherein('id', $request->teammember_id)->pluck('emailid')->toArray();
-            }
-            // $description = str_replace('$name', $debtors->name, $request->description); 
-            //  $description = str_replace('44247', $debtors->amount, $request->description);
-            $des = $request->description;
-            $healthy = ["[name]", "[amount]", "[year]", "[date]", "[address]"];
-            $yummy   = ["$debtors->name", "$debtors->amount", "$debtors->year", "$debtors->date", "$debtors->address"];
-            $description = str_replace($healthy, $yummy, $des);
-
-            $data = array(
-                'subject' => $request->subject,
-                //       'fromemail' =>  $request->fromemail,
-                'name' =>  $debtors->name,
-                'email' =>  $debtors->email,
-                'year' =>  $debtors->year,
-                'date' =>  $debtors->date,
-                'amount' =>  $debtors->amount,
-                'clientid' => $debtors->assignmentgenerate_id,
-                'debtorid' => $debtors->id,
-                'description' => $description,
-                'teammembermail' => $teammembermail ?? '',
-                'yes' => 1,
-                'no' => 0
-            );
-
-
-            Mail::send('emails.debtorform', $data, function ($msg) use ($data, $request) {
-                $msg->to($data['email']);
-                //  $msg->from('arihant@kgsomani.com', 'Kgskonnect');
-                // $msg->cc($teammembermail);
-                $msg->subject($data['subject']);
-
-                if ($request->teammember_id) {
-                    $msg->cc($data['teammembermail']);
-                }
-            });
-
-            DB::table('debtors')
-                ->where('assignmentgenerate_id', $debtors->assignmentgenerate_id)->where('id', $debtors->id)->update([
-                    'mailstatus'         => 1,
-                    'updated_at'         =>   date("Y-m-d H:i:s")
-                ]);
-        }
-        $output = array('msg' => 'Mail Send Successfully');
-        return back()->with('success', $output);
-    } catch (Exception $e) {
-        DB::rollBack();
-        Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-        report($e);
-        $output = array('msg' => $e->getMessage());
-        return back()->withErrors($output)->withInput();
-    }
-}
-
-
-public function pendingmail($id)
-{
-    // dd($id);
-    try {
-        $usermail = DB::table('debtors')->where('id', $id)->select('email')->first();
-        // dd($usermail->email);
-        $data = array(
-            'email' => $usermail->email ?? '',
-        );
-        Mail::send('emails.testingmail', $data, function ($msg) use ($data) {
-            $msg->to($data['email']);
-            $msg->subject('Subject goes to hare');
-        });
-        $output = array('msg' => 'Mail Send Successfully');
-        return back()->with('success', $output);
-    } catch (Exception $e) {
-        DB::rollBack();
-        Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-        report($e);
-        $output = array('msg' => $e->getMessage());
-        return back()->withErrors($output)->withInput();
-    }
-}
 //*
 // Start Hare 
 //*
@@ -132,10 +12,31 @@ public function pendingmail($id)
 // Start Hare 
 //*
 // Start Hare 
-//*
+//* regarding mail 
 // Start Hare 
-//*
+// if ($timesheetRequest->status == 0) {
+//   $data = array(
+//       'teammember' => $name ?? '',
+//       'email' => $teammembermail ?? '',
+//       'id' => $timesheetRequest->id ?? '',
+//       'client_id' => $client_name ?? '',
+//       'reason'     =>     $timesheetRequest->reason ?? '',
+//   );
+//   $url = URL::to('/timesheetrequestlist') ?? '';
+//   $title = "timesheetrequestreminder";
+//   $template = $this->getTemplateData($title);
+//   // dd($template);  
+//   $to = ($data['email']);
+//   $cc = ($template['cc']);
+//   $this->sendTicketEmail($to, $cc, $title, $data, $url);
+// }
+//* regarding sql
 // Start Hare 
+$query = DB::table('timesheetrequests')
+->where('createdby', auth()->user()->teammember_id)
+//->where('status', 1)
+->latest()
+->toSql();
 //* regarding array access / regarding access
 // Start Hare 
     dd($assignments[0]->assignmentgenerate_id);
@@ -1033,6 +934,10 @@ dd($nextweektimesheet);
 ->distinct('partner')
 ->distinct()
   // start hare 
+  ->whereBetween('date', [$date, '2024-03-22'])
+  ->whereBetween('date', [$nextweektimesheets->startdate, $nextweektimesheets->enddate])
+   ->whereBetween('date', ['2024-03-11', '2024-03-16'])
+  ->whereNotIn('createdby', [234, 453])
   ->whereJsonContains('timesheetreport.partnerid', auth()->user()->teammember_id)
      ->whereBetween('startdate', ['2023-12-11', '2024-03-25'])
   ->whereBetween('created_at', ['2023-09-01 16:45:30', '2023-12-31 16:45:30'])
@@ -3024,6 +2929,8 @@ Output:
     //    12
         dd(now()->month); 
         // 2023
+        dd(date('Y-m-d')); 
+        // 2023-12-01
         dd(now()->year); 
         // 1 
         dd(now()->day); 
@@ -3853,7 +3760,7 @@ if ($savetimesheet) {
     }
     //* Download image on click
     
-    //*  insert data in timesheet table / regarding update in table 
+    //* regarding update in table / insert data in timesheet table  
     // Start Hare 
 
     $date = '08-03-2024';
@@ -3887,24 +3794,62 @@ if ($savetimesheet) {
 
 
 
- // Start Hare    
-$nextweektimesheet = DB::table('timesheetusers')
-->where('createdby', auth()->user()->teammember_id)
-->whereBetween('date', ['2023-12-25', '2024-01-13'])
-// ->get();
-->update(['status' => 0]);
+  // Start Hare 
+
+  // regarding exam leave apply
+    // Start Hare 
+    $nextweektimesheet = DB::table('timesheetusers')
+      ->where('createdby', auth()->user()->teammember_id)
+      ->whereBetween('date', ['2024-03-12', '2024-03-29'])
+      ->delete();
+    // ->get();
+    // ->update(['status' => 0]);
+
+
+    $nextweektimesheet = DB::table('timesheets')
+      ->where('created_by', auth()->user()->teammember_id)
+      ->whereBetween('date', ['2024-03-12', '2024-03-29'])
+      ->delete();
+    // ->get();
+    // ->update(['status' => 0]);
+
+    $nextweektimesheet = DB::table('timesheetreport')
+      ->where('teamid', auth()->user()->teammember_id)
+      ->whereBetween('startdate', ['2024-03-12', '2024-03-29'])
+      // ->get();
+      ->delete();
+
+
+    dd('hi');
+
+       // $leaves = DB::table('applyleaves')
+    //   ->where('applyleaves.createdby', auth()->user()->teammember_id)
+    //   ->whereBetween('from', ['2024-03-12', '2024-03-29'])
+    //   // ->get();
+    //   ->delete();
+
+    // 896
+  // Start Hare 
+  $nextweektimesheet = DB::table('timesheetusers')
+  ->where('createdby', auth()->user()->teammember_id)
+  ->whereBetween('date', ['2024-03-12', '2024-03-29'])
+  ->get();
+// ->update(['status' => 0]);
+
 
 $nextweektimesheet = DB::table('timesheets')
-->where('created_by', auth()->user()->teammember_id)
-->whereBetween('date', ['2023-12-25', '2024-01-13'])
-// ->get();
-->update(['status' => 0]);
-// // dd($nextweektimesheet);
+  ->where('created_by', auth()->user()->teammember_id)
+  ->whereBetween('date', ['2024-03-11', '2024-03-20'])
+  ->get();
+// ->update(['status' => 0]);
 
-$nextweektimesheet = DB::table('timesheetusers')
-->where('createdby', auth()->user()->teammember_id)
-->whereBetween('date', ['2023-12-25', '2023-12-31'])
-->delete();
+$nextweektimesheet = DB::table('timesheetreport')
+  ->where('teamid', auth()->user()->teammember_id)
+  ->whereBetween('startdate', ['2024-03-11', '2024-03-20'])
+  ->get();
+// ->delete();
+dd($nextweektimesheet);
+dd('hi');
 
 DB::table('assignmentteammappings')
 ->update(['status' => 0]);
@@ -3936,8 +3881,9 @@ dd('hi');
 
 
 
-// Start Hare update using condition 
+// Start Hare update assignmentgenerate_id in timesheet users table using condition 
  // dd($teamid);
+
  $assignments = DB::table('assignmentbudgetings')
  ->whereBetween('created_at', ['2024-01-01 16:45:30', '2024-03-21 16:45:30'])
  ->select('assignmentgenerate_id', 'client_id', 'assignment_id', 'created_at')
@@ -3967,7 +3913,7 @@ dd($updatedcode);
 // dd($assignments[0]->created_at);
 
 
-// Start Hare update for single user
+// Start Hare update assignmentgenerate_id in timesheet users table for single user
 
 $nextweektimesheet = DB::table('timesheetreport')
 ->whereBetween('created_at', ['2023-12-21 20:14:34', '2024-03-25 20:19:53'])
