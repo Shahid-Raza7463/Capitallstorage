@@ -3,23 +3,100 @@
 2 before it vsaold
 
 {{-- * --}}
+{{--  Start Hare --}}
+{{--  Start Hare --}}
 {{-- * --}}
+{{--  Start Hare --}}
+{{--  Start Hare --}}
+{{-- *regarding trigger --}}
+{{--  Start Hare create trigger using sql tab --}}
+{{-- 1.create users table 
+2.create answer table  --}}
+CREATE TRIGGER `hello` AFTER UPDATE ON `users`
+FOR EACH ROW INSERT INTO `answers`(`is_correct_answer`)
+VALUES(
+'1'
+)
+{{--  Start Hare create trigger using sql tab --}}
+CREATE TRIGGER `new` AFTER UPDATE ON `admins`
+FOR EACH ROW INSERT INTO `answers`(`is_correct_answer`)
+VALUES(
+'1'
+)
+{{--  Start Hare using trigger tab  --}}
+{{-- go to Definition row and paste this code  --}}
+
+INSERT INTO `answers`(`is_correct_answer`)
+VALUES(
+'1'
+)
+{{--  Start Hare --}}
+
+{{-- * regarding REGEXP --}}
+{{--  Start Hare --}}
+SELECT * FROM `assignmentbudgetings` WHERE `assignmentgenerate_id` REGEXP 'SRI';
+{{--  Start Hare --}}
+
+{{-- * regarding ORDER BY --}}
+{{--  Start Hare --}}
+SELECT * FROM `assignmentbudgetings` ORDER BY `id` DESC
+INSERT INTO `activitylogs` (`id`, `user_id`, `activitytitle`, `description`, `ip_address`, `created_at`, `updated_at`)
+VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+TRUNCATE `activitylogs`
+
+"DROP TABLE `activitylogs`
+
+CREATE TABLE `vsaclient` (
+`id` int(11) DEFAULT NULL,
+`client_name` varchar(42) DEFAULT NULL,
+`c_address` varchar(130) DEFAULT NULL,
+`legalstatus` varchar(13) DEFAULT NULL,
+`panno` varchar(11) DEFAULT NULL,
+`tanno` varchar(10) DEFAULT NULL,
+`gstno` varchar(15) DEFAULT NULL,
+`status` int(11) DEFAULT NULL,
+`classification` int(11) DEFAULT NULL,
+`client_code` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+
+INSERT INTO `admins`(`name`, `email`, `password`)
+VALUES(
+'shahid',
+'shahid@example.com',
+'password123'
+);
+
+UPDATE `admins`
+SET `password` = 'shshis345'
+WHERE `id` = 2;
+
+UPDATE `admins`
+SET `password` = 'new_password'
+WHERE `id` = 2;
+
+
+DELETE FROM `users` WHERE 0
+{{--  Start Hare --}}
 {{-- * regarding like query --}}
 {{-- on chatgpy --}}
 {{-- give me all LIKE related quey with uses description 
 in form of table like  1 column heading will be query and 2 column will be description 
 i want to copy above table and paste inside vs code  --}}
+
 <pre>
-| Query                                                         | Description                                                                                                                        |
-|---------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| `SELECT * FROM table WHERE column LIKE 'pattern';`           | Selects all rows from the specified table where the specified column matches the given pattern.                                    |
-| `SELECT * FROM table WHERE column LIKE 'prefix%';`           | Selects all rows from the specified table where the specified column starts with the given prefix.                                |
-| `SELECT * FROM table WHERE column LIKE '%suffix';`           | Selects all rows from the specified table where the specified column ends with the given suffix.                                  |
-| `SELECT * FROM table WHERE column LIKE '%pattern%';`         | Selects all rows from the specified table where the specified column contains the given pattern anywhere within the column value.  |
-| `SELECT * FROM table WHERE column LIKE 'pattern' COLLATE utf8_general_ci;` | Performs a case-insensitive match by specifying a case-insensitive collation. Selects all rows where the column matches the pattern without considering case. |
-| `SELECT * FROM table WHERE column LIKE '_x%';`              | Selects all rows from the specified table where the specified column starts with any character followed by 'x' and then any sequence of characters. |
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    #    Query                                                        #                     Description                                                                     #
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    #  1. `SELECT * FROM table WHERE column LIKE 'pattern';`           #  Selects all rows from the specified table where the specified column matches the given pattern  #
+    #  2. `SELECT * FROM table WHERE column LIKE 'prefix%';`           #  Selects all rows from the specified table where the specified column starts with the given prefix.#
+    #  3. `SELECT * FROM table WHERE column LIKE '%suffix';`           #  Selects all rows from the specified table where the specified column ends with the given suffix.  #
+    #  4. `SELECT * FROM table WHERE column LIKE '%pattern%';`         #  Selects all rows from the specified table where the specified column contains the given pattern anywhere within the column value.  #
+    #  5. `SELECT * FROM table WHERE column LIKE 'pattern' COLLATE utf8_general_ci;` # Performs a case-insensitive match by specifying a case-insensitive collation. Selects all rows where the column matches the pattern without considering case. #
+    #  6. `SELECT * FROM table WHERE column LIKE '_x%';`              #  Selects all rows from the specified table where the specified column starts with any character followed by 'x' and then any sequence of characters.  #
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </pre>
 {{--  Start Hare --}}
+SELECT * FROM `assignmentbudgetings` WHERE `assignmentgenerate_id` LIKE 'JES100152';
 SELECT * FROM `assignmentbudgetings` WHERE `created_at` BETWEEN '2024-01-01 16:45:30.000000' AND '2024-03-20
 16:45:30.000000' ORDER BY `id` DESC
 
