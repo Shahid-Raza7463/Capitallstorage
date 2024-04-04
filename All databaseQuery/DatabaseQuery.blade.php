@@ -2,11 +2,74 @@
 1 current working database is vsa = 27-03-24
 2 before it vsaold
 
-{{-- * --}}
+{{-- * my sql search using like  --}}
 {{--  Start Hare --}}
+<pre>
+LIKE:          Used for pattern matching using wildcard characters (% for zero or more characters, _ for a single character).
+LIKE %...%:    Similar to LIKE, but with placeholders for text that can be matched anywhere within the column value.
+NOT LIKE:       Opposite of LIKE, used to exclude rows that match a certain pattern.
+NOT LIKE %...%:   Similar to NOT LIKE, but with placeholders for text that should not be matched anywhere within the column value.
+=:                Checks for exact equality.
+!=:              Checks for inequality.
+REGEXP:          Used for pattern matching using regular expressions.
+REGEXP ^...$:    Similar to REGEXP, but matches the entire column value against the provided regular expression pattern.
+NOT REGEXP:      Opposite of REGEXP, used to exclude rows that match a certain regular expression pattern.
+= '':            Checks if the column value is an empty string.
+!= '':           Checks if the column value is not an empty string.
+IN (...):        Checks if the column value is within a specified list of values.
+NOT IN (...):    Checks if the column value is not within a specified list of values.
+BETWEEN:         Checks if the column value is within a specified range.
+NOT BETWEEN:     Checks if the column value is not within a specified range.
+IS NULL:         Checks if the column value is NULL.
+IS NOT NULL:     Checks if the column value is not NULL.
+</pre>
 {{--  Start Hare --}}
-{{-- * --}}
+{{-- * regarding regular experation --}}
 {{--  Start Hare --}}
+<pre>
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#                                                Query                                             #                Heading Point                #                                      Explanation                                       #
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#  SELECT * FROM table WHERE column REGEXP 'pattern';                                                #              Basic Pattern Matching:             #  Select rows where a specific column matches a pattern.                                     #
+#  SELECT * FROM table WHERE column REGEXP BINARY 'pattern';                                         #           Case-Insensitive Matching:            #  Select rows where a column matches a pattern regardless of case.                              #
+#  SELECT * FROM table WHERE column REGEXP '.abc';                                                    #             Matching Any Character:              #  Select rows where a column contains any character followed by 'abc'.                           #
+#  SELECT * FROM table WHERE column REGEXP '[ab]';                                                    #          Matching Specific Characters:          #  Select rows where a column contains 'a' or 'b'.                                               #
+#  SELECT * FROM table WHERE column REGEXP '[0-9]abc';                                                #         Matching Ranges of Characters:         #  Select rows where a column contains any digit followed by 'abc'.                               #
+#  SELECT * FROM table WHERE column REGEXP 'a{3}';                                                    #             Matching Repetitions:              #  Select rows where a column contains 'a' repeated 3 times.                                      #
+#  SELECT * FROM table WHERE column NOT REGEXP 'abc';                                                 #               Negating Matches:                #  Select rows where a column does not contain 'abc'.                                              #
+#  SELECT * FROM table WHERE column REGEXP '^abc';                                                    #      Anchoring Matches to Start/End:       #  Select rows where a column starts with 'abc'.                                                    #
+#  SELECT * FROM table WHERE column REGEXP 'abc$';                                                    #      Anchoring Matches to Start/End:       #  Select rows where a column ends with 'abc'.                                                      #
+#  SELECT * FROM table WHERE column REGEXP '^a.*z$';                                                  #           Combining Conditions:            #  Select rows where a column starts with 'a' and ends with 'z'.                                   #
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+</pre>
+
+{{-- * regarding like query --}}
+{{-- on chatgpy --}}
+{{-- give me all LIKE related quey with uses description 
+in form of table like  1 column heading will be query and 2 column will be description 
+i want to copy above table and paste inside vs code  --}}
+
+<pre>
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    #    Query                                                        #                     Description                                                                     #
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    #  1. `SELECT * FROM table WHERE column LIKE 'pattern';`           #  Selects all rows from the specified table where the specified column matches the given pattern  #
+    #  2. `SELECT * FROM table WHERE column LIKE 'prefix%';`           #  Selects all rows from the specified table where the specified column starts with the given prefix.#
+    #  3. `SELECT * FROM table WHERE column LIKE '%suffix';`           #  Selects all rows from the specified table where the specified column ends with the given suffix.  #
+    #  4. `SELECT * FROM table WHERE column LIKE '%pattern%';`         #  Selects all rows from the specified table where the specified column contains the given pattern anywhere within the column value.  #
+    #  5. `SELECT * FROM table WHERE column LIKE 'pattern' COLLATE utf8_general_ci;` # Performs a case-insensitive match by specifying a case-insensitive collation. Selects all rows where the column matches the pattern without considering case. #
+    #  6. `SELECT * FROM table WHERE column LIKE '_x%';`              #  Selects all rows from the specified table where the specified column starts with any character followed by 'x' and then any sequence of characters.  #
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</pre>
+{{--  Start Hare --}}
+SELECT * FROM `assignmentbudgetings` WHERE `assignmentgenerate_id` LIKE 'JES100152';
+SELECT * FROM `assignmentbudgetings` WHERE `created_at` BETWEEN '2024-01-01 16:45:30.000000' AND '2024-03-20
+16:45:30.000000' ORDER BY `id` DESC
+
+
+
+
 {{--  Start Hare --}}
 {{-- *regarding trigger --}}
 {{--  Start Hare create trigger using sql tab --}}
@@ -77,30 +140,6 @@ WHERE `id` = 2;
 
 DELETE FROM `users` WHERE 0
 {{--  Start Hare --}}
-{{-- * regarding like query --}}
-{{-- on chatgpy --}}
-{{-- give me all LIKE related quey with uses description 
-in form of table like  1 column heading will be query and 2 column will be description 
-i want to copy above table and paste inside vs code  --}}
-
-<pre>
-    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    #    Query                                                        #                     Description                                                                     #
-    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    #  1. `SELECT * FROM table WHERE column LIKE 'pattern';`           #  Selects all rows from the specified table where the specified column matches the given pattern  #
-    #  2. `SELECT * FROM table WHERE column LIKE 'prefix%';`           #  Selects all rows from the specified table where the specified column starts with the given prefix.#
-    #  3. `SELECT * FROM table WHERE column LIKE '%suffix';`           #  Selects all rows from the specified table where the specified column ends with the given suffix.  #
-    #  4. `SELECT * FROM table WHERE column LIKE '%pattern%';`         #  Selects all rows from the specified table where the specified column contains the given pattern anywhere within the column value.  #
-    #  5. `SELECT * FROM table WHERE column LIKE 'pattern' COLLATE utf8_general_ci;` # Performs a case-insensitive match by specifying a case-insensitive collation. Selects all rows where the column matches the pattern without considering case. #
-    #  6. `SELECT * FROM table WHERE column LIKE '_x%';`              #  Selects all rows from the specified table where the specified column starts with any character followed by 'x' and then any sequence of characters.  #
-    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-</pre>
-{{--  Start Hare --}}
-SELECT * FROM `assignmentbudgetings` WHERE `assignmentgenerate_id` LIKE 'JES100152';
-SELECT * FROM `assignmentbudgetings` WHERE `created_at` BETWEEN '2024-01-01 16:45:30.000000' AND '2024-03-20
-16:45:30.000000' ORDER BY `id` DESC
-
-KAR100470
 
 {{--  Start Hare --}}
 SELECT * FROM `timesheetusers` WHERE `date` BETWEEN '2023-10-09' AND '2023-10-16';

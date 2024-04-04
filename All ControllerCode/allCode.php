@@ -10,8 +10,6 @@ class ZipController extends Controller
 // Start Hare 
 //*
 // Start Hare 
-//*
-// Start Hare 
 //* regarding mail 
 // Start Hare 
 // if ($timesheetRequest->status == 0) {
@@ -929,11 +927,202 @@ $nextweektimesheet = DB::table('timesheetusers')
 
 dd($nextweektimesheet);
 
+//* regarding join 
+// Start hare
+
+// ------------------------------------------------------------------------------------------------------------------------------------
+// |                            Query                                 |                           Description                            |
+// ------------------------------------------------------------------------------------------------------------------------------------
+// |  1. join('table', 'first', '=', 'second')                       | Inner join with the specified table on the given conditions.     |
+// |  2. joinWhere('table', 'first', '=', 'second')                  | Inner join with the specified table and where conditions.        |
+// |  3. joinSub($query, 'alias', 'first', '=', 'second')            | Inner join with a subquery and where conditions.                 |
+// |  4. leftJoin('table', 'first', '=', 'second')                   | Left join with the specified table on the given conditions.      |
+// |  5. leftJoinWhere('table', 'first', '=', 'second')              | Left join with the specified table and where conditions.         |
+// |  6. leftJoinSub($query, 'alias', 'first', '=', 'second')        | Left join with a subquery and where conditions.                  |
+// |  7. rightJoin('table', 'first', '=', 'second')                  | Right join with the specified table on the given conditions.     |
+// |  8. rightJoinWhere('table', 'first', '=', 'second')             | Right join with the specified table and where conditions.        |
+// |  9. rightJoinSub($query, 'alias', 'first', '=', 'second')       | Right join with a subquery and where conditions.                 |
+// | 10. crossJoin('table')                                          | Cross join with the specified table.                             |
+// | 11. joinWhereRaw('sql', bindings)                               | Inner join with raw WHERE clause.                                |
+// | 12. leftJoinWhereRaw('sql', bindings)                           | Left join with raw WHERE clause.                                 |
+// | 13. rightJoinWhereRaw('sql', bindings)                          | Right join with raw WHERE clause.                                |
+// | 14. joinSub($query, 'alias', 'first', '=', 'second', 'type')   | Join with a subquery and specified type (inner, left, right).    |
+// | 15. joinSub($query, 'alias', 'first', '=', 'second', 'type')   | Left join with a subquery and specified type (inner, left, right).|
+// | 16. joinSub($query, 'alias', 'first', '=', 'second', 'type')   | Right join with a subquery and specified type (inner, left, right).|
+// ------------------------------------------------------------------------------------------------------------------------------------
+
+// start hare 
+// join: Inner join with the specified table on the given conditions.
+$query = DB::table('users')
+    ->join('posts', 'users.id', '=', 'posts.user_id')
+    ->select('users.*', 'posts.title', 'posts.content')
+    ->get();
+
+// Start Hare 
+// joinWhere: Inner join with the specified table and where conditions.
+$query = DB::table('orders')
+    ->joinWhere('customers', 'orders.customer_id', '=', 'customers.id')
+    ->where('orders.status', '=', 'pending')
+    ->get();
+
+// Start Hare 
+// joinSub: Inner join with a subquery and where conditions.
+$subquery = DB::table('posts')
+    ->select('user_id', DB::raw('count(*) as post_count'))
+    ->groupBy('user_id');
+
+$query = DB::table('users')
+    ->joinSub($subquery, 'post_count', 'users.id', '=', 'post_count.user_id')
+    ->get();
+
+// Start Hare 
+// leftJoin: Left join with the specified table on the given conditions.
+
+$query = DB::table('users')
+    ->leftJoin('posts', 'users.id', '=', 'posts.user_id')
+    ->select('users.*', 'posts.title', 'posts.content')
+    ->get();
+
+// Start Hare 
+// leftJoinWhere: Left join with the specified table and where conditions.
+
+$query = DB::table('orders')
+    ->leftJoinWhere('customers', 'orders.customer_id', '=', 'customers.id')
+    ->where('orders.status', '=', 'pending')
+    ->get();
+
+// Start Hare 
+// leftJoinSub: Left join with a subquery and where conditions.
+
+$subquery = DB::table('posts')
+    ->select('user_id', DB::raw('count(*) as post_count'))
+    ->groupBy('user_id');
+
+$query = DB::table('users')
+    ->leftJoinSub($subquery, 'post_count', 'users.id', '=', 'post_count.user_id')
+    ->get();
+
+// Start Hare 
+// rightJoin: Right join with the specified table on the given conditions. (Similar to leftJoin, but reversed)
+
+$query = DB::table('posts')
+    ->rightJoin('users', 'posts.user_id', '=', 'users.id')
+    ->select('users.*', 'posts.title', 'posts.content')
+    ->get();
+
+// Start Hare 
+// rightJoinWhere: Right join with the specified table and where conditions. (Similar to leftJoinWhere, but reversed)
+
+$query = DB::table('orders')
+    ->rightJoinWhere('customers', 'orders.customer_id', '=', 'customers.id')
+    ->where('orders.status', '=', 'pending')
+    ->get();
+
+// Start Hare 
+// rightJoinSub: Right join with a subquery and where conditions. (Similar to leftJoinSub, but reversed)
+
+$subquery = DB::table('posts')
+    ->select('user_id', DB::raw('count(*) as post_count'))
+    ->groupBy('user_id');
+
+$query = DB::table('users')
+    ->rightJoinSub($subquery, 'post_count', 'users.id', '=', 'post_count.user_id')
+    ->get();
+
+// Start Hare
+// crossJoin: Cross join with the specified table.
+
+$query = DB::table('users')
+    ->crossJoin('roles')
+    ->get();
+
+// Start Hare 
+// joinWhereRaw: Inner join with raw WHERE clause.
+
+$query = DB::table('users')
+    ->joinWhereRaw('posts', 'posts.user_id = users.id AND posts.published = ?', ['yes'])
+    ->get();
+
+// Start Hare 
+// leftJoinWhereRaw: Left join with raw WHERE clause.
+$query = DB::table('users')
+    ->leftJoinWhereRaw('posts', 'posts.user_id = users.id AND posts.published = ?', ['yes'])
+    ->get();
+
+// Start Hare 
+// rightJoinWhereRaw: Right join with raw WHERE clause.
+$query = DB::table('posts')
+    ->rightJoinWhereRaw('users', 'posts.user_id = users.id AND users.active = ?', ['yes'])
+    ->get();
+
+// Start Hare 
+// joinSub: Join with a subquery and specified type (inner, left, right).
+$subquery = DB::table('posts')
+    ->select('user_id', DB::raw('count(*) as post_count'))
+    ->groupBy('user_id');
+
+$query = DB::table('users')
+    ->joinSub($subquery, 'post_count', 'users.id', '=', 'post_count.user_id')
+    ->get();
+
+// Start Hare 
+// leftJoinSub: Left join with a subquery and specified type (inner, left, right).
+$subquery = DB::table('posts')
+    ->select('user_id', DB::raw('count(*) as post_count'))
+    ->groupBy('user_id');
+
+$query = DB::table('users')
+    ->leftJoinSub($subquery, 'post_count', 'users.id', '=', 'post_count.user_id')
+    ->get();
+
+// Start Hare 
+// rightJoinSub: Right join with a subquery and specified type (inner, left, right).
+$subquery = DB::table('posts')
+    ->select('user_id', DB::raw('count(*) as post_count'))
+    ->groupBy('user_id');
+
+$query = DB::table('users')
+    ->rightJoinSub($subquery, 'post_count', 'users.id', '=', 'post_count.user_id')
+    ->get();
+
+// Start Hare 
+
+
+
+
 //* regarding where clouse / 
+
+// ------------------------------------------------------------------------------------------------------------------------------------
+// |                            Query                                 |                           Description                            |
+// ------------------------------------------------------------------------------------------------------------------------------------
+// |  1. where('column', '=', 'value')                               | Adds a basic WHERE clause to the query.                         |
+// |  2. orWhere('column', '=', 'value')                             | Adds an OR condition to the WHERE clause.                       |
+// |  3. whereBetween('column', [value1, value2])                    | Adds a WHERE BETWEEN clause to the query.                       |
+// |  4. whereNotBetween('column', [value1, value2])                 | Adds a WHERE NOT BETWEEN clause to the query.                   |
+// |  5. whereIn('column', [value1, value2, ...])                    | Adds a WHERE IN clause to the query.                            |
+// |  6. whereNotIn('column', [value1, value2, ...])                 | Adds a WHERE NOT IN clause to the query.                        |
+// |  7. whereNull('column')                                        | Adds a WHERE NULL clause to the query.                          |
+// |  8. whereNotNull('column')                                     | Adds a WHERE NOT NULL clause to the query.                      |
+// |  9. whereColumn('column1', '=', 'column2')                     | Adds a comparison of two columns to the WHERE clause.           |
+// |  10. whereDate('column', '=', 'date')                           | Adds a WHERE clause comparing a column's value to a date.       |
+// |  11. whereDay('column', '=', 'day')                             | Adds a WHERE clause comparing a column's day part to a value.   |
+// |  12. whereMonth('column', '=', 'month')                         | Adds a WHERE clause comparing a column's month part to a value. |
+// |  13. whereYear('column', '=', 'year')                           | Adds a WHERE clause comparing a column's year part to a value.  |
+// |  14. whereTime('column', '=', 'time')                           | Adds a WHERE clause comparing a column's time part to a value.  |
+// |  15. whereJsonContains('column', 'value')                       | Adds a WHERE JSON_CONTAINS clause to the query.                 |
+// |  16. whereJsonDoesntContain('column', 'value')                  | Adds a WHERE JSON_CONTAINS clause with negation to the query.   |
+// |  17. whereJsonLength('column', 'operator', 'value')             | Adds a WHERE JSON_LENGTH clause to the query.                   |
+// |  18. whereRaw('SQL statement')                                  | Adds a raw WHERE clause to the query.                           |
+// ------------------------------------------------------------------------------------------------------------------------------------
 
 ->distinct('partner')
 ->distinct()
   // start hare 
+  ->where(function ($query) {
+    $query->where('age', '>', 25)
+          ->orWhere('city', 'New York');
+})
+
   ->whereBetween('date', [$date, '2024-03-22'])
   ->whereBetween('date', [$nextweektimesheets->startdate, $nextweektimesheets->enddate])
    ->whereBetween('date', ['2024-03-11', '2024-03-16'])
@@ -3878,6 +4067,40 @@ $nextweektimesheet = DB::table('timesheetreport')
 ->delete();
 
 dd('hi');
+
+
+
+// Start Hare update assignmentgenerate_id in timesheet users table using condition 
+
+ // total 135
+
+ $assignments = DB::table('assignmentbudgetings')
+ // ->whereBetween('created_at', ['2024-01-01 16:45:30', '2024-03-21 16:45:30'])
+ ->whereBetween('created_at', ['2023-09-01 16:45:30', '2023-12-31 16:45:30'])
+ ->where('status', 1)
+ ->select('assignmentgenerate_id', 'client_id', 'assignment_id', 'created_at')
+ ->orderBy('id', 'DESC')
+ ->get();
+
+// dd($assignments);
+
+$date = date('Y-m-d', strtotime($assignments[121]->created_at));
+
+$updatedcode =  DB::table('timesheetusers')
+ // ->whereBetween('date', [$date, '2024-03-23'])
+ // ->whereBetween('date', [$date, '2024-01-06'])
+ ->where('client_id', $assignments[121]->client_id)
+ ->where('assignment_id', $assignments[121]->assignment_id)
+ // ->where('partner', 842)
+ // ->where('createdby', 852)
+ // ->whereNotIn('createdby', [234, 453])
+ // ->get();
+ ->update(['assignmentgenerate_id' => $assignments[121]->assignmentgenerate_id]);
+// ->update(['assignmentgenerate_id' => 'hi']);
+
+dd($updatedcode);
+
+// dd($assignments);
 
 
 
