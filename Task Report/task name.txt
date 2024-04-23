@@ -22,97 +22,51 @@ task name
 15 user should be export own timesheet and also fliter 
 16 problem solved 23-01-24 this is in my notebook 
 
-##################################################  01-feb-2024 ##############################################################
-reject reasion will be show on email 
-reject reason will be display inside rejected information 
-notification show on admin and patner,manager ,staff
-download all folder 
-timesheet download on patner and admin 
 
+end hare jan 2024
 
-
-
-
-
-
-to do
-
-filter should be aprover wize in applyleave on admin 
-everywhere client want to export file name after download
-
-timesheet excell will be latest date ordering 
-open assignment total show 198 and in excell 199 check it 
-
-leave not apply on sunday
-
-0.apply leave remark column add 
-1.mailing close assignment
-2. problem of sunny sir
-3. counting assignment on dashboard 
-4.old details on casual leave revert 
-
-
-5.holyday,notification seprated 
+22222222222222222222222222222222222222222222222222222 Done 22222222222222222222222222
+7. redirection fix on apply leave to patner ok
+1. page top margin decrease everywhere   ok
+2.click on client then extra page comming so remove it   ok
+3. Teammember List on assignment closed page    ok
+4. timesheet save module only 10 data show ho raha hai   ok
+5. after search data in excell only serch data will be show  ok
+6. during assignment create when patner addon any row then without filled will not sumbitted   ok
 5.knowledge base tab seprated
-6.sireal number missing
-7. redirection fix on apply leave to patner 
+5.holyday,notification seprated 
+download all folder 
 
+test staff why comming 
+patner acess assignment time report
+staff code on team member 
 seprated timesheet on weeklist
 
+22222222222222222222222222222222222222222222222222222 to do new 22222222222222222222222222
+reject reasion will be show on email 
+reject reason will be display inside rejected information 
+filter should be aprover wize in applyleave on admin 
+everywhere client want to export file name after download
+open assignment total show 198 and in excell 199 check it 
+leave not apply on sunday
+1. apply leave page :- after filter data should be date wise 
+
+6.sireal number missing
+//   8 => 100009
+//   10 => 100011
+//   11 => 100012
+//   12 => 100013
+//   90 => 100091
+//   323 => 100324  done
 
 
-22222222222222222222222222222222222222222222222222222  march months 22222222222222222222222222
-1. page top margin decrease everywhere 
-2.click on client then extra page comming so remove it 
-3. Teammember List on assignment closed page
-4. timesheet save module only 10 data show ho raha hai 
-5. after search data in excell only serch data will be show
+knowlege base modification 
+assignment report tab delay to load
+1. client want to add patner as a secondary in assignment 
 
+4.old details on casual leave revert 
+2.when select offholiday then work item get automatic from holidays 
 
-
-
-
-
-
-
-[name]
-
- 
-
- 
-
-Reaaaaaag Debitor.qqqqqqq Confirmation of Balance as on [date] 
-
-Dear Sir, 
-We M/s KGS & CO Chartered accountants are the statutory Auditors of M/s ABC for the Financial Year [year]. For the Audit purpose, we require the confirmation of the outstanding balance of the company in your books of account as on [date]. 
-
-We request you to confirm the balance at the place provided below and send the duly signed copy of the same to our address given below. Also share the balance confirmation copy through mail on our mail id office@kgsomani.com 
-
-M/s K G Somani & Co. (Chartered Accountants)
-3rd Floor, Gate no.2, Delite Cinema Building, Asaf Ali Road,
-New Delhi – 110002
-
-An early action would be highly appreciated 
-
-Thanking You, 
-
-Yours Faithfully 
-
-FOR K.G Somani & Co. 
-Chartered Accountants 
-
-             
-
-(Authorised Signatory)
-
-
-
-
-
-
-
-
-basically isme ek bugs ye hai ki jab mai accept and refuse button per click karta hu to ek alrt box aata hai jab mai ok button per click karta hu to mail jata hai aur cancel button per click karta hu to mail nahi jata hai jo ki sah hai ab mai chahta hu ki jab cancel button per click ho to model box open nahi ho 
 
 
 

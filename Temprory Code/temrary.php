@@ -19,17 +19,244 @@ class TimesheetnotfillReminder extends Command
     //*
     // Start Hare 
     //*
-    // Start Hare 
-    //*
-              // $update = DB::table('debtors')
-            //     ->where('mailstatus', 1)
-            //     // ->get();
-            //     ->update(['mailstatus' => 0]);
-            // dd($update);
-            // dd('send');
 
-            
-    // Route::get('/confirmationauthotp',  [BackEndController::class, 'confirmationauthotp']);
+    public function client_list1()
+    {
+        // $client = Client::latest()->get();
+        // return view('backEnd.client.1clientlist', compact('client'));
+        // $teammemberDatas = DB::table('assignmentmappings')
+        //     ->leftjoin('assignmentteammappings', 'assignmentteammappings.assignmentmapping_id', 'assignmentmappings.id')
+        //     ->leftjoin('teammembers', 'teammembers.id', 'assignmentteammappings.teammember_id')
+        //     ->leftjoin('titles', 'titles.id', 'teammembers.title_id')
+        //     ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        //     // ->where('assignmentmappings.assignmentgenerate_id', $id)
+        //     ->where('assignmentmappings.assignmentgenerate_id', 'GOO100433')
+        //     ->select('teammembers.*', 'roles.rolename', 'assignmentteammappings.type', 'titles.title', 'assignmentteammappings.id As assignmentteammappingsId', 'assignmentteammappings.status as assignmentteammappingsStatus', 'assignmentmappings.assignmentgenerate_id as assignmentgenerateid')
+        //     ->get();
+
+        // $teammemberDatas = DB::table('assignmentmappings')
+        //     ->leftjoin('assignmentteammappings', 'assignmentteammappings.assignmentmapping_id', 'assignmentmappings.id')
+        //     ->leftjoin('teammembers', 'teammembers.id', 'assignmentteammappings.teammember_id')
+        //     ->leftjoin('titles', 'titles.id', 'teammembers.title_id')
+        //     ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        //     // ->where('assignmentmappings.assignmentgenerate_id', $id)
+        //     // ->where('assignmentmappings.assignmentgenerate_id', 'GOO100433')
+        //     ->select('assignmentmappings.id', 'teammembers.team_member', 'titles.title', 'assignmentmappings.assignmentgenerate_id')
+        //     ->get();
+        // dd($teammemberDatas);
+
+        // $teammemberDatas = DB::table('assignmentteammappings')
+        //     ->leftjoin('assignmentmappings', 'assignmentmappings.id', 'assignmentteammappings.assignmentmapping_id')
+        //     ->leftjoin('assignmentbudgetings', 'assignmentbudgetings.assignmentgenerate_id', 'assignmentmappings.assignmentgenerate_id')
+        //     ->leftjoin('teammembers', 'teammembers.id', 'assignmentteammappings.teammember_id')
+        //     ->leftjoin('titles', 'titles.id', 'teammembers.title_id')
+        //     ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        //     ->where('assignmentbudgetings.status', 1)
+        //     // ->where('assignmentmappings.assignmentgenerate_id', 'GOO100433')
+        //     ->select('assignmentmappings.id', 'teammembers.id as teamid', 'teammembers.team_member', 'titles.title', 'assignmentmappings.assignmentgenerate_id', 'assignmentbudgetings.assignmentname')
+        //     ->get();
+        // dd($teammemberDatas);
+
+        // $teammemberDatas2 = DB::table('assignmentteammappings')
+        //     ->leftjoin('assignmentmappings', 'assignmentmappings.id', 'assignmentteammappings.assignmentmapping_id')
+        //     ->leftjoin('assignmentbudgetings', 'assignmentbudgetings.assignmentgenerate_id', 'assignmentmappings.assignmentgenerate_id')
+        //     ->leftjoin('teammembers', 'teammembers.id', 'assignmentmappings.leadpartner')
+        //     ->leftjoin('titles', 'titles.id', 'teammembers.title_id')
+        //     ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        //     ->where('assignmentbudgetings.status', 1)
+        //     // ->where('assignmentmappings.assignmentgenerate_id', 'GOO100433')
+        //     ->select('assignmentmappings.id', 'teammembers.id as teamid', 'teammembers.team_member', 'titles.title', 'assignmentmappings.assignmentgenerate_id', 'assignmentbudgetings.assignmentname')
+        //     ->get();
+
+        // $teammemberDatas2 = DB::table('assignmentmappings')
+        //     ->leftjoin('assignmentbudgetings', 'assignmentbudgetings.assignmentgenerate_id', 'assignmentmappings.assignmentgenerate_id')
+        //     ->leftjoin('teammembers', 'teammembers.id', 'assignmentmappings.otherpartner')
+        //     ->leftjoin('titles', 'titles.id', 'teammembers.title_id')
+        //     ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        //     ->where('assignmentbudgetings.status', 1)
+        //     // ->where('assignmentmappings.assignmentgenerate_id', 'GOO100433')
+        //     ->select('assignmentmappings.id', 'teammembers.id as teamid', 'teammembers.team_member', 'titles.title', 'assignmentmappings.assignmentgenerate_id', 'assignmentbudgetings.assignmentname')
+        //     ->get();
+
+        // $teammemberDatas2 = DB::table('assignmentmappings')
+        //     ->leftjoin('assignmentbudgetings', 'assignmentbudgetings.assignmentgenerate_id', 'assignmentmappings.assignmentgenerate_id')
+        //     ->leftjoin('teammembers', 'teammembers.id', 'assignmentmappings.leadpartner')
+        //     ->leftjoin('titles', 'titles.id', 'teammembers.title_id')
+        //     ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+        //     ->where('assignmentbudgetings.status', 1)
+        //     // ->where('assignmentmappings.assignmentgenerate_id', 'GOO100433')
+        //     ->select('assignmentmappings.id', 'teammembers.id as teamid', 'teammembers.team_member', 'titles.title', 'assignmentmappings.assignmentgenerate_id', 'assignmentbudgetings.assignmentname')
+        //     ->get();
+
+        // dd($teammemberDatas2);
+
+        $teammemberDatas2 = DB::table('assignmentmappings')
+            ->leftjoin('assignmentbudgetings', 'assignmentbudgetings.assignmentgenerate_id', 'assignmentmappings.assignmentgenerate_id')
+            ->leftjoin('teammembers', function ($join) {
+                $join->on('teammembers.id', 'assignmentmappings.otherpartner')
+                    ->orOn('teammembers.id', 'assignmentmappings.leadpartner');
+            })
+            ->leftjoin('titles', 'titles.id', 'teammembers.title_id')
+            ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+            ->where('assignmentbudgetings.status', 1)
+            ->select(
+                'assignmentmappings.id',
+                'teammembers.id as teamid',
+                'teammembers.team_member',
+                'titles.title',
+                'assignmentmappings.assignmentgenerate_id',
+                'assignmentbudgetings.assignmentname'
+            )
+            ->get();
+
+        dd($teammemberDatas2);
+
+
+        // return view('backEnd.viewassignment', compact('partner', 'udinDatas', 'contactDatas', 'teammemberDatas', 'assignmentcheckDatas', 'assignmentbudgetingDatas'));
+        return view('backEnd.client.1clientlist', compact('teammemberDatas'));
+    }
+    // Start Hare 
+    if ($request->leavingdate != null) {
+        $timesheetsave = DB::table('timesheetusers')
+            ->where('createdby', $id)
+            ->where('status', 0)
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        // Chunk the $timesheetsave data for one week
+        $weeksData = $timesheetsave->chunk(6);
+        foreach ($weeksData as $weekData) {
+            foreach ($weekData as $timesheet) {
+                $startdate = Carbon::parse($timesheet->date);
+                $nextSaturday = $startdate->copy()->next(Carbon::SATURDAY);
+
+                $startdateformat = $startdate->format('Y-m-d');
+                $nextSaturdayformat = $nextSaturday->format('Y-m-d');
+
+                $week = date('d-m-Y', strtotime($startdateformat)) . ' to ' . date('d-m-Y', strtotime($nextSaturdayformat));
+
+                DB::table('timesheetusers')
+                    ->where('timesheetid', $timesheet->timesheetid)
+                    ->update([
+                        'status' => 1,
+                        'updated_at' => now(),
+                    ]);
+
+                DB::table('timesheets')
+                    ->where('id', $timesheet->timesheetid)
+                    ->update([
+                        'status' => 1,
+                        'updated_at' => now(),
+                    ]);
+            }
+
+            // Insert data into the timesheetreport table for the current week
+            $startdate = Carbon::parse($weekData->first()->date);
+            $nextSaturday = $startdate->copy()->next(Carbon::SATURDAY);
+
+            $startdateformat = $startdate->format('Y-m-d');
+            $nextSaturdayformat = $nextSaturday->format('Y-m-d');
+
+            $week = date('d-m-Y', strtotime($startdateformat)) . ' to ' . date('d-m-Y', strtotime($nextSaturdayformat));
+
+            $co = DB::table('timesheetusers')
+                ->where('createdby', $id)
+                ->whereBetween('date', [$startdateformat, $nextSaturdayformat])
+                ->select('partner', DB::raw('SUM(hour) as total_hours'), DB::raw('COUNT(DISTINCT timesheetid) as row_count'))
+                ->groupBy('partner')
+                ->get();
+            // dd($co);
+
+            foreach ($co as $codata) {
+                DB::table('timesheetreport')->insert([
+                    'teamid'       =>     444,
+                    'week'       =>     $week,
+                    'totaldays'       =>     $codata->row_count,
+                    'totaltime' =>  $codata->total_hours,
+                    'partnerid'  => $codata->partner,
+                    'startdate'  => $startdateformat,
+                    'enddate'  => $nextSaturdayformat,
+                    'created_at'                =>      date('y-m-d H:i:s'),
+                ]);
+            }
+        }
+    }
+    // Start Hare 
+    if ($request->leavingdate != null) {
+        $timesheetsave = DB::table('timesheetusers')
+            ->where('createdby', $id)
+            ->where('status', 0)
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        // Chunk the $timesheetsave collection into arrays containing data for one week
+        $weeksData = $timesheetsave->chunk(6); // Assuming each week has 6 data points
+        foreach ($weeksData as $weekData) {
+
+            // Reset total counts for each week
+            $totalDays = 0;
+            $totalHours = 0;
+
+            foreach ($weekData as $timesheet) {
+                $startdate = Carbon::parse($timesheet->date);
+                $nextSaturday = $startdate->copy()->next(Carbon::SATURDAY);
+
+                $startdateformat = $startdate->format('Y-m-d');
+                $nextSaturdayformat = $nextSaturday->format('Y-m-d');
+
+                $week = date('d-m-Y', strtotime($startdateformat)) . ' to ' . date('d-m-Y', strtotime($nextSaturdayformat));
+
+                $totalDays++;
+                $totalHours += $timesheet->hour;
+
+                // Update status for timesheetusers and timesheets for the current week
+                DB::table('timesheetusers')
+                    ->where('timesheetid', $timesheet->timesheetid)
+                    ->update([
+                        'status' => 1,
+                        'updated_at' => now(),
+                    ]);
+
+                DB::table('timesheets')
+                    ->where('id', $timesheet->timesheetid)
+                    ->update([
+                        'status' => 1,
+                        'updated_at' => now(),
+                    ]);
+            }
+
+            // Insert data into the timesheetreport table for the current week
+            $startdate = Carbon::parse($weekData->first()->date);
+            $nextSaturday = $startdate->copy()->next(Carbon::SATURDAY);
+
+            $startdateformat = $startdate->format('Y-m-d');
+            $nextSaturdayformat = $nextSaturday->format('Y-m-d');
+
+            $week = date('d-m-Y', strtotime($startdateformat)) . ' to ' . date('d-m-Y', strtotime($nextSaturdayformat));
+
+            $co = DB::table('timesheetusers')
+                ->where('createdby', $id)
+                ->whereBetween('date', [$startdateformat, $nextSaturdayformat])
+                ->select('partner', DB::raw('SUM(hour) as total_hours'), DB::raw('COUNT(DISTINCT timesheetid) as row_count'))
+                ->groupBy('partner')
+                ->get();
+            // dd($co);
+
+            foreach ($co as $codata) {
+                DB::table('timesheetreport')->insert([
+                    'teamid'       =>     444,
+                    'week'       =>     $week,
+                    'totaldays'       =>     $codata->row_count,
+                    'totaltime' =>  $codata->total_hours,
+                    'partnerid'  => $codata->partner,
+                    'startdate'  => $startdateformat,
+                    'enddate'  => $nextSaturdayformat,
+                    'created_at'                =>      date('y-m-d H:i:s'),
+                ]);
+            }
+        }
+    }
+    //*
 
     public function confirmationauthotp(Request $request)
     {

@@ -16,3 +16,27 @@ replace    <td> tag hare
                                                 delete blocked
                                             @endif
                                         </td>
+
+
+
+
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+app\Http\Controllers\TimesheetController.php
+
+  public function destroy($id)
+  {
+    try {
+      // dd($id);
+      DB::table('timesheets')->where('id', $id)->delete();
+      DB::table('timesheetusers')->where('timesheetid', $id)->delete();
+      $output = array('msg' => 'Deleted Successfully');
+      return back()->with('statuss', $output);
+    } catch (Exception $e) {
+      DB::rollBack();
+      Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+      report($e);
+      $output = array('msg' => $e->getMessage());
+      return back()->withErrors($output)->withInput();
+    }
+  }

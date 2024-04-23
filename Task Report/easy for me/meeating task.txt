@@ -1,5 +1,0 @@
-1.change on mail data 
-2.staff and manager should be also access 
-3.Cancel buttn add on tracking data 
-4.authorise formate page
-5.

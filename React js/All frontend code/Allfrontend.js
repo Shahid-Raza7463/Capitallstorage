@@ -1,6 +1,124 @@
 
 //*
 //*
+// Start hare 
+// Start hare 
+//*
+// Start hare 
+// Start hare 
+//*
+// Start hare 
+// Start hare 
+//*
+// Start hare 
+// Start hare 
+//*
+// Start hare 
+// Start hare 
+//* regarding ratings
+// Start hare 
+// Assuming these calculations are done before rendering the JSX
+const ratings = item.rating; // Replace with your rating value
+const maxRating = 5; // Maximum rating value
+
+const filledStars = Math.floor(ratings);
+const hasHalfStar = ratings - filledStars >= 0.5;
+const emptyStars = maxRating - filledStars - (hasHalfStar ? 1 : 0);
+
+// Then use these variables in your JSX
+<div className="mt-2 mx-3">
+    <span className="badge join-badge">{item.rating}</span>
+    <div className="table-rating d-flex">
+        {/* Render Empty stars */}
+        {[...Array(emptyStars)].map((_, index) => (
+            <i key={index} className="fas fa-3x fa-star icon-color"></i>
+        ))}
+        {/* Render Half-star if present */}
+        {hasHalfStar && <i className="fas fa-3x fa-star-half-alt"></i>}
+        {/* Render Filled stars */}
+        {[...Array(filledStars)].map((_, index) => (
+            <i key={index} className="fas fa-3x fa-star"></i>
+        ))}
+    </div>
+</div>
+
+// Start hare 
+//* regarding data display
+
+// Start hare 
+import React from 'react';
+
+// TableRow component
+const TableRow = ({ network }) => {
+    return (
+        <div className="d-flex justify-content-between">
+            {/* Render network logo */}
+            <img src={network.logo} className="img-fluid network-img rounded" />
+
+            {/* Render network name and badge */}
+            <div className="mx-4 mobile-div">
+                <h6 className="prm-net">
+                    <a href={network.network_url} className="text-dark">{network.network_name}</a>
+                    {network.is_sponsored === 1 && (
+                        <span className="badge spon-badge mx-1">Sponsored</span>
+                    )}
+                </h6>
+
+                {/* Render icons */}
+                <div className="table-icon">
+                    {/* Render icons here */}
+                </div>
+
+                {/* Render text */}
+                <div className="table-text mt-2">
+                    <p>{network.review_count} Reviews / {network.affiliate_tracking_software} / {network.name}</p>
+                </div>
+            </div>
+
+            {/* Render description */}
+            <div className="desc-td">
+                <p className="description mt-2">{network.network_description}</p>
+            </div>
+
+            {/* Render offer count */}
+            <div className="m-offer">
+                <p className="fw-bold off-text">{network.offer_count}</p>
+            </div>
+
+            {/* Render Join button */}
+            <div className="m-td">
+                <button type="button" className="btn table-btn mx-3" fdprocessedid="6sljwl">Join Now</button>
+                <div className="mt-2 mx-3">
+                    {/* Render rating component */}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Container component
+class NetworkTable extends React.Component {
+    render() {
+        const { networksData } = this.props;
+        return (
+            <div className="container mt-4">
+                <div className="table-div">
+                    <div className="d-flex justify-content-between head-div">
+                        {/* Render table headers */}
+                    </div>
+                    {/* Render table rows */}
+                    {networksData.map((network, index) => (
+                        <TableRow key={index} network={network} />
+                    ))}
+                </div>
+            </div>
+        );
+    }
+}
+
+export default NetworkTable;
+
+// Start hare 
 //*navbar / nav bar 
 import React from 'react';
 import { Link } from 'react-router-dom';

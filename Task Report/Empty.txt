@@ -5,6 +5,11 @@ replace filterDataAdmin() function
 
 
 
+Controller 222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+app\Http\Controllers\NotificationController.php
+add filterDataAdmin() function 
+replace filterDataAdmin() function 
+
 
 
 

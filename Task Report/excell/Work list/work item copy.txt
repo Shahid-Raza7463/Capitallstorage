@@ -1,60 +1,62 @@
-15/3
-1.page design fixed on time sheet request list for partner
+01,24
+1.Balance Confirmation
 
-2.client want to display only Excel button
+02,24
+1.exam leave missing data on timesheet save page bugs,
+2. assignment generate Id insert in timesheetusers table
 
-3.client want to only accending order date wise on time sheet request list
+03,24
+1.assignment generate Id insert in timesheetusers table
 
-4.some modification inside downloaded Excel on time sheet request list
+04,24
+1.assignment generate Id insert in timesheetusers table
 
-5.client want to remove PDF copy button on time sheet save page
+15,24
+1.submit time sheet button don't  show on time sheet save page bugs fixed,
+2. assignment total hours show on assignment time report tab.
 
-6.ordering date wise on time sheet save page
+16,24
+1.assignment total hours show on assignment time report tab completed and documentation completed.
 
-7.remove all comma on time sheet save page and inside Excel
+17.24
+1. Notification on dashboard
+2..assignment total hours show on assignment time report tab completed and documentation completed.update on server
 
-
-16/03
-
-1.data fix inside Excel on team time sheet report
-2.all comma remove ordering fixed and fix data inside excell on my time sheet page
-
-18/03
-1.input box default should be 2 on add time sheet
-2.client want to add input box after click add icon
-3. Client want to set default data when ofholidays selected
+20.24
+1. Old details show on casual leave revert request page
+2. Client want to get work items from calendar when user choose of holiday
 
 
-19/03
+20.24
+1. Old details show on casual leave revert request page
+2. Client want to get work items from calendar when user choose of holiday
 
-1. Client want to modify email content when new team member added and assignment create
-2. Client want to total hour and partner name on view assignment module
-3. All code upload on server
-4. Client want to add team member in assignment according like partner on admin
+05,24
+1.Assignment bugs fixed on patner during creating assignment
+2.filter add on using assignmentname on team timesheet report
 
-20/3
+06,24
+Apply leave filters design and filter implementation
 
-1. Fix date format default on team timesheet  report
-2. Assignment generate ID insert in time sheet user table
+8,24
+1.Apply leave filter design and filter implementation complete,
+2.Clients want to submit a timesheet forcefully when the user goes ,
 
-21/03
+09
+1.Clients want to submit timesheet forcefully when the user goes ,
 
-1. Assignment generate ID insert in time sheet user table
-2. Assignment folder delete problem fixed ( no any problem explain)
+10.
+1.Assignment total hour show on open assignment page
+2.Assignmwnt total hour show on admin according teamwise.
 
-22/03
+18.4
+1.Separate weekly timesheet on admin on admin,partner,and manager,
+2.client want to implement when user apply leave revert on start leave date then all data should be delete.
 
-1.Assignment generate ID insert in time sheet user table
-2. Time sheet save delete bugs fixed
+19.4
+1.Seprate weekly timesheet on admin on admin,patner,and manager complete ,
+2.client want to implement when user apply leave revert on start leave date then all data should be delete.
 
-26/03
-
-1. Time sheet save delete bugs fixed
-2. Client want to display lost data on partner team time sheet (2024)
-
-3. Documentation done
-
-27/03
-
-1. Revert live problem fixed
-2. Balance confirmation
+Sincerely,
+1.Excel button does not show on assignment report page 
+2. Client want to get work items from calendar when user choose of holiday

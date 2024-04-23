@@ -36,11 +36,22 @@ git branch -M main
 git push -u origin main
 
 
-2222222222222222
+222222222222222222222222222222222222222
+Project clone from git Account 
+there are some steps
+1. go to your github account and copy project url
+     https://github.com/Shahid-Raza7463/Login-system.git
+2.Open your terminal or command prompt on your local system.
+    go to directery using cd where do you want like cd path/to/desired/directory
 
+3. for HTTPS url
+  git clone https://github.com/Shahid-Raza7463/Trakafffinal.git
+4.for SSH url
+   git clone git@github.com:Shahid-Raza7463/Login-system.git
 
+5.git clone -b master https://github.com/Shahid-Raza7463/Trakafffinal.git
 
-
+222222222222222222222222222222222222222
 advance command 
 1.git checkout -b main
 2 C:\Shahid Raza\Demo>git remote -v
@@ -55,6 +66,8 @@ git fetch origin main
 git merge origin/main
 
 222222222222222222222222222222222222222
+
+
 
 
 
