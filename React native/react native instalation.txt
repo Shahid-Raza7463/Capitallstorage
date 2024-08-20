@@ -1,0 +1,581 @@
+setup enviroment
+cd C:\Users\KGS-429\Desktop\secondapp\Projects
+cd C:\Users\KGS-429\Desktop\shahidapp\FriendList
+cd C:\Users\KGS-429\Desktop\shahidapp\FriendsList
+
+npx react-native start
+npx react-native start --reset-cache
+
+
+npx react-native run-android
+
+list of devices
+adb devices
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+cd C:\Users\KGS-429\Desktop\db
+cd assets
+
+ipconfig
+npx json-server --watch db.json --host 0.0.0.0
+http://192.168.141.155:3000/users
+http://10.0.2.2:3000
+http://192.168.141.155:3000/users
+192.168.235.155
+192.168.235.155
+192.168.235.155
+192.168.141.155
+192.168.198.155
+192.168.141.155
+192.168.141.155
+
+22222222222222222222222222222222
+api
+https://api.github.com/
+
+
+333333333333333
+
+npm install
+npm update
+
+rm -rf node_modules package-lock.json
+npm install
+
+
+
+https://github.com/anil-sidhu/react-redux-saga/tree/master/src
+222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+1 install choclate 
+   Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+
+2.download node js 
+from site 
+
+
+3. downolad jdk with node js 
+choco install -y nodejs-lts microsoft-openjdk17
+
+
+4. if node js exist then download only jdk 
+choco install -y microsoft-openjdk17
+
+
+5. set jdk path and check donloaded or not 
+path C:\Program Files\Microsoft\jdk-17.0.11.9-hotspot\bin
+
+java -version  to check 
+
+
+6.Install Android Studio now 
+
+
+7 after instalation 
+
+
+8. set path ANDROID_HOME
+C:\Users\KGS-429\AppData\Local\Android\Sdk
+above wla me path set karna hai below wla me nahi 
+
+
+
+
+9.after set path go powershell and paste 
+
+Get-ChildItem -Path Env:\
+
+
+
+10.
+set nice wla me duble  click on path and new path add 
+C:\Users\KGS-429\AppData\Local\Android\Sdk\platform-tools
+
+
+
+12.new application create
+
+22222222222222222222222222222222222222222222222222222222222222
+# react native instalation
+
+Step 1: Creating a folder where do you want project
+
+open powershell using administrate
+
+npm uninstall -g react-native-cli @react-native-community/cli
+
+npx @react-native-community/cli@latest init FriendsList
+
+npx react-native start
+
+npx react-native run-android
+
+222222222222222222222222222222222222222222
+
+
+11 run project 
+npx react-native run-android
+
+
+12 install react native with version 
+
+npx react-native init Projects --version 0.70
+npx react-native init Projects --version 0.70.0
+
+
+
+13.
+npx react-native start
+
+npx react-native run-android --port=8082
+
+
+
+make app 
+222222222222222222222222222222222222
+
+1
+hare point 1 nahi use kare sirf point 2 and 3 use kare 
+1.npx react-native run-android --variant=release
+
+2.cd C:\Users\KGS-429\Desktop\firstapp\FirstProjectApp\android
+3.gradlew assembleRelease
+
+your app on that path 
+1C:\Users\KGS-429\Desktop\firstapp\FirstProjectApp\android\app\build\outputs\apk\release\app-release.apk
+2android\app\build\outputs\apk\release\app-release.apk
+
+
+2222222222222222222222222222222222222222
+rebuild app again 
+cd android
+./gradlew assembleRelease
+
+gradlew.bat assembleRelease
+
+
+2222222222222222222222222222222222
+run your code 
+cd C:\Users\KGS-429\Desktop\firstapp\FirstProjectApp
+
+npx react-native start
+
+npx react-native run-android
+
+22222222222222222222222
+path setting
+1.C:\Program Files\Microsoft\jdk-17.0.11.9-hotspot\bin
+
+2222222222222222222222222222222222222222222
+cd "C:\Users\KGS-429\Desktop\firstapp\FirstProjectApp"
+
+22222222222222222222222222
+npx react-native start --port=8082
+npx react-native run-android --port=8082
+npx react-native start --reset-cache
+
+project related command go to project folder install 
+2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+cd android
+ise clean n kare sabhi download remove kar deta hai fir se npx react-native run-android chalana parta hai 
+gradlew clean
+cd ..
+npx react-native start --reset-cache
+npx react-native run-android
+
+
+
+
+
+
+
+
+222222222222222222222222
+cd C:\Users\KGS-429\Desktop\firstapp\FirstProjectApp
+
+npx react-native start
+
+npx react-native run-android
+
+
+
+
+22222222222222222
+
+1. Shake Gesture (On Emulator or Device)
+Emulator:
+
+For most emulators, you can simulate a shake gesture by pressing Ctrl + M (or Cmd + M on macOS) to open the React Native Developer Menu.
+From the menu, select "Reload" or "Reload JS."
+Device:
+
+Shake the device physically if you're using a real device.
+For some emulators or devices, you can use a shortcut or menu option to simulate a shake.
+2. Keyboard Shortcut
+For iOS Emulator:
+
+Press Cmd + R to reload the app.
+For Android Emulator:
+
+Press Ctrl + M (or Cmd + M on macOS) to open the Developer Menu, then select "Reload."
+
+
+delete / remove / del 
+cd C:\Users\KGS-429\Desktop\shahidapp
+rmdir /s /q AwesomeProject
+rmdir /s /q "C:\Users\KGS-429\Desktop\firstapp"
+C:\Windows\system32>rmdir /s /q "C:\Users\KGS-429\Desktop\firstapp"
+
+rmdir /s /q C:\Users\KGS-429\Desktop\shahidapp\FriendList\android\.gradle
+rmdir /s /q C:\Users\KGS-429\.gradle
+rmdir /s /q C:\Users\KGS-429\.gradle\caches
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+json server install 
+1.create folder 
+2,npm install json-server
+3 npx json-server --version  check 
+4.create file name db.json
+5. add this code below code in db.json
+
+{
+  "posts": [
+    { "id": "1", "title": "a title", "views": 100 },
+    { "id": "2", "title": "another title", "views": 200 }
+  ],
+  "comments": [
+    { "id": "1", "text": "a comment about post 1", "postId": "1" },
+    { "id": "2", "text": "another comment about post 1", "postId": "1" }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
+
+6. run this comaand npx json-server db.json  or fir 
+7 .npx json-server --watch db.json
+
+7. go to this url and you can see hare http://localhost:3000/
+
+
+end hare 
+{
+    "products": [
+        {
+            "id": 1,
+            "name": "Samsung M 40",
+            "color": "black",
+            "price": 15000,
+            "category": "mobile",
+            "brand": "Samsung",
+            "photo": "https://herakoi.com/wp-content/uploads/sites/3/2020/12/dummy-product-09.jpg"
+        },
+        {
+            "id": 2,
+            "name": "Samsung F20",
+            "color": "white",
+            "price": 50000,
+            "category": "Mobile",
+            "brand": "Samsung",
+            "photo": "https://herakoi.com/wp-content/uploads/sites/3/2020/12/dummy-product-09.jpg"
+        },
+        {
+            "id": 3,
+            "name": "T-shirt",
+            "color": "red",
+            "price": 5000,
+            "category": "cloths",
+            "brand": "Nike",
+            "photo": "https://herakoi.com/wp-content/uploads/sites/3/2020/12/dummy-product-09.jpg"
+        },
+        {
+            "id": 4,
+            "name": "Sports Shoes",
+            "color": "red and black",
+            "price": 8000,
+            "category": "rebook",
+            "brand": "Nike",
+            "photo": "https://herakoi.com/wp-content/uploads/sites/3/2020/12/dummy-product-09.jpg"
+        },
+        {
+            "id": 5,
+            "name": "530 laptop",
+            "color": "white",
+            "price": 88000,
+            "category": "laptop",
+            "brand": "HP",
+            "photo": "https://herakoi.com/wp-content/uploads/sites/3/2020/12/dummy-product-09.jpg"
+        },
+        {
+            "id": 6,
+            "name": "earphone - 10",
+            "color": "green",
+            "price": 800,
+            "category": "earphone",
+            "brand": "mivi",
+            "photo": "https://herakoi.com/wp-content/uploads/sites/3/2020/12/dummy-product-09.jpg"
+        },
+        {
+            "id": 7,
+            "name": "black shirt",
+            "color": "black",
+            "price": 1800,
+            "category": "cloths",
+            "brand": "tommy",
+            "photo": "https://herakoi.com/wp-content/uploads/sites/3/2020/12/dummy-product-09.jpg"
+        },
+        {
+            "id": 8,
+            "name": "green shirt",
+            "color": "green",
+            "price": 1900,
+            "category": "cloths",
+            "brand": "tommy",
+            "photo": "https://herakoi.com/wp-content/uploads/sites/3/2020/12/dummy-product-09.jpg"
+        }
+    ]
+}
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+test json using postman / post man 
+
+1.get data 
+1.Get  http://localhost:3000/users
+2.click send
+
+
+2.Insert data 
+1.post http://localhost:3000/users 
+2, go to body and select raw 
+3. id yaha se kabhi bhi nahi bheje id auto generate karta hai ok
+   {
+      "name": "Moshahid",
+      "color": "pink1"
+    }
+
+ clisk send btn 
+
+
+
+3 delete data 
+1.delete  http://localhost:3000/users/ddca 
+hare ddca id hai jo copy karenge get karke 
+
+
+4 Update data 
+1 put http://localhost:3000/users/ddca
+2 hare ddca is id yaani is id ko update karna hai 
+3.go to body and then raw and add below code 
+3. jo bhi field update karna hai uska name and value pass kare 
+   {
+      "name": "Moshahid",
+      "color": "pink1"
+    }
+
+click send button 
+
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+connect json serve with react native 
+1.go to api folder 
+2.open command using administrate
+3.run json server with your current ip address 
+4.ip address will get using this command ipconfig
+ip like 192.168.123.155
+5 start json server using this command like
+ npx json-server --watch db.json --host 0.0.0.0     or     npx json server --host 0.0.0.0 db.json
+6 after that your json server runnig on url like http://localhost:3000/  hare localhost will be replace your ip address 
+like http://192.168.123.155:3000/users
+
+7 after that go your react native project and declare url like const url = 'http://10.0.2.2:3000';
+
+hare 10.0.2.2 use kiya jata hai emulater se connect karne ke liye 
+
+
+  // Function to handle button press
+  const [data, setData] = useState([]);
+  {data.length > 0 ? (
+    data.map((item) => (
+      <View key={item.id} style={styles.item}>
+        <Text>Name: {item.name}</Text> {/* Adjust according to your data structure */}
+        <Text>Value: {item.value}</Text> {/* Adjust according to your data structure */}
+      </View>
+    ))
+  ) : (
+    <Text>No data available</Text>
+  )}
+
+  2222222222222222222222222222222
+  https://shahid-raza7463.github.io/firstjson-api/db.json
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+react devtools installation
+npm install -g react-devtools
+npx react-devtools
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+navigation installation  
+
+1st step run this 3 command
+
+for stack navigation / for moving beetween screen
+npm install @react-navigation/native @react-navigation/native-stack
+npm install react-native-screens react-native-safe-area-context
+npx react-native run-android
+
+2nd step run this below command 
+11111111
+
+for tab navigation /  bottom navigation
+npm install @react-navigation/bottom-tabs
+
+for top tab
+npm install @react-navigation/material-top-tabs react-native-tab-view
+npm install react-native-pager-view
+
+for drawer 
+npm install @react-navigation/drawer
+npm install react-native-gesture-handler react-native-reanimated
+
+npm install metro-react-native-babel-preset --save-dev
+
+
+
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+npx react-native doctor
+
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+after erorr
+1st way to fix it 
+
+cd C:\Users\KGS-429\Desktop\shahidapp\FriendList
+rmdir /s /q .gradle
+
+
+
+if exist C:\Users\KGS-429\.gradle\caches rmdir /s /q C:\Users\KGS-429\.gradle\caches
+rmdir /s /q C:\Users\KGS-429\.gradle\caches
+
+
+rmdir /s /q C:\Users\KGS-429\Desktop\secondapp\Projects\android\.gradle
+rmdir /s /q C:\Users\KGS-429\Desktop\secondapp\Projects\android\app\build
+rmdir /s /q C:\Users\KGS-429\Desktop\secondapp\Projects\android\build
+
+
+cd C:\Users\KGS-429\Desktop\shahidapp\FriendList
+rmdir /s /q node_modules
+
+
+main part of this go to android application
+sdk manager
+sdk tools
+find ndk side by side 
+aur yaha is section me sirf ek hi sdk install rahega ager 2 hai to ek delete kar de abhi 26.1 karke version hai 
+
+
+
+
+222222222
+ 2nd way to fix it 
+
+:: Navigate to the project directory
+cd C:\Users\KGS-429\Desktop\secondapp\Projects
+
+
+
+:: Navigate to the Android directory within the project
+cd C:\Users\KGS-429\Desktop\secondapp\Projects\android
+
+:: Clean build artifacts
+gradlew clean
+
+:: Delete build folders manually if needed
+rmdir /s /q C:\Users\KGS-429\Desktop\secondapp\Projects\android\build
+
+
+:: Delete .gradle directory if needed
+rmdir /s /q C:\Users\KGS-429\Desktop\secondapp\Projects\android\.gradle
+
+:: Navigate back to the project root
+cd C:\Users\KGS-429\Desktop\secondapp\Projects
+
+:: Run React Native doctor to check for issues
+npx react-native doctor
+
+:: Run the project
+npx react-native run-android
+
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+* What went wrong:
+A problem occurred evaluating project ':react-native-reanimated'.
+> Could not get unknown property 'hermesEnabled' for project ':app' of type org.gradle.api.Project.
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+gradlew build
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+expo install expo-blur
+
+npm install react-native-vector-icons
+
+npm install @react-navigation/elements
+
+react-native-vector-icons/Ionicons
+
+
+
+rm -rf node_modules
+rm package-lock.json  # or yarn.lock if using Yarn
+npm install            # or yarn install if using Yarn
+
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+222222222222222222222222222222222222222222222222222222222222222222222222222222
+
+
+{
+  "users": [
+    {
+      "name": "shahid raza khan",
+      "color": "pink dd",
+      "image": "FB_IMG_1545560289018.jpg",
+      "id": "72b4"
+    },
+    {
+      "name": "arif",
+      "color": "redddddddddddddd",
+      "id": "03e4"
+    },
+    {
+      "name": "moshahid ba",
+      "color": "blue",
+      "id": "0a35"
+    },
+    {
+      "id": "1679",
+      "name": "jumma",
+      "color": "bbb"
+    },
+    {
+      "id": "8dbb",
+      "name": "jumma",
+      "color": "bbb"
+    },
+    {
+      "id": "a1de",
+      "name": "mohan",
+      "color": "888"
+    },
+    {
+      "id": "d3fc",
+      "name": "mohan",
+      "color": "888"
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+
+
 task name 
 
 10 jan 2024
@@ -41,31 +43,431 @@ test staff why comming
 patner acess assignment time report
 staff code on team member 
 seprated timesheet on weeklist
-
-22222222222222222222222222222222222222222222222222222 to do new 22222222222222222222222222
-reject reasion will be show on email 
-reject reason will be display inside rejected information 
-filter should be aprover wize in applyleave on admin 
-everywhere client want to export file name after download
-open assignment total show 198 and in excell 199 check it 
-leave not apply on sunday
-1. apply leave page :- after filter data should be date wise 
-
-6.sireal number missing
-//   8 => 100009
-//   10 => 100011
-//   11 => 100012
-//   12 => 100013
-//   90 => 100091
-//   323 => 100324  done
-
-
-knowlege base modification 
-assignment report tab delay to load
-1. client want to add patner as a secondary in assignment 
-
 4.old details on casual leave revert 
 2.when select offholiday then work item get automatic from holidays 
+1. client want to add patner as a secondary in assignment 
+dev khurana delete problem 
+assignment report tab delay to load
+
+2.submitted timesheet staffid in filter box
+3 open assignment report excell fixed
+4 closed assignment report excell fixed
+1.Dashboard then timesheet request box then style want to fix
+5.knowlege base modification (old file name want )
+6.assignment craete time leadpatner will be mandatery
+7.new teammember me staff code
+
+
+seprately timesheet then count mis match 
+reject reasion will be show on email allready done 
+reject reason will be display inside rejected information  already done 
+
+open assignment total show 198 and in excell 199 check it 
+
+
+
+1. apply leave page :- after filter data should be date wise pen
+
+
+applileave me staff code
+timesheet updated current time tak reminder button 
+content should be not cut on timesheet request page
+filter should be aprover wize in applyleave on admin  not needed 
+
+1.Content should be not cut on timesheet request page
+2.client wants to stop leave apply on sunday
+3.everywhere client want to export file name after download
+4.remove accending icon frm all places
+
+edit button in first column on assignmnt report page 
+
+Done
+1.Assignment duplicate problem fixed 
+2.Add leadpartner problem fixed 
+3.add teammember button on assignmentview page 
+downloaded successfully text change and claient want to descending order / latest wise in excell
+526 dublicate
+476 dublicate 
+
+22222222222222222222222222222222222222222222222222222 to do new 22222222222222222222222222222222
+6.sireal number missing
+100009
+100011  done 
+100012  done 
+100013  done 
+100091  done 
+100324  done
+
+Assignmentmaping table
+array:17 [▼
+  8 => 100009
+  13 => 100014
+  29 => 100030
+  41 => 100042
+  43 => 100044
+  101 => 100102
+  120 => 100121
+  133 => 100134
+  145 => 100146
+  163 => 100164
+  172 => 100173
+  183 => 100184
+  250 => 100251
+  260 => 100261   exist
+  320 => 100321
+  351 => 100352
+  459 => 100460
+]
+
+
+Assignmentbudegeting table
+array:17 [▼
+  8 => 100009
+  459 => 100460
+]
+
+
+
+
+
+
+
+
+leave status wants mohit sir   
+in profile, somethings update
+applyleave
+
+
+ANK100366
+app\Http\Controllers\AssignmentfolderfileController.php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+unique id validation
+
+optional email id requared in excell 
+positive and nagative requared when negative then amount not requared 
+posetive and nagetive in excell 
+financial year change on mail formate 
+
+
+user wise access defined to show 
+
+
+client want to link share to user show that user can see particular page 
+
+
+
+name of entyty in excel cloumn add 
+
+
+auto remander every three days 
+
+
+one column want to add for responce type like nagetive and posetive 
+
+
+clent want to show and hide functionality in excell
+
+link want to highlight on mail like click hare link 
+
+
+
+change text power by capitall to vsa 
+
+otp remove on accept and refuse button 
+
+otp on shared link 
+
+client want to after submit will be send mail 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.Optional email I'd column in Excel
+2.Clients want to add a response column in Excel for positive and negative responses. When negative is selected, the corresponding amount should not be included
+3.The financial year will be in excel like 2023-2024
+4.User wise access to show balance confirmation page 
+5.client wants to share a link with users so they can view a specific page 
+6.Add another column for the name of the entity in Excel
+7.Clients want to send auto reminders on every 5 days till 25 days 
+8.Clients want to implement show and hide functionality within Excel, not on the portal
+9.In emails, clients want to highlight the 'click here' link and
+10.Clients want to change text powerd by capitall to powerd by vsa
+11.Remove OTP from the accept and refuse buttons
+12.Admin wants to display which users have sent emails for balance confirmation on the admin panel
+13 If balance confirmation is closed, then the assignment will be closed; otherwise, it will remain open
+
+
+
+
+
+
+
+Close confirmation assignment wise on portal
+
+
+Click hare link want to show before signatures
+Delete and edit before send mail
+
+
+On refuse buttons client want to repeat content
+
+Attachment will be excell and word doc wtc
+
+Vertical 5 field will be on refuse
+
+On Every 5 days one reminder will send till 15 days
+
+Confirmation closed then all functionality remove
+
+Total leaves taken cl el eyc user wise
+bank amount not displayed , template freez, single send button, client sharing confirmation screen.
+
+
+
+
+1.Optional email I'd column in Excel
+2.Clients want to add a response column in Excel for positive and negative responses. When negative is selected, the corresponding amount should not be included
+3.The financial year will be in excel like 2023-2024
+4.User wise access to show balance confirmation page 
+5.client wants to share a link with users so they can view confirmation screen.
+6.Add another column for the name of the entity in Excel
+7.Clients want to send auto reminders on every 5 days till 25 days 
+8.Clients want to implement show and hide functionality within Excel, not on the portal
+9.In emails, clients want to highlight the 'click here' link and show before signatures
+10.Clients want to change text powerd by capitall to powerd by vsa
+11.Remove OTP from the accept and refuse buttons
+12.Admin wants to display which users have sent emails for balance confirmation on the admin panel
+13 If balance confirmation is closed, then the assignment will be closed; otherwise, it will remain open
+14.Clients want to have delete and edit functionality in case of wrong data uploaded via Excel
+15.Upon clicking the refuse button, clients want the ability to repeat content, with all fields being displayed vertically (discussion with Atishay Jain)
+16.Attachments should be in Excel, Word, or any other compatible format
+17 When balance confirmation is closed, all functionalities will be disabled
+
+
+
+
+
+
+
+Balance confirmation
+2222222222222222222222222222222222222222222222222222222222222222222222
+
+1 Users want the mail content to be displayed on the confirmation page, and while accepting and refusing further options (for amount, remarks and attachment) to be displayed on the same page.  (done)
+
+2.While closing the assignment, user will get error / notified if in case balance confirmation module is not closed.  (done)
+
+3.Option for closing the confirmation module should be there, assignment wise. Closing module will make all the functionality under that module disabled.  (done)
+
+4.Edit and Delete option should be available for the entries, before sending confirmation mail.                         (done)
+
+5.OTP functionality during confirmation to be removed. (make it configurable)  (discuss)
+
+6.Confirmation link to be more highlighted in the mail body.  (done)
+
+7.A column for “Entity Name” to be added in Excel Template.  (done)  set key                (done)
+
+8.The year column in the excel template should take input as 2023-24 or 2022-23 etc. not as single year 2023 or 2024.  (done)
+
+9.Amount show & hide option to be included in the excel template. “Show” will work as show amount in the mail, and “Hide” will work as hide amount in the mail      (done)
+
+10.A column to be added in excel template for a secondary email I’d, i.e., optional and not compulsory.   (done)
+
+11.secondary mail also recieved mail and approve and reject 
+
+
+current requirment
+222222222222222222222222222222222222222222222222222222222222222222222
+
+# on mail 
+1.vishal agerwal all access acording partner
+2.rejoining     (in process)
+
+
+# discuss with me 
+3.all places where report generate client want to staff code
+4.Missing assignment 553 want to fixed 
+
+
+2222222222222222222222222
+validation on edit fun
+success message remove after 10 sec
+
+
+
+
+
+2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+1.While closing confirmation module OTP is required from Partner as a validation.
+3.Option for file uploading should be there while Accepting the Confirmation (optional).
+4.We can filter the report based on the “Confirmation Status” and have the option to export the same in Excel.
+2.Once the confirmation module is closed, the responder (Debtor, Creditor, or Bank) cannot respond to the confirmation mail; i.e., the link should expire.  (updated on server)
+5.No toggle for Hide and Show of amount in the module it should be only in the Excel File (updated on server)
+ 
+2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+bugs 
+
+When the user uploads an Excel file, the preview isn't displaying properly.
+The user is able to upload the same email ID as both 'Primary Email' and 'Secondary Email'.  (skip kardo )
+We can filter the report based on the “Confirmation Status” and have the option to export the same in Excel  (discuss atisay )
+Option for file uploading should be there while Accepting the Confirmation (optional).
+
+
+
+in meating to balance confirmn
+###########################################################################
+1.auto remainder 3 days 
+2.on edit, 4 condition on edit like date ,amount
+3.after click reject button client want to pop up on same page 
+4.mail want to sent  by no reply id
+5.Attachment latter add for client request latter
+
+
+2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+
+
+to do 
+2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+2.on my timesheet tab = client want to filter according employyee name (discuss)
+
+
+7.timesheet block days want to decrease now days is 14 days 
+9.some modification in timesheet not fill reminder
+10.count leave me, sunday dont want to count 
+11 assignment code should be seprated from assignment name column 
+12 double click submit button in assignment created form page
+13.wednesday ,tuesday, reminder
+14.vsademo bugs = on my timesheet page after searching 
+15 apr to march working days count 
+16 leave count will be come after submitted timesheet 
+17.are you sure on approved and reject button 
+18. Add assignment button on  http://127.0.0.1:8000/viewclient/136 page 
+35. leave revert date fix using timesheet
+36.timesheet rejected date 
+37.rejected timesheet page per , filter using status 
+38.timesheet rejected
+13 timesheet blocked before valid date on mail
+14.profile update logs want to create
+15 remove rejoining column from team edit
+33.new teammembet=r cearete time will be problem to assign staffcode
+34.clent want to enable timesheet save functionality before 6 pm to going users
+open assignment accending order after export open assignmet
+dublicate teammember add creating assignment and when partne creating assignment on that time lead partner mandatry that partner
+if user inactive then user name should be exist in employee name input box on team timesheet report
+1. if user have leaveing date thne not will be active by admin 
+
+2.when admin inactive user from assignment then other user can see that user but client want to not show inactive user to another user
+
+3.on timesheet report page ,when download then missing data is comming
+bugs 
+
+http://127.0.0.1:8000/assignmentlist/OFF100004
+
+
+4.timesheet report page ,when search using employee name then inactive user want to show hare 
+5.limited review bank of broda assignmnet name problem 
+6 Raj kumar ( ) timesheet reject then want to fill 2 client timesheet
+
+
+
+
+
+
+done
+2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+4.offholidays want to hide instead of suterday
+5.client want to display warning message on timesheet create page when user timesheet rejected
+19.timesheet request remark should be mandatory currently it gets submitted after entering a space.
+20.Add timesheet request button will be show according current timesheet request 
+2.client want to attachment file on timesheet request create form
+19.client want to change name Global Fairs & Media P. Ltd
+20.leave can not apply before submitted timesheet date, 11 septamber 2023 and joining date , but timesheet rejected then it will be apply only that days
+23.when submitted timesheet rejected then user can aplly leave on that days and submitted timesheet overwrite according leave  
+12 Assignment viewer list on assignmentview  page to view user only
+28.Submitted timesheet rejected edit functionality modification 
+29 on UDIN List page  udin documentation date implementation.Currently created date coming
+30.When reverting the leave, in the partner login it is not showing the correct data.
+31.client want to delete assignment id WAV100525 and continue with WAV100526 assignment id
+
+
+
+32. vsalive per testvsa ek assignment hai use hatana hai aur ye assignment kisi aur ko allocate karna hai
+
+
+
+
+1.The client wants the date format to be 01-01-2024 on the webpage and also 01-01-2024 in Excel.
+2.The client wants a consistent design applied throughout the entire table.
+3.The client wants employee code, assignment code, client code, and partner code to be displayed in separate columns.
+4.the sorting icon should be remove from All table and only exist one column in table 
+5.The client wants to display a popup message when clicking on the "View Details" text in the Reason and Remark columns on the Apply Leave and Timesheet Request Listing pages.
+6.the client wants to enable sorting by the Date column in the table. if date column exist then oyherwise not 
+
+
+
+1.Client want to remove employee name and staff code / employee code from timesheet report section
+2.Client want to fixed revert leave date problem
+3.Permotion/rejoining list report want to implement 
+
+4.All bugs fixed raised by manoj and harish
+5.All code uploaded on vsalive and tested by me 
+ 
+
+6.On apply leave page, Client want to implement alart box on click approved and reject button 
+7.Client want to implement checkbox on assignment create page so that user submit form without select teammemebr currently user can not create assignment without teammember selection 
+
+
 
 
 

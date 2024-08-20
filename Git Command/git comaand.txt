@@ -1,25 +1,51 @@
-2222222222222222222222
-Basic command start
+#################################################################################
+1.Go to git hub and create repositery 
+2.open command line using administrate
 
-go to folder and open hare command prompt
-git configration gloably
+git init
+git add README.md ye run n kare skip it 
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Shahid-Raza7463/reactnative-app.git
+git push -u origin main
 
-$ git config --global user.name "Shahid Raza"
-$ git config --global user.email shahidraza7463@gmail.com
-$ git config --list
 
-222222222222222222222
+if allready set repositry then run below command
+git remote set-url origin https://github.com/Shahid-Raza7463/reactnative-app.git
+
+######################################################################################
+
+
+#################################################################################
+1 existing repositery ko push karna ho to run below command
+
+git remote add origin https://github.com/Shahid-Raza7463/reactnative-app.git
+git branch -M main
+git push -u origin main
+
+######################################################################################
 it is first way in this way , your code pushed master instead main branch
 git init
 git add .
 $ git commit -m "first commit" or $ git commit -a -m "add git command"
-$ git remote add origin https://github.com/Shahid-Raza7463/practice_at_capitall.git
+$ git remote add origin https://github.com/Shahid-Raza7463/e-dashboardreact.git
 $ git push origin master
 $ git branch  // all branch name
 $ git branch -d main
+ git remote set-url origin https://github.com/Shahid-Raza7463/ReactexpertaffDashboardApp-.git
 
+check kaun sa repositery connected hai 
+2 C:\Shahid Raza\Demo>git remote -v
+output
+        origin  https://github.com/Shahid-Raza7463/Demo.git (fetch)
+        origin  https://github.com/Shahid-Raza7463/Demo.git (push)
+
+ git remote set-url origin https://github.com/Shahid-Raza7463/ReactCrudeAppBackend
 Basic command end hare 
-222222222222222222222
+######################################################################################
+
+
+######################################################################################
 it is second way in this way , your code pushed main instead master branch 
 create a new repository on the command line
 git init
@@ -34,9 +60,33 @@ push an existing repository from the command line
 git remote add origin https://github.com/Shahid-Raza7463/Capitalldemo.git
 git branch -M main
 git push -u origin main
+######################################################################################
+
+######################################################################################
+Basic command start
+
+go to folder and open hare command prompt
+git configration gloably
+
+$ git config --global user.name "Shahid Raza"
+$ git config --global user.email shahidraza7463@gmail.com
+$ git config --list
 
 
-222222222222222222222222222222222222222
+
+
+######################################################################################
+
+Important point for any project clone from github then 
+1.Clone project from git
+2.add .env file from your project ok becouse git does not have .env file 
+    this two step is very important if after that any error then follow below point 
+3.composer install
+4.composer dump-autoload
+
+######################################################################################
+
+######################################################################################
 Project clone from git Account 
 there are some steps
 1. go to your github account and copy project url
@@ -51,21 +101,46 @@ there are some steps
 
 5.git clone -b master https://github.com/Shahid-Raza7463/Trakafffinal.git
 
-222222222222222222222222222222222222222
+######################################################################################
+
+
+######################################################################################
 advance command 
 1.git checkout -b main
 2 C:\Shahid Raza\Demo>git remote -v
 output
         origin  https://github.com/Shahid-Raza7463/Demo.git (fetch)
         origin  https://github.com/Shahid-Raza7463/Demo.git (push)
+
+ git remote set-url origin https://github.com/Shahid-Raza7463/ReactCrudeAppBackend
+
 git branch main
+git branch -d vsa (Delete)
 git checkout main
 git checkout -b main
 git pull origin main
 git fetch origin main
 git merge origin/main
 
-222222222222222222222222222222222222222
+######################################################################################
+Bitbucket
+1.git clone https://capitall-india-admin@bitbucket.org/capitall-india/vsa.git
+3.cd vsa
+2.git checkout vsa-shahid
+4.git add .
+5.git commit -m "first commit"
+6.git push origin vsashahid
+end hare 
+
+
+2.git fetch -a   not used 
+## reverse from git commited
+git rm -r --cached public/
+git add .gitignore
+git commit -m "Update .gitignore to ignore the public folder"
+
+
+######################################################################################
 
 
 

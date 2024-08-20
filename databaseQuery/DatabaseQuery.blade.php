@@ -17,14 +17,189 @@
 {{-- *   --}}
 {{--  Start Hare --}}
 {{--  Start Hare --}}
-{{-- *   --}}
+{{-- *regarding beetween  --}}
 {{--  Start Hare --}}
+SELECT * FROM `timesheetusers` WHERE `date` BETWEEN '2024-07-10' AND '2024-07-20' AND `createdby` = 932
 {{--  Start Hare --}}
-{{-- *   --}}
+using search tab using date column 
+2024-07-10,2024-07-20
+{{-- * teammembers table   --}}
 {{--  Start Hare --}}
+
+$users = DB::table('teammembers')
+->where('', 887)
+->first();
+dd($users);
+
+$users = (object) [
+'id' => 887,
+'staffcode' => "P10010",
+'staffcodenumber' => "10010",
+'mentor_id' => null,
+'title_id' => null,
+'team_member' => "NA",
+'entity' => " ",
+'employment_status' => null,
+'mobile_no' => "11111111",
+'emailid' => "na@vsa.co.in",
+'department' => null,
+'personalemail' => null,
+'profilepic' => null,
+'fathername' => null,
+'dateofbirth' => "2023-09-06",
+'pancardno' => null,
+'emergencycontactnumber' => null,
+'adharcardnumber' => null,
+'aadharupload' => null,
+'nameasperbank' => null,
+'nameofbank' => null,
+'bankaccountnumber' => null,
+'ifsccode' => null,
+'cancelcheque' => null,
+'mothername' => null,
+'mothernumber' => null,
+'fathernumber' => null,
+'panupload' => null,
+'address_proof' => null,
+'designation' => null,
+'addressupload' => null,
+'role_id' => 13,
+'teamlead' => null,
+'qualification' => null,
+'appointment_letter' => null,
+'nda' => null,
+'permanentaddress' => null,
+'communicationaddress' => null,
+'joining_date' => "2023-09-06",
+'rejoining_date' => null,
+'leavingdate' => null,
+'reasonofleaving' => null,
+'dateofresign' => null,
+'created_by' => 485,
+'location' => null,
+'gender' => "Male",
+'linkedin' => null,
+'about' => null,
+'status' => 0,
+'verify' => null,
+'relievingstatus' => null,
+'category' => null,
+'cost_hour' => null,
+'salary_range' => "0",
+'monthly_gross_salary' => 0,
+'pf_applicable' => null,
+'timesheet_applicable' => null,
+'taxtds' => null,
+'taxgrosssalary' => null,
+'taxpf' => null,
+];
+
+DB::table('teammembers')->insert([
+'id' => $users->id,
+'staffcode' => $users->staffcode,
+'staffcodenumber' => $users->staffcodenumber,
+'mentor_id' => $users->mentor_id,
+'title_id' => $users->title_id,
+'team_member' => $users->team_member,
+'entity' => $users->entity,
+'employment_status' => $users->employment_status,
+'mobile_no' => $users->mobile_no,
+'emailid' => $users->emailid,
+'department' => $users->department,
+'personalemail' => $users->personalemail,
+'profilepic' => $users->profilepic,
+'fathername' => $users->fathername,
+'dateofbirth' => $users->dateofbirth,
+'pancardno' => $users->pancardno,
+'emergencycontactnumber' => $users->emergencycontactnumber,
+'adharcardnumber' => $users->adharcardnumber,
+'aadharupload' => $users->aadharupload,
+'nameasperbank' => $users->nameasperbank,
+'nameofbank' => $users->nameofbank,
+'bankaccountnumber' => $users->bankaccountnumber,
+'ifsccode' => $users->ifsccode,
+'cancelcheque' => $users->cancelcheque,
+'mothername' => $users->mothername,
+'mothernumber' => $users->mothernumber,
+'fathernumber' => $users->fathernumber,
+'panupload' => $users->panupload,
+'address_proof' => $users->address_proof,
+'designation' => $users->designation,
+'addressupload' => $users->addressupload,
+'role_id' => $users->role_id,
+'teamlead' => $users->teamlead,
+'qualification' => $users->qualification,
+'appointment_letter' => $users->appointment_letter,
+'nda' => $users->nda,
+'permanentaddress' => $users->permanentaddress,
+'communicationaddress' => $users->communicationaddress,
+'joining_date' => $users->joining_date,
+'rejoining_date' => $users->rejoining_date,
+'leavingdate' => $users->leavingdate,
+'reasonofleaving' => $users->reasonofleaving,
+'dateofresign' => $users->dateofresign,
+'created_by' => $users->created_by,
+'location' => $users->location,
+'gender' => $users->gender,
+'linkedin' => $users->linkedin,
+'about' => $users->about,
+'status' => $users->status,
+'verify' => $users->verify,
+'relievingstatus' => $users->relievingstatus,
+'category' => $users->category,
+'cost_hour' => $users->cost_hour,
+'salary_range' => $users->salary_range,
+'monthly_gross_salary' => $users->monthly_gross_salary,
+'pf_applicable' => $users->pf_applicable,
+'timesheet_applicable' => $users->timesheet_applicable,
+'taxtds' => $users->taxtds,
+'taxgrosssalary' => $users->taxgrosssalary,
+'taxpf' => $users->taxpf,
+'created_at' => now(),
+'updated_at' => now(),
+]);
+
+##############################################
+
+
+
+INSERT INTO `teammembers` (
+`id`, `staffcode`, `staffcodenumber`, `mentor_id`, `title_id`, `team_member`,
+`entity`, `employment_status`, `mobile_no`, `emailid`, `department`, `personalemail`,
+`profilepic`, `fathername`, `dateofbirth`, `pancardno`, `emergencycontactnumber`,
+`adharcardnumber`, `aadharupload`, `nameasperbank`, `nameofbank`, `bankaccountnumber`,
+`ifsccode`, `cancelcheque`, `mothername`, `mothernumber`, `fathernumber`, `panupload`,
+`address_proof`, `designation`, `addressupload`, `role_id`, `teamlead`, `qualification`,
+`appointment_letter`, `nda`, `permanentaddress`, `communicationaddress`, `joining_date`,
+`rejoining_date`, `leavingdate`, `reasonofleaving`, `dateofresign`, `created_by`,
+`location`, `gender`, `linkedin`, `about`, `status`, `verify`, `relievingstatus`,
+`category`, `cost_hour`, `salary_range`, `monthly_gross_salary`, `pf_applicable`,
+`timesheet_applicable`, `taxtds`, `taxgrosssalary`, `taxpf`, `created_at`, `updated_at`
+) VALUES (
+887, 'P10010', '10010', NULL, NULL, 'NA', NULL, '11111111', 'na@vsa.co.in', NULL,
+NULL, NULL, NULL, '2023-09-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 13, NULL, NULL, NULL, NULL,
+NULL, '2023-09-06', NULL, NULL, NULL, NULL, '485', NULL, 'Male', NULL, NULL, 0,
+NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, '2023-09-06 12:06:54', '2023-11-23 17:13:02'
+);
+
 {{--  Start Hare --}}
-{{-- *   --}}
+{{-- *insert data into table / insert data / client table    --}}
 {{--  Start Hare --}}
+
+INSERT INTO `clients` (
+`id`, `parent_id`, `client_name`, `name`, `clientdesignation`, `client_code`,
+`kind_attention`, `emailid`, `password`, `c_address`, `scopeofwork`, `c_state`,
+`mobileno`, `associatedfrom`, `leadpartner`, `panno`, `legalstatus`, `tanno`,
+`gstno`, `dateofincorporation`, `otherpartner`, `companygroup`, `engagementpartner`,
+`clientdob`, `createdbyadmin_id`, `updatedbyadmin_id`, `status`, `classification`,
+`otherclassification`, `capital`, `borrowings`, `networth`, `created_at`, `updated_at`
+) VALUES (
+134, NULL, 'Leave', NULL, NULL, '10091', NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0,
+NULL, NULL, NULL, NULL, NULL, '2023-09-20 06:25:19', NULL
+);
+
 {{--  Start Hare --}}
 {{-- * regarding chatgpt text    --}}
 {{--  Start Hare --}}

@@ -1,642 +1,2048 @@
 {{-- *  --}}
 {{--  Start Hare  --}}
-{{-- *  --}}
 {{--  Start Hare  --}}
 {{-- *  --}}
 {{--  Start Hare  --}}
-{{-- * regarding filter functionality   --}}
+{{--  Start Hare  --}}
+{{-- *  --}}
+{{--  Start Hare  --}}
+{{--  Start Hare  --}}
+{{-- *  --}}
+{{--  Start Hare  --}}
+{{--  Start Hare  --}}
+{{-- *  --}}
+{{--  Start Hare  --}}
+{{--  Start Hare  --}}
+{{-- *  --}}
+{{--  Start Hare  --}}
+{{--  Start Hare  --}}
+{{-- * regarding are you sure  --}}
+{{--  Start Hare --}}
+
+<button type="submit" style="float: right" class="btn btn-success" id="saveform">Save
+</button>
+
+<script>
+    $(document).ready(function() {
+        $('#saveform').click(function(event) {
+            var reasoninputvalve = $('#reasoninput').val().trim();
+
+            if (reasoninputvalve === "") {
+                alert('Please enter a reason. It is mandatory.');
+                event.preventDefault();
+                return false;
+            }
+
+            // Confirmation prompt
+            var confirmSubmit = confirm('Are you sure you want to submit ?');
+            if (!confirmSubmit) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>
+{{--  Start Hare --}}
+{{-- *  --}}
+{{--  Start Hare  --}}
+
+<script>
+    $(document).ready(function() {
+        var createdBy = @json($timesheetData[0]->createdby);
+        var userRoleId = @json(Auth::user()->role_id);
+        var userTeammemberId = @json(Auth::user()->teammember_id);
+
+        // Determine if the column 15 should be included
+        var includeColumn15 = (userRoleId != 11 && userTeammemberId == createdBy);
+
+        $('#examplee').DataTable({
+            "order": [
+                [3, "desc"]
+            ],
+            searching: false,
+            columnDefs: [{
+                targets: includeColumn15 ? [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] :
+                    [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                orderable: false
+            }],
+            buttons: []
+        });
+    });
+</script>
+{{--  Start Hare  --}}
+{{-- *  --}}
+{{--  Start Hare  --}}
+<script>
+    $('#examplee').DataTable({
+        "pageLength": 10,
+        "dom": 'Bfrtip',
+        "order": [
+            [0, "desc"]
+        ],
+
+        columnDefs: [{
+            targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            orderable: false
+        }],
+
+        buttons: [{
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: ':visible',
+                format: {
+                    body: function(data, row, column, node) {
+                        // it should be column number 2
+                        if (column === 0) {
+                            // If the data is a date, extract the date without HTML tags
+                            var cleanedText = $(data).text().trim();
+                            var dateParts = cleanedText.split(
+                                '-');
+                            // Assuming the date format is yyyy-mm-dd
+                            if (dateParts.length === 3) {
+                                return dateParts[2] + '-' + dateParts[1] + '-' +
+                                    dateParts[0];
+                            }
+                        }
+                        if (column === 1) {
+                            var cleanedText = $(data).text().trim();
+                            return cleanedText;
+                        }
+                        if (column === 9) {
+                            var cleanedText = $(data).text().trim();
+                            return cleanedText;
+                        }
+                        return data;
+                    }
+                }
+            },
+            text: 'Export to Excel',
+            className: 'btn-excel',
+        }, ]
+    });
+</script>
+{{--  Start Hare  --}}
+{{-- * regarding data table / regarding datatable  --}}
+{{--  Start Hare --}}
+{{-- add this code on top of page  --}}
+<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" rel="stylesheet">
+
+
+
+
+
+{{-- add this code on end  of page  --}}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#examplee').DataTable({
+            "pageLength": 10,
+            "dom": '1Bfrtip',
+            "order": [
+                [5, "desc"]
+            ],
+            columnDefs: [{
+                targets: [1, 2, 3, 4, 6, 7, 8, 9, 10],
+                orderable: false
+            }],
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                text: 'Export to Excel',
+                className: 'btn-excel',
+            }, ]
+        });
+
+        $('.btn-excel').hide();
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#teamexamplee').DataTable({
+            "pageLength": 10,
+            "dom": '1Bfrtip',
+            "order": [
+                [5, "desc"]
+            ],
+            columnDefs: [{
+                targets: [1, 2, 3, 4, 6, 7, 8, 9, 10],
+                orderable: false
+            }],
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                text: 'Export to Excel',
+                className: 'btn-excel',
+            }, ]
+        });
+
+        $('.btn-excel').hide();
+    });
+</script>
+{{-- *regarding date formate   --}}
 {{--  Start Hare  --}}
 <script>
     $(document).ready(function() {
-        // Common function to render table rows
-        function renderTableRows(data) {
-            $('table tbody').html("");
-            $('#clickExcell').show();
+        $('#examplee').DataTable({
+            dom: 'Bfrtip',
+            "order": [
+                [0, "desc"]
+            ],
 
-            if (data.length === 0) {
-                $('table tbody').append('<tr><td colspan="8" class="text-center">No data found</td></tr>');
+            columnDefs: [{
+                targets: [0, 1, 3, 4, 5, 6, 7, 8, 9, 10],
+                orderable: false
+            }],
+
+            buttons: [{
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, ':visible']
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    filename: 'Timesheet Request List',
+                    // exportOptions: {
+                    //     columns: ':visible'
+                    // }
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function(data, row, column, node) {
+                                if (column === 0) {
+                                    var cleanedText = $(data).text().trim();
+                                    return cleanedText;
+                                }
+                                if (column === 1) {
+                                    var dateParts = data.split('-');
+                                    var monthNumbers = {
+                                        'Jan': '01',
+                                        'Feb': '02',
+                                        'Mar': '03',
+                                        'Apr': '04',
+                                        'May': '05',
+                                        'Jun': '06',
+                                        'Jul': '07',
+                                        'Aug': '08',
+                                        'Sep': '09',
+                                        'Oct': '10',
+                                        'Nov': '11',
+                                        'Dec': '12'
+                                    };
+                                    var day = dateParts[0];
+                                    var month = monthNumbers[dateParts[1]];
+                                    var year = dateParts[2];
+                                    return day + '-' + month + '-' + year;
+                                }
+                                if (column === 3) {
+                                    var cleanedText = $(data).text().trim();
+                                    return cleanedText;
+                                }
+                                return data; // Return other data unchanged
+                            }
+                        }
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    filename: 'Timesheet Request List',
+                    exportOptions: {
+                        columns: [0, 1, 2, 5]
+                    }
+                },
+                'colvis'
+            ]
+        });
+    });
+</script>
+
+{{--  Start Hare  --}}
+{{-- * regarding value / ajax  --}}
+{{--  Start Hare  --}}
+<script>
+    $(document).ready(function() {
+        $("#aircraft_name").change(function() {
+            var air_id = $(this).val();
+            alert(air_id);
+            $("#aircraft_id").val(air_id);
+        });
+    });
+</script>
+
+<div class="col-4">
+    <div class="form-group">
+        <label class="font-weight-600">Login Name</label>
+        <input type="text" readonly name="email" id="aircraft_id" value="{{ $teammember->email ?? '' }}"
+            class="form-control" placeholder="Enter Email">
+    </div>
+</div>
+
+<select class="language form-control" id="aircraft_name" name="teammember_id"
+    @if (Request::is('teamlogin/*/edit')) > <option disabled
+style="display:block">Please Select One</option>
+
+@foreach ($teammemberlist as $teammemberlistData)
+<option value="{{ $teammemberlistData->id }}"
+    {{ $teammember->teammemberlist->id == $teammemberlistData->id ?? '' ? 'selected="selected"' : '' }}>
+    {{ $teammemberlistData->teammemberlist }}</option>
+@endforeach
+
+
+@else
+<option></option>
+<option value="">Please Select One</option>
+@foreach ($teammemberlist as $teammemberlistData)
+<option value="{{ $teammemberlistData->emailid }}">
+    {{ $teammemberlistData->team_member }} ({{ $teammemberlistData->staffcode }})</option>
+
+@endforeach @endif
+    </select>
+    {{--  Start Hare  --}}
+    {{-- *  --}}
+    {{--  Start Hare  --}}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        //jQuery.noConflict();
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    jQuery('#profile-img-tag').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        jQuery("#profile-img").change(function() {
+            readURL(this);
+        });
+    </script>
+
+    <script>
+        // Add event listener for 'To' date input
+        document.getElementById('to').addEventListener('change', function() {
+            var fromDate = new Date(document.getElementById('from').value);
+            var toDate = new Date(this.value);
+
+            // Compare the dates
+            if (toDate < fromDate) {
+                alert('The "To" date must be greater than the "From" date.');
+                this.value = '';
+            }
+        });
+    </script>
+    <script>
+        // Function to count the number of words in a string
+        function countWords(str) {
+            str = str.trim();
+            if (str === '') {
+                return 0;
+            }
+            return str.split(/\s+/).length;
+        }
+
+        // Add event listener for form submission
+        document.getElementById('formLeaveCreate').addEventListener('submit', function(event) {
+            var reasonInput = document.getElementById('reasonleave');
+            var reasonValue = reasonInput.value;
+            var wordCount = countWords(reasonValue);
+
+            // Check if word count exceeds the limit
+            if (wordCount > 10) {
+                alert('The reason for leave should not exceed 10 words.');
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+
+        // Add event listener for reason input
+        document.getElementById('reasonleave').addEventListener('input', function() {
+            var reasonValue = this.value;
+            var wordCount = countWords(reasonValue);
+
+            // Update word count display
+            document.getElementById('wordCount').textContent = wordCount;
+
+            // Check if word count exceeds the limit and show a warning if needed
+            if (wordCount > 10) {
+                document.getElementById('wordCount').classList.add('text-danger');
             } else {
-                $.each(data, function(index, item) {
-                    var url = '/applyleave/' + item.id;
-                    var createdAt = formatDate(item.created_at);
-                    var fromDate = formatDate(item.from);
-                    var toDate = formatDate(item.to);
-                    var holidays = Math.floor((new Date(item.to) - new Date(item.from)) / (24 * 60 *
-                        60 * 1000)) + 1;
+                document.getElementById('wordCount').classList.remove('text-danger');
+            }
+        });
+    </script>
+    {{--  Start Hare  --}}
+    {{-- * regarding model box closed  --}}
+    {{--  Start Hare  regarding model box closed  --}}
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+    <script>
+        $(document).ready(function() {
+            $('#exampleModal12').on('hidden.bs.modal', function() {
+                $('#detailsFormudin')[0].reset();
+            });
+        });
+    </script>
+    <div class="modal fade" id="exampleModal12" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="detailsFormudin" method="post" action="{{ url('assignmentudin/store') }}"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header" style="background:#37A000;color:white;">
+                        <h5 class="modal-title font-weight-600" id="exampleModalLabel4">Add UDIN</h5>
+                        <div>
+                            <ul>
+                                @foreach ($errors->all() as $e)
+                                    <li style="color:red;">{{ $e }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
 
-                    $('table tbody').append('<tr>' +
-                        '<td><a href="' + url + '">' + item.team_member + '</a></td>' +
-                        '<td>' + createdAt + '</td>' +
-                        '<td>' + getStatusBadge(item.status) + '</td>' +
-                        '<td>' + item.name + '</td>' +
-                        '<td>' + fromDate + ' to ' + toDate + '</td>' +
-                        '<td>' + holidays + '</td>' +
-                        '<td>' + item.approvernames + '</td>' +
-                        '<td style="width: 7rem;text-wrap: wrap;">' + item.reasonleave + '</td>' +
-                        '</tr>');
+                        <button style="color: white" type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="field_wrapper">
+                            <div class="row row-sm ">
+                                <div class="col-10">
+                                    <div class="form-group">
+                                        <label class="font-weight-600">UDIN</label>
+                                        <input type="text" name="udin[]" value="" class=" form-control"
+                                            placeholder="Enter Udin">
+                                        <input type="text" name="assignment_generate_id" hidden
+                                            value="{{ $assignmentbudgetingDatas->assignmentgenerate_id }}"
+                                            class=" form-control">
+                                    </div>
+                                </div>
+                                <a href="javascript:void(0);" style="margin-top: 36px;" class="add_button"
+                                    title="Add field"><img src="{{ url('backEnd/image/add-icon.png') }}" /></a>
+                            </div>
+                        </div>
+
+                        <div class="row row-sm ">
+                            <div class="col-10">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Partner </label>
+                                    <select class="form-control" name="partner">
+                                        <option value="">Please Select One</option>
+                                        @foreach ($partner as $teammemberData)
+                                            <option value="{{ $teammemberData->id }}">
+                                                {{ $teammemberData->team_member }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-sm ">
+                            <div class="col-10">
+                                <div class="form-group">
+                                    <label class="font-weight-600">UDIN Documentation Date</label>
+                                    <input type="date" name="udindate" value="" class=" form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    {{--  Start Hare  --}}
+    {{-- *  --}}
+    {{--  Start Hare  --}}
+    <script>
+        $(function() {
+            $('#client').on('change', function() {
+                var cid = $(this).val();
+                $.ajax({
+                    type: "get",
+                    url: "{{ url('timesheetreject/edit') }}",
+                    data: {
+                        cid: cid
+                    },
+                    success: function(res) {
+                        $('#assignment').html(res.html);
+                    },
+                    error: function() {
+                        alert('Error occurred while fetching assignments');
+                    },
+                });
+            });
+
+
+            $('#assignment').on('change', function() {
+                var assignment = $(this).val();
+                $.ajax({
+                    type: "get",
+                    url: "{{ url('timesheetreject/edit') }}",
+                    data: {
+                        assignment: assignment
+                    },
+                    success: function(res) {
+                        $('#partner').html(res.html);
+                    },
+                    error: function() {
+                        alert('Error occurred while fetching partners');
+                    },
+                });
+            });
+        });
+    </script>
+    {{--  Start Hare  --}}
+    {{-- * regarding file upload / file    --}}
+    {{--  Start Hare --}}
+    @php
+        $fileName = '';
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $destinationPath = 'backEnd/image/confirmationfile';
+            $fileName = $file->getClientOriginalName();
+            $file->move($destinationPath, $fileName);
+        }
+
+        DB::table('debtorconfirmations')->insert([
+            'debtor_id' => $request->debitid,
+            'assignmentgenerate_id' => $request->assignmentgenerate_id,
+            'remark' => null,
+            'amount' => null,
+            'file' => $fileName,
+            'name' => $debtorconfirm->name,
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+        ]);
+    @endphp
+    <script>
+        document.getElementById('file-1').addEventListener('change', function() {
+            alert('hi');
+            var fileLabel = document.getElementById('file-label').querySelector('span');
+            if (this.files.length > 0) {
+                fileLabel.textContent = this.files[0].name;
+            } else {
+                fileLabel.textContent = "Choose a file…";
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('file-1').addEventListener('change', function() {
+                alert('hi');
+                var fileLabel = document.getElementById('file-label').querySelector('span');
+                if (this.files.length > 0) {
+                    fileLabel.textContent = this.files[0].name;
+                } else {
+                    fileLabel.textContent = "Choose a file…";
+                }
+            });
+        });
+    </script>
+
+    <div class="modal fade" id="exampleModal21" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="detailsForm" method="post" action="{{ url('timesheetrequest/store') }}"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header" style="background: #37A000">
+                        <h5 style="color:white;" class="modal-title font-weight-600" id="exampleModalLabel4">Add
+                            Request
+                        </h5>
+                        <div>
+                            <ul>
+                                @foreach ($errors->all() as $e)
+                                    <li style="color:red;">{{ $e }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="details-form-field form-group row">
+                            <label for="name" class="col-sm-3 col-form-label font-weight-600">Admin :</label>
+                            <div class="col-sm-9">
+                                <select class="language form-control" required id="category" name="partner">
+                                    <option value="">Please Select One</option>
+                                    @foreach ($partner as $teammemberData)
+                                        <option value="{{ $teammemberData->id }}">
+                                            {{ $teammemberData->team_member }}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+
+                        </div>
+                        <div class="details-form-field form-group row">
+                            <label for="name" class="col-sm-3 col-form-label font-weight-600">Reason :</label>
+                            <div class="col-sm-9">
+                                <textarea rows="4" name="reason" required class="form-control" placeholder="Enter Reason"></textarea>
+
+                            </div>
+
+                        </div>
+
+                        <div class="details-form-field form-group row">
+                            <label for="name" class="col-sm-3 col-form-label font-weight-600">Attachment File
+                                :</label>
+                            <div class="col-sm-9">
+                                <input type="file" name="file" id="file-1" class="custom-input-file">
+                                <label for="file-1" id="file-label">
+                                    <i class="fa fa-upload"></i>
+                                    <span>Choose a file…</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{--  Start Hare --}}
+    {{-- * regarding page load / reload page / page refresh  --}}
+    {{--  Start Hare  --}}
+
+    <script>
+        // {{--  Start Hare  --}}
+        document.addEventListener('DOMContentLoaded', function() {
+            var refreshBtn = document.getElementById('refreshbtn');
+            var refreshBtn1 = document.getElementById('refreshbtn1');
+
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    location.reload();
                 });
             }
+
+            if (refreshBtn1) {
+                refreshBtn1.addEventListener('click', function() {
+                    location.reload();
+                });
+            }
+        });
+        // {{--  Start Hare  --}}
+        document.addEventListener('click', function(event) {
+            if (event.target && event.target.id === 'refreshbtn') {
+                location.reload();
+            }
+            if (event.target && event.target.id === 'refreshbtn1') {
+                location.reload();
+            }
+        });
+        // {{--  Start Hare  --}}
+        $(document).ready(function() {
+            var refreshBtn = $('#refreshbtn');
+            var refreshBtn1 = $('#refreshbtn1');
+
+            if (refreshBtn.length) {
+                refreshBtn.on('click', function() {
+                    location.reload();
+                });
+            }
+
+            if (refreshBtn1.length) {
+                refreshBtn1.on('click', function() {
+                    location.reload();
+                });
+            }
+        });
+        // {{--  Start Hare  --}}
+        $('body').on('click', '#refreshbtn', function(event) {
+            location.reload();
+
+        });
+        $('body').on('click', '#refreshbtn1', function(event) {
+            location.reload();
+
+        });
+        // {{--  Start Hare  --}}
+    </script>
+    {{-- * regarding are you sure / regarding form submit  --}}
+    {{--  Start Hare  --}}
+
+    <div class="modal-footer">
+        <button id="refreshButton" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-info" onclick="saveForm()">Save Draft</button>
+        <button type="submit" class="btn btn-primary" onclick="saveForm2()">Save</button>
+        <button type="submit" class="btn btn-success" onclick="return validateSubject();">Send</button>
+    </div>
+    <script>
+        function validateSubject() {
+            var subjectInput = document.getElementsByName('subject')[0].value.trim();
+            if (subjectInput === '') {
+                alert('Please enter a subject.');
+                return false; // Prevent form submission
+            }
+            return confirm('Are you sure?'); // Proceed with form submission
         }
+    </script>
 
-        // Common function to export data to Excel
-        function exportToExcel(data) {
-            const filteredData = data.map(item => {
-                const holidays = Math.floor((new Date(item.to) - new Date(item.from)) / (24 * 60 * 60 *
-                    1000)) + 1;
-                const createdAt = formatDate(item.created_at);
-                const fromDate = formatDate(item.from);
-                const toDate = formatDate(item.to);
 
-                return {
-                    Employee: item.team_member,
-                    Date_of_Request: createdAt,
-                    status: getStatusText(item.status),
-                    Leave_Type: item.name,
-                    from: fromDate,
-                    to: toDate,
-                    Days: holidays,
-                    Approver: item.approvernames,
-                    Reason_for_Leave: item.reasonleave
-                };
-            });
+    {{--  Start Hare  --}}
+    {{-- * regarding condition   --}}
+    {{--  Start Hare  --}}
+    <input required type="text" oninput="validateNumber(this)" name="withdrawalpurpose" id="key"
+        value="{{ $withdrawal->purposeofwithdrawl ?? '' }}" class="form-control key">
 
-            const ws = XLSX.utils.json_to_sheet(filteredData);
-            const headerCellStyle = {
-                font: {
-                    bold: true
-                }
-            };
-
-            ws['!cols'] = [{
-                    wch: 15
-                },
-                {
-                    wch: 20
-                },
-                {
-                    wch: 15
-                },
-                {
-                    wch: 20
-                },
-                {
-                    wch: 15
-                },
-                {
-                    wch: 15
-                },
-                {
-                    wch: 20
-                },
-                {
-                    wch: 30
-                }
-            ];
-
-            Object.keys(ws).filter(key => key.startsWith('A')).forEach(key => {
-                ws[key].s = headerCellStyle;
-            });
-
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
-            const excelBuffer = XLSX.write(wb, {
-                bookType: "xlsx",
-                type: "array"
-            });
-            const dataBlob = new Blob([excelBuffer], {
-                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            });
-            saveAs(dataBlob, "Apply_Report_Filter_List.xlsx");
-        }
-
-        // Common function to format date
-        function formatDate(dateString) {
-            return new Date(dateString).toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-        }
-
-        // Common function to get status text
-        function getStatusText(status) {
-            return status === 0 ? 'Created' : status === 1 ? 'Approved' : status === 2 ? 'Rejected' : '';
-        }
-
-        // Common function to get status badge
-        function getStatusBadge(status) {
-            if (status === 0) {
-                return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
-            } else if (status === 1) {
-                return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
-            } else if (status === 2) {
-                return '<span class="badge badge-danger">Rejected</span>';
+    <script>
+        function validateNumber(input) {
+            var regex = /^\d*$/; // Regular expression to match only digits
+            if (!regex.test(input.value)) {
+                input.setCustomValidity("Please enter numbers only, without commas or letters");
             } else {
-                return '';
+                input.setCustomValidity("");
             }
         }
+    </script>
+    {{--  Start Hare  --}}
+    <input type="number" required name="noofdays" class="form-control" placeholder="Enter days" min="1"
+        max="100" id="noofdays">
+    <input type="number" required name="maxremider" class="form-control" placeholder="" id="maxremider">
 
-        // Function to handle status change
-        function handleStatusChange() {
-            var endperiod1 = $('#endperiod1').val();
-            var startperiod1 = $('#startperiod1').val();
-            var employee1 = $('#employee1').val();
-            var leave1 = $('#leave1').val();
-            var status1 = $('#status1').val();
-            var end1 = $('#end1').val();
-            var start1 = $('#start1').val();
-            $('#clickExcell').hide();
-
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    end: end1,
-                    start: start1,
-                    startperiod: startperiod1,
-                    endperiod: endperiod1,
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    renderTableRows(data);
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-
-                    // Remove previus attachment on download button 
-                    $('#clickExcell').off('click');
-
-                    if (data.length > 0) {
-                        $('#clickExcell').on('click', function() {
-                            exportToExcel(data);
-                        });
-                    }
-                    $('#clickExcell').show();
+    <script>
+        $(document).ready(function() {
+            $('#noofdays, #maxremider').on('change', function() {
+                var value = $(this).val();
+                if (value > 100 || value < 1) {
+                    alert('Enter a value between 1 and 100');
+                    $(this).val('');
+                }
+                if (value % 1 !== 0) {
+                    alert('You cannot insert a decimal value.');
+                    $(this).val('');
                 }
             });
-        }
+        });
+    </script>
+    {{--  Start Hare  --}}
+    {{-- *  --}}
 
-        // Function to handle leave type change
-        function handleLeaveTypeChange() {
-            var endperiod1 = $('#endperiod1').val();
-            var startperiod1 = $('#startperiod1').val();
-            var employee1 = $('#employee1').val();
-            var leave1 = $('#leave1').val();
-            var status1 = $('#status1').val();
-            var end1 = $('#end1').val();
-            var start1 = $('#start1').val();
-            $('#clickExcell').hide();
-
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    end: end1,
-                    start: start1,
-                    startperiod: startperiod1,
-                    endperiod: endperiod1,
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    renderTableRows(data);
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    // Remove previus attachment on download button 
-                    $('#clickExcell').off('click');
-                    if (data.length > 0) {
-                        $('#clickExcell').on('click', function() {
-                            exportToExcel(data);
-                        });
-                    }
-                    $('#clickExcell').show();
-                }
-            });
-        }
-
-        // Function to handle employee change
-        function handleEmployeeChange() {
-            var endperiod1 = $('#endperiod1').val();
-            var startperiod1 = $('#startperiod1').val();
-            var employee1 = $('#employee1').val();
-            var leave1 = $('#leave1').val();
-            var status1 = $('#status1').val();
-            var end1 = $('#end1').val();
-            var start1 = $('#start1').val();
-            $('#clickExcell').hide();
-
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    end: end1,
-                    start: start1,
-                    startperiod: startperiod1,
-                    endperiod: endperiod1,
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    renderTableRows(data);
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    // Remove previus attachment on download button 
-                    $('#clickExcell').off('click');
-                    if (data.length > 0) {
-                        $('#clickExcell').on('click', function() {
-                            exportToExcel(data);
-                        });
-                    }
-                    $('#clickExcell').show();
-                }
-            });
-        }
-
-        // Function to handle leave period end date change
-        function handleleaveperiodendChange() {
-            var endperiod1 = $('#endperiod1').val();
-            var startperiod1 = $('#startperiod1').val();
-            var employee1 = $('#employee1').val();
-            var leave1 = $('#leave1').val();
-            var status1 = $('#status1').val();
-            var end1 = $('#end1').val();
-            var start1 = $('#start1').val();
-            $('#clickExcell').hide();
-
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    end: end1,
-                    start: start1,
-                    startperiod: startperiod1,
-                    endperiod: endperiod1,
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    renderTableRows(data);
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    // Remove previus attachment on download button 
-                    $('#clickExcell').off('click');
-                    if (data.length > 0) {
-                        $('#clickExcell').on('click', function() {
-                            exportToExcel(data);
-                        });
-                    }
-                    $('#clickExcell').show();
-                }
-            });
-        }
-
-        //  end Request Date end date wise
-        function handleEndRequestDateChange() {
-            var endperiod1 = $('#endperiod1').val();
-            var startperiod1 = $('#startperiod1').val();
-            var employee1 = $('#employee1').val();
-            var leave1 = $('#leave1').val();
-            var status1 = $('#status1').val();
-            var end1 = $('#end1').val();
-            var start1 = $('#start1').val();
-            $('#clickExcell').hide();
-
-
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    end: end1,
-                    start: start1,
-                    startperiod: startperiod1,
-                    endperiod: endperiod1,
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    renderTableRows(data);
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    $('#clickExcell').off('click');
-                    if (data.length > 0) {
-                        $('#clickExcell').on('click', function() {
-                            exportToExcel(data);
-                        });
-                    }
-                    $('#clickExcell').show();
-                }
-            });
-        }
-
-        // Event handlers
-        $('#employee1').change(handleEmployeeChange);
-        $('#leave1').change(handleLeaveTypeChange);
-        $('#status1').change(handleStatusChange);
-        $('#end1').change(handleEndRequestDateChange);
-        $('#endperiod1').change(handleleaveperiodendChange);
-    });
-</script>
-{{--  Start Hare  --}}
-
-
-
-{{-- *  --}}
-{{--  Start Hare  --}}
-<div class="modal-footer">
-    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-info" onclick="saveForm()">Save Draft</button>
-    <button type="submit" class="btn btn-primary" onclick="saveForm2()">Save</button>
-    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure?');">Send</button>
+    {{--  Start Hare  --}}
+    {{-- <div style="display: none" class="alert alert-success" id="successmessage">
+    <p>Your balance confirmation open</p>
 </div>
+<div style="display: none" class="alert alert-success" id="successmessageclosed">
+    <p>Your balance confirmation closed</p>
+</div> --}}
 
 
-<script>
-    function saveForm() {
-        document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
-    }
-
-    function saveForm2() {
-        var template = $('#template').val();
-        if (template == '') {
-            alert('Please Select Confirmation Type');
-        } else {
-            //   document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
-            var url = "{{ url('/maildraft') }}";
-
-            // Perform the URL hit
-            window.location.href = url;
-
-        }
-    }
-</script>
-
-<script>
-    function saveForm() {
-        document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
-    }
-
-    function saveForm2() {
-        var type = $('#template').val();
-        //   var clientid = $("[name='clientid']").val();
-        if (type == '') {
-            alert('Please Select Confirmation Type');
-        } else {
-            var url = "{{ url('/mailsave') }}";
-            // Append type and clientid to the URL
-            //   url += "?type=" + type + "&clientid=" + clientid;
-            url += "?type=" + type;
-            window.location.href = url;
-
-        }
-    }
-
-    function saveForm2() {
-        document.getElementById('detailsForm').action = "{{ url('/finalsave') }}";
-    }
-</script>
-{{-- * regarding form  --}}
-{{--  Start Hare  --}}
-
-<div class="modal-footer">
-    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-primary" onclick="saveForm()">Save</button>
-    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure?');">Send</button>
-</div>
-<script>
-    function saveForm() {
-        document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
-    }
-
-    //   function sendMail() {
-    //       document.getElementById('detailsForm').action = "{{ url('/confirmation/mail') }}";
-    //   }
-</script>
-{{-- *  --}}
-{{--  Start Hare  --}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script>
-    $(function() {
-        $('#template').on('change', function() {
-            var template_id = $(this).val();
+    <script>
+        function updateConfirmationStatus(checkbox) {
+            var assignmentId = "{{ $clientList->assignmentgenerate_id }}";
+            var status = checkbox.checked ? 1 : 0;
 
             $.ajax({
-                type: "GET",
-                url: "{{ url('confirmationtem') }}",
-                data: "template_id=" + template_id,
+                url: "{{ url('/confirmationstatus') }}",
+                type: 'GET',
+                data: {
+                    assignmentid: assignmentId,
+                    status: status
+                },
                 success: function(response) {
-                    var desc = response.description;
-
-                    // Check if "desc" exists in the response and is not empty before setting
-                    if (desc && desc.trim() !== "") {
-                        $('#summernote').summernote('code',
-                            desc); // Update Summernote content
+                    console.log(response);
+                    if (response.status == 1) {
+                        $('#successmessage').find('p').text('Your balance confirmation open');
+                        $('#successmessage').show();
+                        $('#successmessageclosed').hide();
+                    } else {
+                        $('#successmessageclosed').find('p').text('Your balance confirmation closed');
+                        $('#successmessageclosed').show();
+                        $('#successmessage').hide();
                     }
                 },
-                error: function() {
-
-                },
+                error: function(xhr, status, error) {
+                    // Handle error response if needed
+                    console.error(xhr.responseText);
+                }
             });
-            $('#subcentre_id').html('');
+        }
+    </script>
+    {{--  Start Hare  --}}
+    {{-- <div class="alert alert-success" id="successmessage" style="display: none;">
+    <p></p>
+</div> --}}
+    <script>
+        function updateConfirmationStatus(checkbox) {
+            var assignmentId = "{{ $clientList->assignmentgenerate_id }}";
+            var status = checkbox.checked ? 1 : 0;
+
+            $.ajax({
+                url: "{{ url('/confirmationstatus') }}",
+                type: 'GET',
+                data: {
+                    assignmentid: assignmentId,
+                    status: status
+                },
+                success: function(response) {
+                    console.log(response);
+                    var message = response.status == 1 ? 'Your balance confirmation open' :
+                        'Your balance confirmation closed';
+                    $('#successmessage').find('p').text(message);
+                    $('#successmessage').show();
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response if needed
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    </script>
+    {{--  Start Hare regarding delay --}}
+    {{-- $('#successmessage').delay(5000).fadeOut(400); --}}
+    {{-- <script>
+      // Use jQuery to add a temporary display to the flash message
+      $(document).ready(function() {
+          $('#successmessage').delay(5000).fadeOut(400);
+      });
+  </script> --}}
+    {{--  Start Hare  --}}
+
+    {{-- * regarding column number know / regarding column / regarding exce download  --}}
+    {{--  Start Hare  --}}
+    <script>
+        {
+            extend: 'excelHtml5',
+            filename: 'Timesheet_Download',
+            exportOptions: {
+                columns: ':visible',
+                format: {
+                    body: function(data, row, column, node) {
+                        // If the data is a date, extract the date without HTML tags
+                        if (column === 2) {
+                            // var cleanedText = $(data).text().trim();
+                            // var dateParts = cleanedText.split(
+                            //     '-');
+                            // Assuming the date format is yyyy-mm-dd
+                            // if (dateParts.length === 3) {
+                            //     return dateParts[2] + '-' + dateParts[1] + '-' +
+                            //         dateParts[0];
+                            // }
+                        }
+                        return column;
+                    }
+                }
+            },
+        },
+    </script>
+    {{--  Start Hare  --}}
+    {{-- * regarding console  --}}
+    {{--  Start Hare  --}}
+    <script>
+        const d = new Date(datepickers);
+        const dayOfWeek = d.getDay();
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+            "Saturday"
+        ];
+        const dayString = days[dayOfWeek];
+        console.log(d, 0);
+        console.log(dayOfWeek, 1);
+        console.log(days, 2);
+        console.log(dayString, 3);
+    </script>
+    {{--  Start Hare  --}}
+    {{-- * regarding alert  --}}
+    {{--  Start Hare  --}}
+    alert("Value of workitem: " + workitem);
+    {{--  Start Hare  --}}
+    {{-- *  --}}
+    {{--  Start Hare  --}}
+    <script>
+        $(document).ready(function() {
+            var status = @json(Request::query('status'));
+
+            var filename = 'All Team Member List';
+            if (status == '1') {
+                filename = 'Active Team Members';
+            } else if (status == '0') {
+                filename = 'Inactive Team Members';
+            }
+
+            $('#examplee').DataTable({
+                "pageLength": 130,
+                dom: 'Bfrtip',
+                "order": [
+                    [0, "desc"]
+                ],
+                buttons: [{
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: [0, ':visible']
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        filename: filename,
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: [0, 1, 2, 5]
+                        }
+                    },
+                    'colvis'
+                ]
+            });
         });
-    });
-</script>
-{{-- *  --}}
-{{--  Start Hare  --}}
-<script>
-    function saveForm() {
-        if (confirm('Are you sure?')) {
-            document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
-            return true; // Form will be submitted
-        }
-        return false; // Form submission canceled
-    }
-    //   function sendMail() {
-    //       document.getElementById('detailsForm').action = "{{ url('/confirmation/mail') }}";
-    //   }
-</script>
+    </script>
+    {{--  Start Hare  --}}
+    {{-- *  --}}
+    {{--  Start Hare  --}}
+    {{--  Start Hare  --}}
+    {{-- * regarding filter functionality   --}}
+    {{--  Start Hare  --}}
+    <script>
+        $(document).ready(function() {
+            // Common function to render table rows
+            function renderTableRows(data) {
+                $('table tbody').html("");
+                $('#clickExcell').show();
 
-<script>
-    $(document).on('change', '[id^=partner]', function() {
-        var partnerValue = $(this).val();
-        var index = $(this).attr('id').slice(-1);
-        if (partnerValue != "" && partnerValue != "Select Partner") {
-            $('.workItem' + index).attr('required', true);
-            $('.location' + index).attr('required', true);
-            $('.hour' + index).attr('required', true);
-        } else {
-            $('.workItem' + index).attr('required', false);
-            $('.location' + index).attr('required', false);
-            $('.hour' + index).attr('required', false);
-        }
-    });
-</script>
-{{-- * regarding replace function /regarding text replace function --}}
-{{--  Start Hare  --}}
-
-<script>
-    function handleClientChange(clientId) {
-        $('#' + clientId).on('change', function() {
-            var cid = $(this).val();
-            var datepickers = $('#datepickers').val();
-
-            if (cid == 33) {
-                var location = 'N/A';
-                var workitem = 'N/A';
-                var time = 0;
-
-                // clientId me hai client,client1,client2,client3,client4
-                // Extract the number from the client ID like 1,2,3,4
-                //   var clientNumber = parseInt(clientId.replace('client', ''));
-                var clientNumber = clientId.replace('clien', '');
-                alert(clientNumber);
-                if (!isNaN(clientNumber)) {
-                    // Check if clientNumber is a valid number
-                    $('.workitemnvalue' + clientNumber).val(workitem);
-                    $('.locationvalue' + clientNumber).val(location);
-                    $('#totalhours').val(time);
-                    $('#hour' + (clientNumber + 1)).prop('readonly', true);
+                if (data.length === 0) {
+                    $('table tbody').append('<tr><td colspan="8" class="text-center">No data found</td></tr>');
                 } else {
-                    // Default behavior for clientId 'client'
-                    $('.workitemnvalue').val(workitem);
-                    $('.locationvalue').val(location);
-                    $('#totalhours').val(time);
-                    $("#hour1").prop("readonly", true);
+                    $.each(data, function(index, item) {
+                        var url = '/applyleave/' + item.id;
+                        var createdAt = formatDate(item.created_at);
+                        var fromDate = formatDate(item.from);
+                        var toDate = formatDate(item.to);
+                        var holidays = Math.floor((new Date(item.to) - new Date(item.from)) / (24 * 60 *
+                            60 * 1000)) + 1;
+
+                        $('table tbody').append('<tr>' +
+                            '<td><a href="' + url + '">' + item.team_member + '</a></td>' +
+                            '<td>' + createdAt + '</td>' +
+                            '<td>' + getStatusBadge(item.status) + '</td>' +
+                            '<td>' + item.name + '</td>' +
+                            '<td>' + fromDate + ' to ' + toDate + '</td>' +
+                            '<td>' + holidays + '</td>' +
+                            '<td>' + item.approvernames + '</td>' +
+                            '<td style="width: 7rem;text-wrap: wrap;">' + item.reasonleave + '</td>' +
+                            '</tr>');
+                    });
                 }
             }
 
-            $.ajax({
-                type: "get",
-                url: "{{ url('timesheet/create') }}",
-                data: {
-                    cid: cid,
-                    datepickers: datepickers
-                },
-                success: function(res) {
-                    $('#' + clientId.replace('client', 'assignment')).html(res);
-                },
-                error: function() {},
+            // Common function to export data to Excel
+            function exportToExcel(data) {
+                const filteredData = data.map(item => {
+                    const holidays = Math.floor((new Date(item.to) - new Date(item.from)) / (24 * 60 * 60 *
+                        1000)) + 1;
+                    const createdAt = formatDate(item.created_at);
+                    const fromDate = formatDate(item.from);
+                    const toDate = formatDate(item.to);
+
+                    return {
+                        Employee: item.team_member,
+                        Date_of_Request: createdAt,
+                        status: getStatusText(item.status),
+                        Leave_Type: item.name,
+                        from: fromDate,
+                        to: toDate,
+                        Days: holidays,
+                        Approver: item.approvernames,
+                        Reason_for_Leave: item.reasonleave
+                    };
+                });
+
+                const ws = XLSX.utils.json_to_sheet(filteredData);
+                const headerCellStyle = {
+                    font: {
+                        bold: true
+                    }
+                };
+
+                ws['!cols'] = [{
+                        wch: 15
+                    },
+                    {
+                        wch: 20
+                    },
+                    {
+                        wch: 15
+                    },
+                    {
+                        wch: 20
+                    },
+                    {
+                        wch: 15
+                    },
+                    {
+                        wch: 15
+                    },
+                    {
+                        wch: 20
+                    },
+                    {
+                        wch: 30
+                    }
+                ];
+
+                Object.keys(ws).filter(key => key.startsWith('A')).forEach(key => {
+                    ws[key].s = headerCellStyle;
+                });
+
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
+                const excelBuffer = XLSX.write(wb, {
+                    bookType: "xlsx",
+                    type: "array"
+                });
+                const dataBlob = new Blob([excelBuffer], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                });
+                saveAs(dataBlob, "Apply_Report_Filter_List.xlsx");
+            }
+
+            // Common function to format date
+            function formatDate(dateString) {
+                return new Date(dateString).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            }
+
+            // Common function to get status text
+            function getStatusText(status) {
+                return status === 0 ? 'Created' : status === 1 ? 'Approved' : status === 2 ? 'Rejected' : '';
+            }
+
+            // Common function to get status badge
+            function getStatusBadge(status) {
+                if (status === 0) {
+                    return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
+                } else if (status === 1) {
+                    return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
+                } else if (status === 2) {
+                    return '<span class="badge badge-danger">Rejected</span>';
+                } else {
+                    return '';
+                }
+            }
+
+            // Function to handle status change
+            function handleStatusChange() {
+                var endperiod1 = $('#endperiod1').val();
+                var startperiod1 = $('#startperiod1').val();
+                var employee1 = $('#employee1').val();
+                var leave1 = $('#leave1').val();
+                var status1 = $('#status1').val();
+                var end1 = $('#end1').val();
+                var start1 = $('#start1').val();
+                $('#clickExcell').hide();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        end: end1,
+                        start: start1,
+                        startperiod: startperiod1,
+                        endperiod: endperiod1,
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        renderTableRows(data);
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+
+                        // Remove previus attachment on download button 
+                        $('#clickExcell').off('click');
+
+                        if (data.length > 0) {
+                            $('#clickExcell').on('click', function() {
+                                exportToExcel(data);
+                            });
+                        }
+                        $('#clickExcell').show();
+                    }
+                });
+            }
+
+            // Function to handle leave type change
+            function handleLeaveTypeChange() {
+                var endperiod1 = $('#endperiod1').val();
+                var startperiod1 = $('#startperiod1').val();
+                var employee1 = $('#employee1').val();
+                var leave1 = $('#leave1').val();
+                var status1 = $('#status1').val();
+                var end1 = $('#end1').val();
+                var start1 = $('#start1').val();
+                $('#clickExcell').hide();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        end: end1,
+                        start: start1,
+                        startperiod: startperiod1,
+                        endperiod: endperiod1,
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        renderTableRows(data);
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+                        // Remove previus attachment on download button 
+                        $('#clickExcell').off('click');
+                        if (data.length > 0) {
+                            $('#clickExcell').on('click', function() {
+                                exportToExcel(data);
+                            });
+                        }
+                        $('#clickExcell').show();
+                    }
+                });
+            }
+
+            // Function to handle employee change
+            function handleEmployeeChange() {
+                var endperiod1 = $('#endperiod1').val();
+                var startperiod1 = $('#startperiod1').val();
+                var employee1 = $('#employee1').val();
+                var leave1 = $('#leave1').val();
+                var status1 = $('#status1').val();
+                var end1 = $('#end1').val();
+                var start1 = $('#start1').val();
+                $('#clickExcell').hide();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        end: end1,
+                        start: start1,
+                        startperiod: startperiod1,
+                        endperiod: endperiod1,
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        renderTableRows(data);
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+                        // Remove previus attachment on download button 
+                        $('#clickExcell').off('click');
+                        if (data.length > 0) {
+                            $('#clickExcell').on('click', function() {
+                                exportToExcel(data);
+                            });
+                        }
+                        $('#clickExcell').show();
+                    }
+                });
+            }
+
+            // Function to handle leave period end date change
+            function handleleaveperiodendChange() {
+                var endperiod1 = $('#endperiod1').val();
+                var startperiod1 = $('#startperiod1').val();
+                var employee1 = $('#employee1').val();
+                var leave1 = $('#leave1').val();
+                var status1 = $('#status1').val();
+                var end1 = $('#end1').val();
+                var start1 = $('#start1').val();
+                $('#clickExcell').hide();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        end: end1,
+                        start: start1,
+                        startperiod: startperiod1,
+                        endperiod: endperiod1,
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        renderTableRows(data);
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+                        // Remove previus attachment on download button 
+                        $('#clickExcell').off('click');
+                        if (data.length > 0) {
+                            $('#clickExcell').on('click', function() {
+                                exportToExcel(data);
+                            });
+                        }
+                        $('#clickExcell').show();
+                    }
+                });
+            }
+
+            //  end Request Date end date wise
+            function handleEndRequestDateChange() {
+                var endperiod1 = $('#endperiod1').val();
+                var startperiod1 = $('#startperiod1').val();
+                var employee1 = $('#employee1').val();
+                var leave1 = $('#leave1').val();
+                var status1 = $('#status1').val();
+                var end1 = $('#end1').val();
+                var start1 = $('#start1').val();
+                $('#clickExcell').hide();
+
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        end: end1,
+                        start: start1,
+                        startperiod: startperiod1,
+                        endperiod: endperiod1,
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        renderTableRows(data);
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+                        $('#clickExcell').off('click');
+                        if (data.length > 0) {
+                            $('#clickExcell').on('click', function() {
+                                exportToExcel(data);
+                            });
+                        }
+                        $('#clickExcell').show();
+                    }
+                });
+            }
+
+            // Event handlers
+            $('#employee1').change(handleEmployeeChange);
+            $('#leave1').change(handleLeaveTypeChange);
+            $('#status1').change(handleStatusChange);
+            $('#end1').change(handleEndRequestDateChange);
+            $('#endperiod1').change(handleleaveperiodendChange);
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            //   all partner
+            $('#category1').change(function() {
+                var search1 = $(this).val();
+                var search4 = $('#category4').val();
+                var search7 = $('#category7').val();
+                //   console.log(search1);
+                // Send an AJAX request to fetch filtered data based on the selected partner
+                $.ajax({
+                    type: 'GET',
+                    url: '/filter-dataadmin',
+                    data: {
+                        partnersearch: search1,
+                        totalhours: search4,
+                        teamname: search7
+                    },
+                    success: function(data) {
+                        // Clear the table body
+                        $('table tbody').html("");
+
+                        if (data.length === 0) {
+                            // If no data is found, display a "No data found" message
+                            $('table tbody').append(
+                                '<tr><td colspan="5" class="text-center">No data found</td></tr>'
+                            );
+                        } else {
+                            $.each(data, function(index, item) {
+
+                                // Create the URL dynamically
+                                var url = '/weeklylist?id=' + item.id +
+                                    '&teamid=' + item.teamid +
+                                    '&partnerid=' + item.partnerid +
+                                    '&startdate=' + item.startdate +
+                                    '&enddate=' + item.enddate;
+
+                                // Format created_at date
+                                var formattedDate = moment(item.created_at).format(
+                                    'DD-MM-YYYY');
+                                var formattedTime = moment(item.created_at).format(
+                                    'hh:mm A');
+
+                                @if (Auth::user()->role_id == 11)
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + (item.dayscount != 0 ? item
+                                            .dayscount :
+                                            item.totaldays) + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+
+                                        '</tr>');
+                                @else
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + item.totaldays + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+
+                                        '</tr>');
+                                @endif
+                            });
+                            //   remove pagination after filter
+                            $('.paging_simple_numbers').remove();
+                            $('.dataTables_info').remove();
+                        }
+                    }
+                });
+            });
+
+            //** start date
+            $('#start').change(function() {
+                var search8 = $(this).val();
+                var search9 = $('#end').val();
+                var search7 = $('#category7').val();
+                var search4 = $('#category4').val();
+                var search1 = $('#category1').val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/filter-dataadmin',
+                    data: {
+                        end: search9,
+                        start: search8,
+                        totalhours: search4,
+                        teamname: search7,
+                        partnersearch: search1
+                    },
+                    success: function(data) {
+                        // Replace the table body with the filtered data
+                        $('table tbody').html(""); // Clear the table body
+
+                        if (data.length === 0) {
+                            // If no data is found, display a "No data found" message
+                            $('table tbody').append(
+                                '<tr><td colspan="5" class="text-center">No data found</td></tr>'
+                            );
+                        } else {
+                            $.each(data, function(index, item) {
+
+                                // Create the URL dynamically
+                                var url = '/weeklylist?id=' + item.id +
+                                    '&teamid=' + item.teamid +
+                                    '&partnerid=' + item.partnerid +
+                                    '&startdate=' + item.startdate +
+                                    '&enddate=' + item.enddate;
+
+                                // Format created_at date
+                                var formattedDate = moment(item.created_at).format(
+                                    'DD-MM-YYYY');
+                                var formattedTime = moment(item.created_at).format(
+                                    'hh:mm A');
+
+                                @if (Auth::user()->role_id == 11)
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + (item.dayscount != 0 ? item
+                                            .dayscount :
+                                            item.totaldays) + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+
+                                        '</tr>');
+                                @else
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + item.totaldays + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+
+                                        '</tr>');
+                                @endif
+                            });
+                            //   remove pagination after filter
+                            $('.paging_simple_numbers').remove();
+                            $('.dataTables_info').remove();
+                        }
+                    }
+                });
+            });
+
+            //** end date
+            $('#end').change(function() {
+                var search9 = $(this).val();
+                var search8 = $('#start').val();
+                var search7 = $('#category7').val();
+                var search4 = $('#category4').val();
+                var search1 = $('#category1').val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/filter-dataadmin',
+                    data: {
+                        end: search9,
+                        start: search8,
+                        totalhours: search4,
+                        teamname: search7,
+                        partnersearch: search1
+                    },
+                    success: function(data) {
+                        // Replace the table body with the filtered data
+                        $('table tbody').html(""); // Clear the table body
+
+                        if (data.length === 0) {
+                            // If no data is found, display a "No data found" message
+                            $('table tbody').append(
+                                '<tr><td colspan="5" class="text-center">No data found</td></tr>'
+                            );
+                        } else {
+                            $.each(data, function(index, item) {
+
+                                // Create the URL dynamically
+                                var url = '/weeklylist?id=' + item.id +
+                                    '&teamid=' + item.teamid +
+                                    '&partnerid=' + item.partnerid +
+                                    '&startdate=' + item.startdate +
+                                    '&enddate=' + item.enddate;
+
+                                // Format created_at date
+                                var formattedDate = moment(item.created_at).format(
+                                    'DD-MM-YYYY');
+                                var formattedTime = moment(item.created_at).format(
+                                    'hh:mm A');
+
+                                @if (Auth::user()->role_id == 11)
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + (item.dayscount != 0 ? item
+                                            .dayscount :
+                                            item.totaldays) + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+
+                                        '</tr>');
+                                @else
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + item.totaldays + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+
+                                        '</tr>');
+                                @endif
+                            });
+                            //   remove pagination after filter
+                            $('.paging_simple_numbers').remove();
+                            $('.dataTables_info').remove();
+                        }
+                    }
+                });
+            });
+            //   total hour wise
+            $('#category4').change(function() {
+                var search4 = $(this).val();
+                var search7 = $('#category7').val();
+                var search1 = $('#category1').val();
+                // Send an AJAX request to fetch filtered data based on the selected partner
+                $.ajax({
+                    type: 'GET',
+                    url: '/filter-dataadmin',
+                    data: {
+                        totalhours: search4,
+                        teamname: search7,
+                        partnersearch: search1
+                    },
+                    success: function(data) {
+                        // Replace the table body with the filtered data
+                        $('table tbody').html(""); // Clear the table body
+                        if (data.length === 0) {
+                            // If no data is found, display a "No data found" message
+                            $('table tbody').append(
+                                '<tr><td colspan="5" class="text-center">No data found</td></tr>'
+                            );
+                        } else {
+                            $.each(data, function(index, item) {
+
+                                // Create the URL dynamically
+                                var url = '/weeklylist?id=' + item.id +
+                                    '&teamid=' + item.teamid +
+                                    '&partnerid=' + item.partnerid +
+                                    '&startdate=' + item.startdate +
+                                    '&enddate=' + item.enddate;
+
+                                // Format created_at date
+                                var formattedDate = moment(item.created_at).format(
+                                    'DD-MM-YYYY');
+                                var formattedTime = moment(item.created_at).format(
+                                    'hh:mm A');
+
+                                @if (Auth::user()->role_id == 11)
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + (item.dayscount != 0 ? item
+                                            .dayscount :
+                                            item.totaldays) + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+
+                                        '</tr>');
+                                @else
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + item.totaldays + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+
+                                        '</tr>');
+                                @endif
+                            });
+                            //   remove pagination after filter
+                            $('.paging_simple_numbers').remove();
+                            $('.dataTables_info').remove();
+                        }
+                    }
+                });
+            });
+
+            //   team name wise
+            $('#category7').change(function() {
+                var search7 = $(this).val();
+                var search4 = $('#category4').val();
+                var search1 = $('#category1').val();
+
+                // Send an AJAX request to fetch filtered data based on the selected partner
+                $.ajax({
+                    type: 'GET',
+                    url: '/filter-dataadmin',
+                    data: {
+                        teamname: search7,
+                        partnersearch: search1,
+                        totalhours: search4
+                    },
+                    success: function(data) {
+                        // Replace the table body with the filtered data
+                        $('table tbody').html(""); // Clear the table body
+                        if (data.length === 0) {
+                            // If no data is found, display a "No data found" message
+                            $('table tbody').append(
+                                '<tr><td colspan="5" class="text-center">No data found</td></tr>'
+                            );
+                        } else {
+                            $.each(data, function(index, item) {
+
+                                // Create the URL dynamically
+                                var url = '/weeklylist?id=' + item.id +
+                                    '&teamid=' + item.teamid +
+                                    '&partnerid=' + item.partnerid +
+                                    '&startdate=' + item.startdate +
+                                    '&enddate=' + item.enddate;
+
+                                // Format created_at date
+                                var formattedDate = moment(item.created_at).format(
+                                    'DD-MM-YYYY');
+                                var formattedTime = moment(item.created_at).format(
+                                    'hh:mm A');
+
+
+                                @if (Auth::user()->role_id == 11)
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + (item.dayscount != 0 ? item
+                                            .dayscount :
+                                            item.totaldays) + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+
+                                        '</tr>');
+                                @else
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + item.totaldays + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+
+                                        '</tr>');
+                                @endif
+
+                            });
+                            //   remove pagination after filter
+                            $('.paging_simple_numbers').remove();
+                            $('.dataTables_info').remove();
+                        }
+                    }
+                });
+            });
+            //shahid
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function() {
+            // Define a function for handling filter changes
+            function handleFilterChange() {
+                var search1 = $('#category1').val();
+                var search4 = $('#category4').val();
+                var search7 = $('#category7').val();
+                var search8 = $('#start').val();
+                var search9 = $('#end').val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/filter-dataadmin',
+                    data: {
+                        partnersearch: search1,
+                        totalhours: search4,
+                        teamname: search7,
+                        start: search8,
+                        end: search9
+                    },
+                    success: function(data) {
+                        $('table tbody').html(""); // Clear the table body
+
+                        if (data.length === 0) {
+                            $('table tbody').append(
+                                '<tr><td colspan="5" class="text-center">No data found</td></tr>');
+                        } else {
+                            $.each(data, function(index, item) {
+                                var url = '/weeklylist?id=' + item.id +
+                                    '&teamid=' + item.teamid +
+                                    '&partnerid=' + item.partnerid +
+                                    '&startdate=' + item.startdate +
+                                    '&enddate=' + item.enddate;
+
+                                var formattedDate = moment(item.created_at).format(
+                                    'DD-MM-YYYY');
+                                var formattedTime = moment(item.created_at).format('hh:mm A');
+
+                                @if (Auth::user()->role_id == 11)
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + (item.dayscount != 0 ? item
+                                            .dayscount :
+                                            item.totaldays) + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+                                        '</tr>');
+                                @else
+                                    // Add the rows to the table
+                                    $('table tbody').append('<tr>' +
+                                        '<td><a href="' + url + '">' + item
+                                        .team_member +
+                                        '</a></td>' +
+                                        '<td>' + item.week + '</td>' +
+                                        '<td>' + formattedDate + ' ' +
+                                        formattedTime +
+                                        '</td>' +
+                                        '<td>' + item.totaldays + '</td>' +
+                                        '<td>' + item.totaltime + '</td>' +
+                                        '</tr>');
+                                @endif
+                            });
+
+                            $('.paging_simple_numbers').remove();
+                            $('.dataTables_info').remove();
+                        }
+                    }
+                });
+            }
+
+            // Handle change events for all filters
+            $('#category1, #category4, #category7').change(handleFilterChange);
+            $('#start, #end').change(handleFilterChange);
+        });
+    </script>
+    {{--  Start Hare  --}}
+
+
+
+    {{-- *  --}}
+    {{--  Start Hare  --}}
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-info" onclick="saveForm()">Save Draft</button>
+        <button type="submit" class="btn btn-primary" onclick="saveForm2()">Save</button>
+        <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure?');">Send</button>
+    </div>
+
+
+    <script>
+        function saveForm() {
+            document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
+        }
+
+        function saveForm2() {
+            var template = $('#template').val();
+            if (template == '') {
+                alert('Please Select Confirmation Type');
+            } else {
+                //   document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
+                var url = "{{ url('/maildraft') }}";
+
+                // Perform the URL hit
+                window.location.href = url;
+
+            }
+        }
+    </script>
+
+    <script>
+        function saveForm() {
+            document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
+        }
+
+        function saveForm2() {
+            var type = $('#template').val();
+            //   var clientid = $("[name='clientid']").val();
+            if (type == '') {
+                alert('Please Select Confirmation Type');
+            } else {
+                var url = "{{ url('/mailsave') }}";
+                // Append type and clientid to the URL
+                //   url += "?type=" + type + "&clientid=" + clientid;
+                url += "?type=" + type;
+                window.location.href = url;
+
+            }
+        }
+
+        function saveForm2() {
+            document.getElementById('detailsForm').action = "{{ url('/finalsave') }}";
+        }
+    </script>
+    {{-- * regarding form  --}}
+    {{--  Start Hare  --}}
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" onclick="saveForm()">Save</button>
+        <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure?');">Send</button>
+    </div>
+    <script>
+        function saveForm() {
+            document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
+        }
+
+        //   function sendMail() {
+        //       document.getElementById('detailsForm').action = "{{ url('/confirmation/mail') }}";
+        //   }
+    </script>
+    {{-- *  --}}
+    {{--  Start Hare  --}}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(function() {
+            $('#template').on('change', function() {
+                var template_id = $(this).val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('confirmationtem') }}",
+                    data: "template_id=" + template_id,
+                    success: function(response) {
+                        var desc = response.description;
+
+                        // Check if "desc" exists in the response and is not empty before setting
+                        if (desc && desc.trim() !== "") {
+                            $('#summernote').summernote('code',
+                                desc); // Update Summernote content
+                        }
+                    },
+                    error: function() {
+
+                    },
+                });
+                $('#subcentre_id').html('');
             });
         });
-    }
-</script>
-{{-- * sweech case  --}}
-{{--  Start Hare  --}}
-<script>
-    switch (clientId) {
-        case 'client':
-            $('.workitemnvalue').val(workitem);
-            $('.locationvalue').val(location);
-            $("#hour1").prop("readonly", true);
-            break;
-        case 'client1':
-            $('.workitemnvalue1').val(workitem);
-            $('.locationvalue1').val(location);
-            $("#hour2").prop("readonly", true);
-            break;
-        case 'client2':
-        case 'client3':
-        case 'client4':
-            $('.workitemnvalue1').val(workitem);
-            $('.locationvalue1').val(location);
-            $("#hour1").prop("readonly", true);
-            break;
-        default:
-            break;
-    }
-</script>
-{{-- * selecteor / regarding selector/ regarding selecter / regarding jquery selector / regarding jquery selecter / regarding target --}}
-{{--  Start Hare  --}}
-{{-- for testing 
+    </script>
+    {{-- *  --}}
+    {{--  Start Hare  --}}
+    <script>
+        function saveForm() {
+            if (confirm('Are you sure?')) {
+                document.getElementById('detailsForm').action = "{{ url('/maildraft') }}";
+                return true; // Form will be submitted
+            }
+            return false; // Form submission canceled
+        }
+        //   function sendMail() {
+        //       document.getElementById('detailsForm').action = "{{ url('/confirmation/mail') }}";
+        //   }
+    </script>
+
+    <script>
+        $(document).on('change', '[id^=partner]', function() {
+            var partnerValue = $(this).val();
+            var index = $(this).attr('id').slice(-1);
+            if (partnerValue != "" && partnerValue != "Select Partner") {
+                $('.workItem' + index).attr('required', true);
+                $('.location' + index).attr('required', true);
+                $('.hour' + index).attr('required', true);
+            } else {
+                $('.workItem' + index).attr('required', false);
+                $('.location' + index).attr('required', false);
+                $('.hour' + index).attr('required', false);
+            }
+        });
+    </script>
+    {{-- * regarding replace function /regarding text replace function --}}
+    {{--  Start Hare  --}}
+
+    <script>
+        function handleClientChange(clientId) {
+            $('#' + clientId).on('change', function() {
+                var cid = $(this).val();
+                var datepickers = $('#datepickers').val();
+
+                if (cid == 33) {
+                    var location = 'N/A';
+                    var workitem = 'N/A';
+                    var time = 0;
+
+                    // clientId me hai client,client1,client2,client3,client4
+                    // Extract the number from the client ID like 1,2,3,4
+                    //   var clientNumber = parseInt(clientId.replace('client', ''));
+                    var clientNumber = clientId.replace('clien', '');
+                    alert(clientNumber);
+                    if (!isNaN(clientNumber)) {
+                        // Check if clientNumber is a valid number
+                        $('.workitemnvalue' + clientNumber).val(workitem);
+                        $('.locationvalue' + clientNumber).val(location);
+                        $('#totalhours').val(time);
+                        $('#hour' + (clientNumber + 1)).prop('readonly', true);
+                    } else {
+                        // Default behavior for clientId 'client'
+                        $('.workitemnvalue').val(workitem);
+                        $('.locationvalue').val(location);
+                        $('#totalhours').val(time);
+                        $("#hour1").prop("readonly", true);
+                    }
+                }
+
+                $.ajax({
+                    type: "get",
+                    url: "{{ url('timesheet/create') }}",
+                    data: {
+                        cid: cid,
+                        datepickers: datepickers
+                    },
+                    success: function(res) {
+                        $('#' + clientId.replace('client', 'assignment')).html(res);
+                    },
+                    error: function() {},
+                });
+            });
+        }
+    </script>
+    {{-- * sweech case  --}}
+    {{--  Start Hare  --}}
+    <script>
+        switch (clientId) {
+            case 'client':
+                $('.workitemnvalue').val(workitem);
+                $('.locationvalue').val(location);
+                $("#hour1").prop("readonly", true);
+                break;
+            case 'client1':
+                $('.workitemnvalue1').val(workitem);
+                $('.locationvalue1').val(location);
+                $("#hour2").prop("readonly", true);
+                break;
+            case 'client2':
+            case 'client3':
+            case 'client4':
+                $('.workitemnvalue1').val(workitem);
+                $('.locationvalue1').val(location);
+                $("#hour1").prop("readonly", true);
+                break;
+            default:
+                break;
+        }
+    </script>
+    {{-- * selecteor / regarding selector/ regarding selecter / regarding jquery selector / regarding jquery selecter / regarding target --}}
+    {{--  Start Hare  --}}
+    {{-- for testing 
 https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
-<script>
-    if (cid == 33) {
-        var location = 'N/A';
-        var workitem = 'N/A';
-        var time = 0;
+    <script>
+        if (cid == 33) {
+            var location = 'N/A';
+            var workitem = 'N/A';
+            var time = 0;
 
-        $('.workitemnvalue1').val(workitem);
-        $('.locationvalue1').val(location);
-        $('#totalhours').val(time);
-        $("#hour1").prop("readonly", true);
-    }
+            $('.workitemnvalue1').val(workitem);
+            $('.locationvalue1').val(location);
+            $('#totalhours').val(time);
+            $("#hour1").prop("readonly", true);
+        }
 
-    if (cid == 33) {
-        var location = 'leaave';
-        var workitem = 'leaaveq';
-        $("p").hide();
-        $("[name='workitem']").val(workitem);
-        $("[name='location']").val(workitem);
-        $("#Lastname")
-        $(".intro")
-        $(".intro, #Lastname")
-        $("h1")
-        $("h1, p")
-        $("p:first")
-        $("p:last")
-        $("tr:even")
-        $("tr:odd")
-        $("p:first-child")
-        $("p:first-of-type")
-        $("p:last-child")
-        $("p:last-of-type")
-        $("li:nth-child(1)")
-        $("li:nth-last-child(1)")
-        $("li:nth-of-type(2)")
-        $("li:nth-last-of-type(2)")
-        $("b:only-child")
-        $("h3:only-of-type")
-        $("div > p")
-        $("div p")
-        $("ul + p")
-        $("ul ~ table")
-        $("ul li:eq(0)")
-        $("ul li:gt(0)")
-        $("ul li:lt(2)")
-        $(":header")
-        $(":header:not(h1)")
-        $(":animated")
-        $(":focus")
-        $(":contains(Duck)")
-        $("div:has(p)")
-        $(":empty")
-        $(":parent")
-        $("p:hidden")
-        $("table:visible")
-        $(":root")
-        $("p:lang(it)")
-        $("[id]")
-        $("[id=my-Address]")
-        $("p[id!=my-Address]")
-        $("[id$=ess]")
-        $("[id|=my]")
-        $("[id^=L]")
-        $("[title~=beautiful]")
-        $("[id*=s]")
-        $(":input")
-        $(":text")
-        $(":password")
-        $(":radio")
-        $(":checkbox")
-        $(":submit")
-        $(":reset")
-        $(":button")
-        $(":image")
-        $(":file")
-        $(":enabled")
-        $(":disabled")
-        $(":selected")
-        $(":checked")
-        $("*")
-        $('[id^=partner]')
-    }
-</script>
+        if (cid == 33) {
+            var location = 'leaave';
+            var workitem = 'leaaveq';
+            $("p").hide();
+            $("[name='workitem']").val(workitem);
+            $("[name='location']").val(workitem);
+            $("#Lastname")
+            $(".intro")
+            $(".intro, #Lastname")
+            $("h1")
+            $("h1, p")
+            $("p:first")
+            $("p:last")
+            $("tr:even")
+            $("tr:odd")
+            $("p:first-child")
+            $("p:first-of-type")
+            $("p:last-child")
+            $("p:last-of-type")
+            $("li:nth-child(1)")
+            $("li:nth-last-child(1)")
+            $("li:nth-of-type(2)")
+            $("li:nth-last-of-type(2)")
+            $("b:only-child")
+            $("h3:only-of-type")
+            $("div > p")
+            $("div p")
+            $("ul + p")
+            $("ul ~ table")
+            $("ul li:eq(0)")
+            $("ul li:gt(0)")
+            $("ul li:lt(2)")
+            $(":header")
+            $(":header:not(h1)")
+            $(":animated")
+            $(":focus")
+            $(":contains(Duck)")
+            $("div:has(p)")
+            $(":empty")
+            $(":parent")
+            $("p:hidden")
+            $("table:visible")
+            $(":root")
+            $("p:lang(it)")
+            $("[id]")
+            $("[id=my-Address]")
+            $("p[id!=my-Address]")
+            $("[id$=ess]")
+            $("[id|=my]")
+            $("[id^=L]")
+            $("[title~=beautiful]")
+            $("[id*=s]")
+            $(":input")
+            $(":text")
+            $(":password")
+            $(":radio")
+            $(":checkbox")
+            $(":submit")
+            $(":reset")
+            $(":button")
+            $(":image")
+            $(":file")
+            $(":enabled")
+            $(":disabled")
+            $(":selected")
+            $(":checked")
+            $("*")
+            $('[id^=partner]')
+        }
+    </script>
 
-<pre>
+    <pre>
     | Selector             | Example                    | Selects                                                |
 |----------------------|----------------------------|--------------------------------------------------------|
 | *                    | $("*")                     | All elements                                           |
@@ -704,45 +2110,45 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
 </pre>
 
 
-{{-- * val function / insert value / regarding val function   --}}
-{{--  Start Hare  --}}
-<script>
-    if (cid == 33) {
-        //   alert(cid);
-        var location = 'hi';
-        document.getElementById("totalhours").value = location;
-    }
-    if (cid == 33) {
-        alert(cid);
-        var location = 'hi';
-        $('#key').val(location);
-    }
-</script>
-{{-- *  --}}
-
-<script>
-    //   $(document).ready(function() {
-    $("#timesheet-form").submit(function(e) {
-        // Check if the "Client Name" dropdown is selected
-        if ($("#client1").val() != "Select Client" && $("#client1").val() != "") {
-            // If a client is selected, make the following fields required
-            $("#assignment1").prop("required", true);
-            $("#partner1").prop("required", true);
-            $("#assignment2").prop("required", true);
+    {{-- * val function / insert value / regarding val function   --}}
+    {{--  Start Hare  --}}
+    <script>
+        if (cid == 33) {
+            //   alert(cid);
+            var location = 'hi';
+            document.getElementById("totalhours").value = location;
         }
-    });
-</script>
-{{--  Start Hare  --}}
-{{-- * add html dynamically / regarding dynamically html --}}
-{{--  Start Hare  --}}
-{{-- html --}}
-<div class="row row-sm">
+        if (cid == 33) {
+            alert(cid);
+            var location = 'hi';
+            $('#key').val(location);
+        }
+    </script>
+    {{-- *  --}}
+
+    <script>
+        //   $(document).ready(function() {
+        $("#timesheet-form").submit(function(e) {
+            // Check if the "Client Name" dropdown is selected
+            if ($("#client1").val() != "Select Client" && $("#client1").val() != "") {
+                // If a client is selected, make the following fields required
+                $("#assignment1").prop("required", true);
+                $("#partner1").prop("required", true);
+                $("#assignment2").prop("required", true);
+            }
+        });
+    </script>
+    {{--  Start Hare  --}}
+    {{-- * add html dynamically / regarding dynamically html --}}
+    {{--  Start Hare  --}}
+    {{-- html --}}
     <div class="row row-sm">
-        <div class="col-2">
-            <div class="form-group">
-                <label class="font-weight-600">Client Name</label>
-                <select class="language form-control refresh" name="client_id[]" id="client1"
-                    @if (Request::is('timesheet/*/edit')) > <option disabled style="display:block">Select
+        <div class="row row-sm">
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="font-weight-600">Client Name</label>
+                    <select class="language form-control refresh" name="client_id[]" id="client1"
+                        @if (Request::is('timesheet/*/edit')) > <option disabled style="display:block">Select
                     Client
                     </option>
 
@@ -761,50 +2167,58 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
                         {{ $clientData->client_name }} ({{ $clientData->client_code }})</option>
 
                     @endforeach @endif
+                        </select>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="font-weight-600">Assignment Name</label>
+                    <select class="form-control key refreshoption" name="assignment_id[]" id="assignment1">
+                        @if (!empty($timesheet->assignment_id))
+                            <option value="{{ $timesheet->assignment_id }}">
+                                {{ App / Models / Assignment::where('id', $timesheet->assignment_id)->first()->assignment_name ?? '' }}
+                            </option>
+                        @endif
                     </select>
+                </div>
             </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <label class="font-weight-600">Assignment Name</label>
-                <select class="form-control key refreshoption" name="assignment_id[]" id="assignment1">
-                    @if (!empty($timesheet->assignment_id))
-                        <option value="{{ $timesheet->assignment_id }}">
-                            {{ App / Models / Assignment::where('id', $timesheet->assignment_id)->first()->assignment_name ?? '' }}
-                        </option>
-                    @endif
-                </select>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="font-weight-600">Partner *</label>
+                    <select class="language form-control refreshoption" id="partner1" name="partner[]">
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <label class="font-weight-600">Partner *</label>
-                <select class="language form-control refreshoption" id="partner1" name="partner[]">
-                </select>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="font-weight-600" style="width:100px;">Work Item</label>
+                    <textarea type="text" name="workitem[]" id="key" value="{{ $timesheet->workitem ?? '' }}"
+                        class="form-control key workItem1 refresh" rows="2"></textarea>
+                </div>
             </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <label class="font-weight-600" style="width:100px;">Work Item</label>
-                <textarea type="text" name="workitem[]" id="key" value="{{ $timesheet->workitem ?? '' }}"
-                    class="form-control key workItem1 refresh" rows="2"></textarea>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="font-weight-600" style="width:100px;">Location *</label>
+                    <input type="text" name="location[]" id="key" value="{{ $timesheet->location ?? '' }}"
+                        class="form-control key location1 refresh">
+                </div>
             </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <label class="font-weight-600" style="width:100px;">Location *</label>
-                <input type="text" name="location[]" id="key" value="{{ $timesheet->location ?? '' }}"
-                    class="form-control key location1 refresh">
-            </div>
-        </div>
 
-        <div class="col-1">
-            <div class="form-group">
-                <label class="font-weight-600">Hour</label>
-                <input type="number" class="form-control hour1 refresh" id="hour2" min="0" name="hour[]"
-                    oninput="calculateTotal(this)" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                    value="0" step="1">
+            <div class="col-1">
+                <div class="form-group">
+                    <label class="font-weight-600">Hour</label>
+                    <input type="number" class="form-control hour1 refresh" id="hour2" min="0"
+                        name="hour[]" oninput="calculateTotal(this)"
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="0"
+                        step="1">
 
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="form-group" style="margin-top: 36px;">
+                    <a href="javascript:void(0);" class="add_button" title="Add field"><img
+                            src="{{ url('backEnd/image/add-icon.png') }}" /></a>
+                </div>
             </div>
         </div>
         <div class="col-1">
@@ -814,28 +2228,21 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
             </div>
         </div>
     </div>
-    <div class="col-1">
-        <div class="form-group" style="margin-top: 36px;">
-            <a href="javascript:void(0);" class="add_button" title="Add field"><img
-                    src="{{ url('backEnd/image/add-icon.png') }}" /></a>
-        </div>
-    </div>
-</div>
 
-{{-- ! ok done --}}
-<script>
-    $(document).ready(function() {
-        var maxField = 5; //Input fields increment limitation
-        var addButton = $('.add_button'); //Add button selector
-        var wrapper = $('.field_wrapper'); //Input field wrapper
-        var x = 2;
+    {{-- ! ok done --}}
+    <script>
+        $(document).ready(function() {
+            var maxField = 5; //Input fields increment limitation
+            var addButton = $('.add_button'); //Add button selector
+            var wrapper = $('.field_wrapper'); //Input field wrapper
+            var x = 2;
 
-        $(addButton).click(function() {
-            //Check maximum number of input fields
-            if (x < maxField) {
-                x++; //Increment field counter
+            $(addButton).click(function() {
+                //Check maximum number of input fields
+                if (x < maxField) {
+                    x++; //Increment field counter
 
-                var fieldHTML = `<div class="row row-sm">
+                    var fieldHTML = `<div class="row row-sm">
                 <div class="col-2">
                     <div class="form-group">
                         <label class="font-weight-600">Client Name *</label>
@@ -889,30 +2296,30 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
                 </div>
             </div>`;
 
-                $(wrapper).append(fieldHTML); //Add field html
-            }
+                    $(wrapper).append(fieldHTML); //Add field html
+                }
+            });
+
+            //Once remove button is clicked
+            $(wrapper).on('click', '.remove_button', function(e) {
+                e.preventDefault();
+                $(this).parent('div').remove(); //Remove field html
+                x--; //Decrement field counter
+            });
         });
+    </script>
 
-        //Once remove button is clicked
-        $(wrapper).on('click', '.remove_button', function(e) {
-            e.preventDefault();
-            $(this).parent('div').remove(); //Remove field html
-            x--; //Decrement field counter
-        });
-    });
-</script>
+    <script>
+        $(document).ready(function() {
+            var maxField = 4;
+            var addButton = $('.add_button');
+            var wrapper = $('.field_wrapper');
+            var x = 1;
 
-<script>
-    $(document).ready(function() {
-        var maxField = 4;
-        var addButton = $('.add_button');
-        var wrapper = $('.field_wrapper');
-        var x = 1;
-
-        $(addButton).click(function() {
-            if (x < maxField) {
-                x++;
-                var fieldHTML = `<div class="row row-sm">
+            $(addButton).click(function() {
+                if (x < maxField) {
+                    x++;
+                    var fieldHTML = `<div class="row row-sm">
               <div class="col-2">
                   <div class="form-group">
                       <label class="font-weight-600">Client Name *</label>
@@ -966,69 +2373,69 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
               </div>
           </div>`;
 
-                $(wrapper).append(fieldHTML);
+                    $(wrapper).append(fieldHTML);
+                }
+            });
+
+            //Once remove button is clicked
+            $(wrapper).on('click', '.remove_button', function(e) {
+                e.preventDefault();
+                $(this).closest('.row-sm').remove();
+                x--;
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Function to handle change event for client select
+            function handleClientChange(clientId) {
+                $('#' + clientId).on('change', function() {
+                    var cid = $(this).val();
+                    var datepickers = $('#datepickers').val();
+
+                    $.ajax({
+                        type: "get",
+                        url: "{{ url('timesheet/create') }}",
+                        data: {
+                            cid: cid,
+                            datepickers: datepickers
+                        },
+                        success: function(res) {
+                            $('#' + clientId.replace('client', 'assignment')).html(res);
+                        },
+                        error: function() {},
+                    });
+                });
             }
-        });
 
-        //Once remove button is clicked
-        $(wrapper).on('click', '.remove_button', function(e) {
-            e.preventDefault();
-            $(this).closest('.row-sm').remove();
-            x--;
-        });
-    });
-</script>
+            // Function to handle change event for assignment select
+            function handleAssignmentChange(assignmentId) {
+                $('#' + assignmentId).on('change', function() {
+                    var assignment = $(this).val();
 
-<script>
-    $(document).ready(function() {
-        // Function to handle change event for client select
-        function handleClientChange(clientId) {
-            $('#' + clientId).on('change', function() {
-                var cid = $(this).val();
-                var datepickers = $('#datepickers').val();
-
-                $.ajax({
-                    type: "get",
-                    url: "{{ url('timesheet/create') }}",
-                    data: {
-                        cid: cid,
-                        datepickers: datepickers
-                    },
-                    success: function(res) {
-                        $('#' + clientId.replace('client', 'assignment')).html(res);
-                    },
-                    error: function() {},
+                    $.ajax({
+                        type: "get",
+                        url: "{{ url('timesheet/create') }}",
+                        data: "assignment=" + assignment,
+                        success: function(res) {
+                            $('#' + assignmentId.replace('assignment', 'partner')).html(res);
+                        },
+                        error: function() {},
+                    });
                 });
-            });
-        }
+            }
 
-        // Function to handle change event for assignment select
-        function handleAssignmentChange(assignmentId) {
-            $('#' + assignmentId).on('change', function() {
-                var assignment = $(this).val();
+            // Dynamically add client fields
+            var maxField = 4;
+            var addButton = $('.add_button');
+            var wrapper = $('.field_wrapper');
+            var x = 1;
 
-                $.ajax({
-                    type: "get",
-                    url: "{{ url('timesheet/create') }}",
-                    data: "assignment=" + assignment,
-                    success: function(res) {
-                        $('#' + assignmentId.replace('assignment', 'partner')).html(res);
-                    },
-                    error: function() {},
-                });
-            });
-        }
-
-        // Dynamically add client fields
-        var maxField = 4;
-        var addButton = $('.add_button');
-        var wrapper = $('.field_wrapper');
-        var x = 1;
-
-        $(addButton).click(function() {
-            if (x < maxField) {
-                x++;
-                var fieldHTML = `<div class="row row-sm">
+            $(addButton).click(function() {
+                if (x < maxField) {
+                    x++;
+                    var fieldHTML = `<div class="row row-sm">
               <div class="col-2">
                   <div class="form-group">
                       <label class="font-weight-600">Client Name *</label>
@@ -1082,76 +2489,76 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
               </div>
           </div>`;
 
-                $(wrapper).append(fieldHTML);
+                    $(wrapper).append(fieldHTML);
 
-                var clientId = 'client' + x;
-                var assignmentId = 'assignment' + x;
+                    var clientId = 'client' + x;
+                    var assignmentId = 'assignment' + x;
 
-                handleClientChange(clientId);
-                handleAssignmentChange(assignmentId);
-            }
+                    handleClientChange(clientId);
+                    handleAssignmentChange(assignmentId);
+                }
+            });
+
+            handleClientChange('client');
+            handleClientChange('client1');
+            handleAssignmentChange('assignment');
+            handleAssignmentChange('assignment1');
         });
-
-        handleClientChange('client');
-        handleClientChange('client1');
-        handleAssignmentChange('assignment');
-        handleAssignmentChange('assignment1');
-    });
-</script>
+    </script>
 
 
-<script>
-    $(document).ready(function() {
-        // Function to handle change event for client select
-        function handleClientChange(clientId) {
-            $('#' + clientId).on('change', function() {
-                var cid = $(this).val();
-                var datepickers = $('#datepickers').val();
+    <script>
+        $(document).ready(function() {
+            // Function to handle change event for client select
+            function handleClientChange(clientId) {
+                $('#' + clientId).on('change', function() {
+                    var cid = $(this).val();
+                    var datepickers = $('#datepickers').val();
 
-                $.ajax({
-                    type: "get",
-                    url: "{{ url('timesheet/create') }}",
-                    data: {
-                        cid: cid,
-                        datepickers: datepickers
-                    },
-                    success: function(res) {
-                        $('#' + clientId.replace('client', 'assignment')).html(res);
-                    },
-                    error: function() {},
+                    $.ajax({
+                        type: "get",
+                        url: "{{ url('timesheet/create') }}",
+                        data: {
+                            cid: cid,
+                            datepickers: datepickers
+                        },
+                        success: function(res) {
+                            $('#' + clientId.replace('client', 'assignment')).html(res);
+                        },
+                        error: function() {},
+                    });
                 });
-            });
-        }
+            }
 
-        // Function to handle change event for assignment select
-        function handleAssignmentChange(assignmentId) {
-            $('#' + assignmentId).on('change', function() {
-                var assignment = $(this).val();
+            // Function to handle change event for assignment select
+            function handleAssignmentChange(assignmentId) {
+                $('#' + assignmentId).on('change', function() {
+                    var assignment = $(this).val();
 
-                $.ajax({
-                    type: "get",
-                    url: "{{ url('timesheet/create') }}",
-                    data: "assignment=" + assignment,
-                    success: function(res) {
-                        $('#' + assignmentId.replace('assignment', 'partner')).html(res);
-                    },
-                    error: function() {},
+                    $.ajax({
+                        type: "get",
+                        url: "{{ url('timesheet/create') }}",
+                        data: "assignment=" + assignment,
+                        success: function(res) {
+                            $('#' + assignmentId.replace('assignment', 'partner')).html(res);
+                        },
+                        error: function() {},
+                    });
                 });
-            });
-        }
+            }
 
-        // Dynamically add client fields
-        var maxField = 4;
-        var addButton = $('.add_button');
-        var wrapper = $('.field_wrapper');
-        var x = 1;
-        var h = 2;
+            // Dynamically add client fields
+            var maxField = 4;
+            var addButton = $('.add_button');
+            var wrapper = $('.field_wrapper');
+            var x = 1;
+            var h = 2;
 
-        $(addButton).click(function() {
-            if (x < maxField) {
-                x++;
-                h++;
-                var fieldHTML = `<div class="row row-sm">
+            $(addButton).click(function() {
+                if (x < maxField) {
+                    x++;
+                    h++;
+                    var fieldHTML = `<div class="row row-sm">
             <div class="col-2">
                 <div class="form-group">
                     <label class="font-weight-600">Client Name *</label>
@@ -1205,604 +2612,724 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
             </div>
         </div>`;
 
-                $(wrapper).append(fieldHTML);
+                    $(wrapper).append(fieldHTML);
 
-                var clientId = 'client' + x;
-                var assignmentId = 'assignment' + x;
+                    var clientId = 'client' + x;
+                    var assignmentId = 'assignment' + x;
 
-                handleClientChange(clientId);
-                handleAssignmentChange(assignmentId);
-            }
+                    handleClientChange(clientId);
+                    handleAssignmentChange(assignmentId);
+                }
+            });
+
+            handleClientChange('client');
+            handleClientChange('client1');
+            handleAssignmentChange('assignment');
+            handleAssignmentChange('assignment1');
         });
 
-        handleClientChange('client');
-        handleClientChange('client1');
-        handleAssignmentChange('assignment');
-        handleAssignmentChange('assignment1');
-    });
+        function calculateTotal() {
+            var totalSum = 0;
+            $('input[name^="hour"]').each(function() {
+                totalSum += parseInt($(this).val()) || 0;
+            });
 
-    function calculateTotal() {
-        var totalSum = 0;
-        $('input[name^="hour"]').each(function() {
-            totalSum += parseInt($(this).val()) || 0;
-        });
-
-        document.getElementById("totalhours").value = totalSum;
-    }
-</script>
+            document.getElementById("totalhours").value = totalSum;
+        }
+    </script>
 
 
-{{-- * Regarding date selection  --}}
-{{--  Start Hare  --}}
-
-<div class="col-md-5">
-    <p style="float: right;color: white"><b>Select Date : </b> <input type="text" id="datepickers" name="date"
-            value="{{ date('d-m-Y') }}" readonly></p>
-</div>
-
-
-<style>
-    tr td:first-child a.ui-state-default {
-        background-color: rgb(234, 0, 0) !important;
-        color: white !important;
-    }
-</style>
-
-<script>
-    $(function() {
-        var startDate = new Date();
-        $("#datepickers").datepicker({
-            maxDate: startDate,
-            dateFormat: 'dd-mm-yy'
-        });
-    });
-</script>
-{{--  Start Hare  --}}
-<style>
-    td a.ui-state-default {
-        background-color: green !important;
-        color: white !important;
-    }
-
-    td span.ui-state-default {
-        background-color: red !important;
-        color: white !important;
-    }
-</style>
-
-<script>
-    $(function() {
-        var startDate = new Date();
-        var endDate = new Date();
-        endDate.setDate(startDate.getDate() + 6);
-
-        $("#datepickersq").datepicker({
-            minDate: startDate,
-            maxDate: endDate,
-            dateFormat: 'dd-mm-yy'
-        });
-    });
-</script>
-{{--  Start Hare  --}}
-<div class="col-md-5">
-    <p style="float: right;color: white"><b>Select Date : </b> <input type="text" id="datepickersq"
-            name="date" value="{{ date('d-m-Y') }}" readonly></p>
-</div>
-
-<script>
-    $(function() {
-        var startDate = new Date();
-        var endDate = new Date();
-        endDate.setDate(startDate.getDate() + 6);
-
-        $("#datepickersq").datepicker({
-            minDate: startDate,
-            maxDate: endDate,
-            dateFormat: 'dd-mm-yy'
-        });
-    });
-</script>
-{{--  Start Hare  --}}
-<script>
-    $(function() {
-        var startDate = new Date();
-        var endDate = new Date();
-        startDate.setDate(startDate.getDate() - 10);
-        endDate.setDate(startDate.getDate() + 16);
-
-        $("#datepickersq").datepicker({
-            minDate: startDate,
-            maxDate: endDate,
-            dateFormat: 'dd-mm-yy'
-        });
-    });
-</script>
-{{--  Start Hare  --}}
-<script>
-    // Get the input element by its ID
-    const startDateInput = document.getElementById('startdate');
-
-    // Add an event listener to listen for changes in the input value
-    startDateInput.addEventListener('change', function() {
-        // Get the selected date value
-        const selectedDate = new Date(this.value);
-
-        // Format the date to 'yyyy-mm-dd'
-        const year = selectedDate.getFullYear();
-        const month = ('0' + (selectedDate.getMonth() + 1)).slice(-2); // Add leading zero if needed
-        const day = ('0' + selectedDate.getDate()).slice(-2); // Add leading zero if needed
-
-        // Update the input value with the formatted date
-        this.value = year + '-' + month + '-' + day;
-    });
-</script>
-{{--  Start Hare  --}}
-{{-- regarding date formate  --}}
-<script>
-    $(function() {
-        $('#datepicker').datepicker({
-            dateFormat: 'dd-mm-yy'
-        });
-    });
-    $(function() {
-        $("#datepickers").datepicker({
-            maxDate: new Date,
-            dateFormat: 'dd-mm-yy'
-        });
-    });
-</script>
-
-
-
-{{-- * Remove extra space  --}}
-{{--  Start Hare  --}}
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            "pageLength": 14,
-            dom: 'Bfrtip',
-            "order": [
-                // [2, "desc"]
-            ],
-
-            columnDefs: [{
-                targets: [0, 1, 3, 4, 5, 6, 7, 8, 9, 10],
-                orderable: false
-            }],
-
-            buttons: [{
-                    extend: 'excelHtml5',
-                    filename: 'Timesheet Save',
-                    // remove extra date from column
-                    exportOptions: {
-                        columns: ':visible',
-                        format: {
-                            body: function(data, row, column, node) {
-                                if (column === 1) {
-                                    var cleanedText = $(data).text().trim();
-                                    var dateParts = cleanedText.split(
-                                        '-');
-                                    // Assuming the date format is yyyy-mm-dd
-                                    if (dateParts.length === 3) {
-                                        return dateParts[2] + '-' + dateParts[1] + '-' +
-                                            dateParts[0];
-                                    }
-                                }
-                                if (column === 0 || column === 10) {
-                                    var cleanedText = $(data).text().trim();
-                                    return cleanedText;
-                                }
-                                return data;
-                            }
-                        }
-                    },
-
-                    //  Remove extra space 
-                    customize: function(xlsx) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                        // remove extra spaces
-                        $('c', sheet).each(function() {
-                            var originalText = $(this).find('is t').text();
-                            var cleanedText = originalText.replace(/\s+/g, ' ')
-                                .trim();
-                            $(this).find('is t').text(cleanedText);
-                        });
-                    }
+    {{-- * Regarding date selection  --}}
+    {{--  Start Hare  --}}
+    <script>
+        $('#client').on('change', function() {
+            var cid = $(this).val();
+            var date = new Date();
+            var day = ("0" + date.getDate()).slice(-2);
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var datepickers = day + "-" + month + "-" + date.getFullYear();
+            // alert(datepickers);
+            $.ajax({
+                type: "get",
+                url: "{{ url('timesheet/create') }}",
+                // data: "cid=" + cid,
+                data: {
+                    cid: cid,
+                    datepickers: datepickers
                 },
-                'colvis'
-            ]
-        });
-    });
-</script>
-{{-- * two table on one page then table implement / column modify / column modification --}}
-{{--  Start Hare  --}}
-
-
-<script>
-    $(document).ready(function() {
-        $('#myTimesheetTable').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                // [0, "desc"]
-            ],
-            columnDefs: [{
-                targets: [0, 2, 3, 4, 5, 6],
-                orderable: false
-            }],
-
-            buttons: [{
-                    extend: 'excelHtml5',
-                    filename: 'My timesheet Request',
-                    //   remove extra date from column
-                    exportOptions: {
-                        columns: ':visible',
-                        format: {
-                            body: function(data, row, column, node) {
-                                if (column === 1) {
-                                    var cleanedText = $(data).text().trim();
-                                    var dateParts = cleanedText.split(
-                                        '-');
-                                    // Assuming the date format is yyyy-mm-dd
-                                    if (dateParts.length === 3) {
-                                        return dateParts[2] + '-' + dateParts[1] + '-' +
-                                            dateParts[0];
-                                    }
-                                }
-                                if (column === 0 || column === 3) {
-                                    var cleanedText = $(data).text().trim();
-                                    return cleanedText;
-                                }
-                                return data;
-                            }
-                        }
-                    },
+                success: function(res) {
+                    $('#assignment').html(res);
                 },
-                'colvis'
-            ]
+                error: function() {},
+            });
         });
+    </script>
+    {{--  Start Hare  --}}
 
-        $('#teamTimesheetTable').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                // [0, "desc"]
-            ],
-            columnDefs: [{
-                targets: [0, 2, 3, 4, 5, 6],
-                orderable: false
-            }],
-            buttons: [{
-                    extend: 'excelHtml5',
-                    filename: 'Team timesheet Request',
-
-                    //   remove extra date from column
-                    exportOptions: {
-                        columns: ':visible',
-                        format: {
-                            body: function(data, row, column, node) {
-                                if (column === 1) {
-                                    var cleanedText = $(data).text().trim();
-                                    var dateParts = cleanedText.split(
-                                        '-');
-                                    // Assuming the date format is yyyy-mm-dd
-                                    if (dateParts.length === 3) {
-                                        return dateParts[2] + '-' + dateParts[1] + '-' +
-                                            dateParts[0];
-                                    }
-                                }
-                                if (column === 0 || column === 3) {
-                                    var cleanedText = $(data).text().trim();
-                                    return cleanedText;
-                                }
-                                return data;
-                            }
-                        }
-                    },
-
-                },
-                'colvis'
-            ]
-        });
-    });
-</script>
-{{--  Start Hare  --}}
-<style>
-    .dt-buttons {
-        margin-bottom: -34px;
-    }
-
-    #teamTimesheetTable {
-        width: 100% !important;
-
-    }
-</style>
-<script>
-    $(document).ready(function() {
-        $('#myTimesheetTable').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                [0, "desc"]
-            ],
-
-            buttons: [{
-                    extend: 'excelHtml5',
-                    filename: 'Timesheet_Download',
-
-                },
-                'colvis'
-            ]
-        });
-
-        $('#teamTimesheetTable').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                [0, "desc"]
-            ],
-            buttons: [{
-                    extend: 'excelHtml5',
-                    filename: 'Timesheet_Download',
-
-                },
-                'colvis'
-            ]
-        });
-    });
-</script>
-
-{{-- * hide button  --}}
-{{--  start hare --}}
-<style>
-    .dt-buttons {
-        margin-bottom: -34px;
-    }
-</style>
-
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            // 'l' for the length menu
-            dom: 'Bfrtip',
-            // "order": [
-            //     [0, "ASC"]
-            // ],
-            @if (Auth::user()->role_id == 11 || Auth::user()->role_id == 13)
-                buttons: [{
-                        extend: 'excelHtml5',
-                        filename: 'Team List',
-                    },
-                    'colvis'
-                ]
-            @else
-                buttons: []
-            @endif
-        });
-    });
-</script>
-
-{{--  start har --}}
-
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            "pageLength": 10,
-            "dom": '1Bfrtip',
-            "order": [
-                [1, "desc"]
-            ],
-
-            buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: ':visible'
-                },
-                text: 'Export to Excel',
-                className: 'btn-excel',
-            }, ]
-        });
-
-        $('.btn-excel').hide();
-    });
-</script>
-{{--  start har --}}
-<style>
-    .dt-buttons {
-        margin-bottom: -34px;
-    }
-</style>
-
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            @if (Auth::user()->role_id == 11 || Auth::user()->role_id == 13)
-                // 'l' for the length menu
-                dom: 'lBfrtip',
-                buttons: [{
-                        extend: 'excelHtml5',
-                        filename: 'Team List',
-                    },
-                    'colvis'
-                ]
-            @else
-                buttons: []
-            @endif
-        });
-    });
-</script>
-
-{{-- * accending order on date   --}}
-
-<td> <span style="display: none;">
-        {{ date('Y-m-d', strtotime($timesheetDatas->date)) }}</span>{{ date('d-m-Y', strtotime($timesheetDatas->date)) }}
-</td>
-{{-- understanding code --}}
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "order": [],
-            searching: false,
-            @if (Auth::user()->role_id == 11 ||
-                    Request::is('adminsearchtimesheet') ||
-                    (Auth::user()->role_id == 13 && Request::is('admintimesheetlist')))
-                columnDefs: [{
-                    targets: [1, 2, 4, 5, 6, 7, 8, 9],
-                    orderable: false
-                }],
-            @else
-                columnDefs: [{
-                    targets: [1, 3, 4, 5, 6, 7, 8, 9],
-                    orderable: false
-                }],
-            @endif
-            buttons: [{
-                    extend: 'excelHtml5',
-                    filename: 'Timesheet_Download',
-                    //   remove extra date from column
-                    exportOptions: {
-                        columns: ':visible',
-                        format: {
-                            body: function(data, row, column, node) {
-                                // If the data is a date, extract the date without HTML tags
-                                if (column === 2) {
-                                    // data = <span style="display: none;"> 2024-02-26</span>26-02-2024
-                                    var cleanedText = $(data).text().trim();
-                                    //   2024-02-26
-                                    var dateParts = cleanedText.split(
-                                        '-');
-                                    //   20240226
-                                    //   2,02,40,226
-                                    // Assuming the date format is yyyy-mm-dd
-                                    //   dateParts.length = 3 hai 
-                                    if (dateParts.length === 3) {
-                                        //   return dateParts[2] + '-' + dateParts[1] + '-' +
-                                        //       dateParts[0];
-                                        //  for testing
-                                        //   return dateParts[0];
-                                        //   dateParts[2]= 26
-                                        //   dateParts[1]= 02
-                                        //   dateParts[0]= 2024
-                                    }
-                                }
-                                return data;
-                            }
-                        }
-                    },
-                    //   set width in excell
-                    customize: function(xlsx) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                        // set column width
-                        $('col', sheet).eq(0).attr('width', 15);
-                        $('col', sheet).eq(1).attr('width', 15);
-                        $('col', sheet).eq(3).attr('width', 30);
-                        $('col', sheet).eq(4).attr('width', 30);
-                        $('col', sheet).eq(5).attr('width', 30);
-                        $('col', sheet).eq(6).attr('width', 30);
-                        $('col', sheet).eq(7).attr('width', 30);
-
-                        // remove extra spaces
-                        $('c', sheet).each(function() {
-                            var originalText = $(this).find('is t').text();
-                            var cleanedText = originalText.replace(/\s+/g, ' ').trim();
-                            $(this).find('is t').text(cleanedText);
-                        });
-                    }
-                },
-                'colvis'
-            ]
-        });
-    });
-</script>
-
-{{-- clean code  --}}
-
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "order": [],
-            searching: false,
-            @if (Auth::user()->role_id == 11 ||
-                    Request::is('adminsearchtimesheet') ||
-                    (Auth::user()->role_id == 13 && Request::is('admintimesheetlist')))
-                columnDefs: [{
-                    targets: [1, 2, 4, 5, 6, 7, 8, 9],
-                    orderable: false
-                }],
-            @else
-                columnDefs: [{
-                    targets: [1, 3, 4, 5, 6, 7, 8, 9],
-                    orderable: false
-                }],
-            @endif
-            buttons: [{
-                    extend: 'excelHtml5',
-                    filename: 'Timesheet_Download',
-
-                    //   remove extra date from column
-                    exportOptions: {
-                        columns: ':visible',
-                        format: {
-                            body: function(data, row, column, node) {
-                                // If the data is a date, extract the date without HTML tags
-                                if (column === 2) {
-                                    var cleanedText = $(data).text().trim();
-                                    var dateParts = cleanedText.split(
-                                        '-');
-                                    // Assuming the date format is yyyy-mm-dd
-                                    if (dateParts.length === 3) {
-                                        return dateParts[2] + '-' + dateParts[1] + '-' +
-                                            dateParts[0];
-                                    }
-                                }
-                                return data;
-                            }
-                        }
-                    },
-
-                    //   set width in excell
-                    customize: function(xlsx) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                        // set column width
-                        $('col', sheet).eq(0).attr('width', 15);
-                        $('col', sheet).eq(1).attr('width', 15);
-                        $('col', sheet).eq(3).attr('width', 30);
-                        $('col', sheet).eq(4).attr('width', 30);
-                        $('col', sheet).eq(5).attr('width', 30);
-                        $('col', sheet).eq(6).attr('width', 30);
-                        $('col', sheet).eq(7).attr('width', 30);
-
-                        // remove extra spaces
-                        $('c', sheet).each(function() {
-                            var originalText = $(this).find('is t').text();
-                            var cleanedText = originalText.replace(/\s+/g, ' ').trim();
-                            $(this).find('is t').text(cleanedText);
-                        });
-                    }
-                },
-                'colvis'
-            ]
-        });
-    });
-</script>
-
-{{-- * on click button  --}}
-<div class="col-1">
-    <div class="form-group" style="margin-top: 36px;">
-        <a href="javascript:void(0);" class="add_button" title="Add field"><img
-                src="{{ url('backEnd/image/add-icon.png') }}" /></a>
+    <div class="col-md-5">
+        <p style="float: right;color: white"><b>Select Date : </b> <input type="text" id="datepickers"
+                name="date" value="{{ date('d-m-Y') }}" readonly></p>
     </div>
-</div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-<script type="text/javascript">
+    <style>
+        tr td:first-child a.ui-state-default {
+            background-color: rgb(234, 0, 0) !important;
+            color: white !important;
+        }
+    </style>
+
+    <script>
+        $(function() {
+            var startDate = new Date();
+            $("#datepickers").datepicker({
+                maxDate: startDate,
+                dateFormat: 'dd-mm-yy'
+            });
+        });
+    </script>
+    {{--  Start Hare  --}}
+    <style>
+        td a.ui-state-default {
+            background-color: green !important;
+            color: white !important;
+        }
+
+        td span.ui-state-default {
+            background-color: red !important;
+            color: white !important;
+        }
+    </style>
+
+    <script>
+        $(function() {
+            var startDate = new Date();
+            var endDate = new Date();
+            endDate.setDate(startDate.getDate() + 6);
+
+            $("#datepickersq").datepicker({
+                minDate: startDate,
+                maxDate: endDate,
+                dateFormat: 'dd-mm-yy'
+            });
+        });
+    </script>
+    {{--  Start Hare  --}}
+    <div class="col-md-5">
+        <p style="float: right;color: white"><b>Select Date : </b> <input type="text" id="datepickersq"
+                name="date" value="{{ date('d-m-Y') }}" readonly></p>
+    </div>
+
+    <script>
+        $(function() {
+            var startDate = new Date();
+            var endDate = new Date();
+            endDate.setDate(startDate.getDate() + 6);
+
+            $("#datepickersq").datepicker({
+                minDate: startDate,
+                maxDate: endDate,
+                dateFormat: 'dd-mm-yy'
+            });
+        });
+    </script>
+    {{--  Start Hare  --}}
+    <script>
+        $(function() {
+            var startDate = new Date();
+            var endDate = new Date();
+            startDate.setDate(startDate.getDate() - 10);
+            endDate.setDate(startDate.getDate() + 16);
+
+            $("#datepickersq").datepicker({
+                minDate: startDate,
+                maxDate: endDate,
+                dateFormat: 'dd-mm-yy'
+            });
+        });
+    </script>
+    {{--  Start Hare  --}}
+    <script>
+        // Get the input element by its ID
+        const startDateInput = document.getElementById('startdate');
+
+        // Add an event listener to listen for changes in the input value
+        startDateInput.addEventListener('change', function() {
+            // Get the selected date value
+            const selectedDate = new Date(this.value);
+
+            // Format the date to 'yyyy-mm-dd'
+            const year = selectedDate.getFullYear();
+            const month = ('0' + (selectedDate.getMonth() + 1)).slice(-2); // Add leading zero if needed
+            const day = ('0' + selectedDate.getDate()).slice(-2); // Add leading zero if needed
+
+            // Update the input value with the formatted date
+            this.value = year + '-' + month + '-' + day;
+        });
+    </script>
+    {{--  Start Hare  --}}
+    <script>
+        var datepickers = $('#datepickers').val();
+        const d = new Date(datepickers);
+
+        // Get the day of the week (0 for Sunday, 1 for Monday, and so on)
+        const dayOfWeek = d.getDay();
+
+        // Convert day of the week to a string representation
+        let dayString;
+        switch (dayOfWeek) {
+            case 0:
+                dayString = "Sunday";
+                break;
+            case 1:
+                dayString = "Monday";
+                break;
+            case 2:
+                dayString = "Tuesday";
+                break;
+            case 3:
+                dayString = "Wednesday";
+                break;
+            case 4:
+                dayString = "Thursday";
+                break;
+            case 5:
+                dayString = "Friday";
+                break;
+            case 6:
+                dayString = "Saturday";
+                break;
+            default:
+                dayString = "Invalid Day";
+        }
+
+        alert("The selected date is on a " + dayString);
+    </script>
+    {{--  Start Hare  --}}
+    <script>
+        var datepickers = $('#datepickers').val();
+        const d = new Date(datepickers);
+        const dayOfWeek = d.getDay();
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+            "Saturday"
+        ];
+        const dayString = days[dayOfWeek];
+
+        alert(dayString);
+    </script>
+    {{--  Start Hare  --}}
+    {{--  Start Hare  --}}
+    {{--  Start Hare  --}}
+    {{-- regarding date formate  --}}
+
+    <script>
+        $(function() {
+            var startDate = new Date();
+            $("#datepickers").datepicker({
+                maxDate: startDate,
+                dateFormat: 'dd-mm-yy'
+            });
+        });
+    </script>
+
+    {{-- resources\views\backEnd\layouts\includes\js.blade.php --}}
+    {{-- <script>
     $(document).ready(function() {
-        var maxField = 10; //Input fields increment limitation
-        var addButton = $('.add_button'); //Add button selector
-        var wrapper = $('.field_wrapper'); //Input field wrapper
-        var x = 1;
-        var fieldHTML = `
+        $('.datepicker').datepicker({
+            format: 'dd-mm-yyyy',
+            autoclose: true,
+            todayHighlight: true
+        });
+    });
+</script> --}}
+    <script>
+        $(function() {
+            $('#datepicker').datepicker({
+                dateFormat: 'dd-mm-yy'
+            });
+        });
+        $(function() {
+            $("#datepickers").datepicker({
+                maxDate: new Date,
+                dateFormat: 'dd-mm-yy'
+            });
+        });
+    </script>
+    {{--  Start Hare  --}}
+    <script>
+        var datepickers = $('#datepickers').val();
+        const d = new Date(datepickers);
+
+        const year = d.getFullYear();
+        const month = ('0' + (d.getMonth() + 1)).slice(-2); // Add 1 because getMonth() returns zero-based month index
+        const day = ('0' + d.getDate()).slice(-2);
+
+        const formattedDate = `${year}/${month}/${day}`;
+        console.log(formattedDate); // Output: "2024/05/30"
+    </script>
+
+
+    {{--  Start Hare  --}}
+    <script>
+        var datepickers = $('#datepickers').val();
+        const parts = datepickers.split('-'); // Split the date string into parts
+        const formattedDate =
+            `${parts[2]}-${parts[1]}-${parts[0]}`; // Rearrange parts to 'YYYY-MM-DD' format
+        const d = new Date(formattedDate);
+    </script>
+    {{--  Start Hare  --}}
+
+
+
+    {{-- * Remove extra space  --}}
+    {{--  Start Hare  --}}
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                "pageLength": 14,
+                dom: 'Bfrtip',
+                "order": [
+                    // [2, "desc"]
+                ],
+
+                columnDefs: [{
+                    targets: [0, 1, 3, 4, 5, 6, 7, 8, 9, 10],
+                    orderable: false
+                }],
+
+                buttons: [{
+                        extend: 'excelHtml5',
+                        filename: 'Timesheet Save',
+                        // remove extra date from column
+                        exportOptions: {
+                            columns: ':visible',
+                            format: {
+                                body: function(data, row, column, node) {
+                                    if (column === 1) {
+                                        var cleanedText = $(data).text().trim();
+                                        var dateParts = cleanedText.split(
+                                            '-');
+                                        // Assuming the date format is yyyy-mm-dd
+                                        if (dateParts.length === 3) {
+                                            return dateParts[2] + '-' + dateParts[1] + '-' +
+                                                dateParts[0];
+                                        }
+                                    }
+                                    if (column === 0 || column === 10) {
+                                        var cleanedText = $(data).text().trim();
+                                        return cleanedText;
+                                    }
+                                    return data;
+                                }
+                            }
+                        },
+
+                        //  Remove extra space 
+                        customize: function(xlsx) {
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                            // remove extra spaces
+                            $('c', sheet).each(function() {
+                                var originalText = $(this).find('is t').text();
+                                var cleanedText = originalText.replace(/\s+/g, ' ')
+                                    .trim();
+                                $(this).find('is t').text(cleanedText);
+                            });
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        });
+    </script>
+    {{-- * two table on one page then table implement / column modify / column modification --}}
+    {{--  Start Hare  --}}
+
+
+    <script>
+        $(document).ready(function() {
+            $('#myTimesheetTable').DataTable({
+                dom: 'Bfrtip',
+                "order": [
+                    // [0, "desc"]
+                ],
+                columnDefs: [{
+                    targets: [0, 2, 3, 4, 5, 6],
+                    orderable: false
+                }],
+
+                buttons: [{
+                        extend: 'excelHtml5',
+                        filename: 'My timesheet Request',
+                        //   remove extra date from column
+                        exportOptions: {
+                            columns: ':visible',
+                            format: {
+                                body: function(data, row, column, node) {
+                                    if (column === 1) {
+                                        var cleanedText = $(data).text().trim();
+                                        var dateParts = cleanedText.split(
+                                            '-');
+                                        // Assuming the date format is yyyy-mm-dd
+                                        if (dateParts.length === 3) {
+                                            return dateParts[2] + '-' + dateParts[1] + '-' +
+                                                dateParts[0];
+                                        }
+                                    }
+                                    if (column === 0 || column === 3) {
+                                        var cleanedText = $(data).text().trim();
+                                        return cleanedText;
+                                    }
+                                    return data;
+                                }
+                            }
+                        },
+                    },
+                    'colvis'
+                ]
+            });
+
+            $('#teamTimesheetTable').DataTable({
+                dom: 'Bfrtip',
+                "order": [
+                    // [0, "desc"]
+                ],
+                columnDefs: [{
+                    targets: [0, 2, 3, 4, 5, 6],
+                    orderable: false
+                }],
+                buttons: [{
+                        extend: 'excelHtml5',
+                        filename: 'Team timesheet Request',
+
+                        //   remove extra date from column
+                        exportOptions: {
+                            columns: ':visible',
+                            format: {
+                                body: function(data, row, column, node) {
+                                    if (column === 1) {
+                                        var cleanedText = $(data).text().trim();
+                                        var dateParts = cleanedText.split(
+                                            '-');
+                                        // Assuming the date format is yyyy-mm-dd
+                                        if (dateParts.length === 3) {
+                                            return dateParts[2] + '-' + dateParts[1] + '-' +
+                                                dateParts[0];
+                                        }
+                                    }
+                                    if (column === 0 || column === 3) {
+                                        var cleanedText = $(data).text().trim();
+                                        return cleanedText;
+                                    }
+                                    return data;
+                                }
+                            }
+                        },
+
+                    },
+                    'colvis'
+                ]
+            });
+        });
+    </script>
+    {{--  Start Hare  --}}
+    <style>
+        .dt-buttons {
+            margin-bottom: -34px;
+        }
+
+        #teamTimesheetTable {
+            width: 100% !important;
+
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            $('#myTimesheetTable').DataTable({
+                dom: 'Bfrtip',
+                "order": [
+                    [0, "desc"]
+                ],
+
+                buttons: [{
+                        extend: 'excelHtml5',
+                        filename: 'Timesheet_Download',
+
+                    },
+                    'colvis'
+                ]
+            });
+
+            $('#teamTimesheetTable').DataTable({
+                dom: 'Bfrtip',
+                "order": [
+                    [0, "desc"]
+                ],
+                buttons: [{
+                        extend: 'excelHtml5',
+                        filename: 'Timesheet_Download',
+
+                    },
+                    'colvis'
+                ]
+            });
+        });
+    </script>
+
+    {{-- * hide button  --}}
+    {{--  start hare --}}
+    <style>
+        .dt-buttons {
+            margin-bottom: -34px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                // 'l' for the length menu
+                dom: 'Bfrtip',
+                // "order": [
+                //     [0, "ASC"]
+                // ],
+                @if (Auth::user()->role_id == 11 || Auth::user()->role_id == 13)
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            filename: 'Team List',
+                        },
+                        'colvis'
+                    ]
+                @else
+                    buttons: []
+                @endif
+            });
+        });
+    </script>
+
+    {{--  start har --}}
+
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                "pageLength": 10,
+                "dom": '1Bfrtip',
+                "order": [
+                    [1, "desc"]
+                ],
+
+                buttons: [{
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: ':visible'
+                    },
+                    text: 'Export to Excel',
+                    className: 'btn-excel',
+                }, ]
+            });
+
+            $('.btn-excel').hide();
+        });
+    </script>
+    {{--  start har --}}
+    <style>
+        .dt-buttons {
+            margin-bottom: -34px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                @if (Auth::user()->role_id == 11 || Auth::user()->role_id == 13)
+                    // 'l' for the length menu
+                    dom: 'lBfrtip',
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            filename: 'Team List',
+                        },
+                        'colvis'
+                    ]
+                @else
+                    buttons: []
+                @endif
+            });
+        });
+    </script>
+
+    {{-- * accending order on date   --}}
+
+    <td> <span style="display: none;">
+            {{ date('Y-m-d', strtotime($timesheetDatas->date)) }}</span>{{ date('d-m-Y', strtotime($timesheetDatas->date)) }}
+    </td>
+    {{-- understanding code --}}
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                dom: 'Bfrtip',
+                "order": [],
+                searching: false,
+                @if (Auth::user()->role_id == 11 ||
+                        Request::is('adminsearchtimesheet') ||
+                        (Auth::user()->role_id == 13 && Request::is('admintimesheetlist')))
+                    columnDefs: [{
+                        targets: [1, 2, 4, 5, 6, 7, 8, 9],
+                        orderable: false
+                    }],
+                @else
+                    columnDefs: [{
+                        targets: [1, 3, 4, 5, 6, 7, 8, 9],
+                        orderable: false
+                    }],
+                @endif
+                buttons: [{
+                        extend: 'excelHtml5',
+                        filename: 'Timesheet_Download',
+                        //   remove extra date from column
+                        exportOptions: {
+                            columns: ':visible',
+                            format: {
+                                body: function(data, row, column, node) {
+                                    // If the data is a date, extract the date without HTML tags
+                                    if (column === 2) {
+                                        // data = <span style="display: none;"> 2024-02-26</span>26-02-2024
+                                        var cleanedText = $(data).text().trim();
+                                        //   2024-02-26
+                                        var dateParts = cleanedText.split(
+                                            '-');
+                                        //   20240226
+                                        //   2,02,40,226
+                                        // Assuming the date format is yyyy-mm-dd
+                                        //   dateParts.length = 3 hai 
+                                        if (dateParts.length === 3) {
+                                            //   return dateParts[2] + '-' + dateParts[1] + '-' +
+                                            //       dateParts[0];
+                                            //  for testing
+                                            //   return dateParts[0];
+                                            //   dateParts[2]= 26
+                                            //   dateParts[1]= 02
+                                            //   dateParts[0]= 2024
+                                        }
+                                    }
+                                    return data;
+                                }
+                            }
+                        },
+                        //   set width in excell
+                        customize: function(xlsx) {
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                            // set column width
+                            $('col', sheet).eq(0).attr('width', 15);
+                            $('col', sheet).eq(1).attr('width', 15);
+                            $('col', sheet).eq(3).attr('width', 30);
+                            $('col', sheet).eq(4).attr('width', 30);
+                            $('col', sheet).eq(5).attr('width', 30);
+                            $('col', sheet).eq(6).attr('width', 30);
+                            $('col', sheet).eq(7).attr('width', 30);
+
+                            // remove extra spaces
+                            $('c', sheet).each(function() {
+                                var originalText = $(this).find('is t').text();
+                                var cleanedText = originalText.replace(/\s+/g, ' ').trim();
+                                $(this).find('is t').text(cleanedText);
+                            });
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        });
+    </script>
+
+    {{-- clean code  --}}
+
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                dom: 'Bfrtip',
+                "order": [],
+                searching: false,
+                @if (Auth::user()->role_id == 11 ||
+                        Request::is('adminsearchtimesheet') ||
+                        (Auth::user()->role_id == 13 && Request::is('admintimesheetlist')))
+                    columnDefs: [{
+                        targets: [1, 2, 4, 5, 6, 7, 8, 9],
+                        orderable: false
+                    }],
+                @else
+                    columnDefs: [{
+                        targets: [1, 3, 4, 5, 6, 7, 8, 9],
+                        orderable: false
+                    }],
+                @endif
+                buttons: [{
+                        extend: 'excelHtml5',
+                        filename: 'Timesheet_Download',
+
+                        //   remove extra date from column
+                        exportOptions: {
+                            columns: ':visible',
+                            format: {
+                                body: function(data, row, column, node) {
+                                    // If the data is a date, extract the date without HTML tags
+                                    if (column === 2) {
+                                        var cleanedText = $(data).text().trim();
+                                        var dateParts = cleanedText.split(
+                                            '-');
+                                        // Assuming the date format is yyyy-mm-dd
+                                        if (dateParts.length === 3) {
+                                            return dateParts[2] + '-' + dateParts[1] + '-' +
+                                                dateParts[0];
+                                        }
+                                    }
+                                    return data;
+                                }
+                            }
+                        },
+
+                        //   set width in excell
+                        customize: function(xlsx) {
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                            // set column width
+                            $('col', sheet).eq(0).attr('width', 15);
+                            $('col', sheet).eq(1).attr('width', 15);
+                            $('col', sheet).eq(3).attr('width', 30);
+                            $('col', sheet).eq(4).attr('width', 30);
+                            $('col', sheet).eq(5).attr('width', 30);
+                            $('col', sheet).eq(6).attr('width', 30);
+                            $('col', sheet).eq(7).attr('width', 30);
+
+                            // remove extra spaces
+                            $('c', sheet).each(function() {
+                                var originalText = $(this).find('is t').text();
+                                var cleanedText = originalText.replace(/\s+/g, ' ').trim();
+                                $(this).find('is t').text(cleanedText);
+                            });
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        });
+    </script>
+
+    {{-- * on click button  --}}
+    <div class="col-1">
+        <div class="form-group" style="margin-top: 36px;">
+            <a href="javascript:void(0);" class="add_button" title="Add field"><img
+                    src="{{ url('backEnd/image/add-icon.png') }}" /></a>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var maxField = 10; //Input fields increment limitation
+            var addButton = $('.add_button'); //Add button selector
+            var wrapper = $('.field_wrapper'); //Input field wrapper
+            var x = 1;
+            var fieldHTML = `
         <div class="row row-sm">
       <div class="col-2">
           <div class="form-group">
@@ -1891,106 +3418,106 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
   </div>
 `;
 
-        //Once add button is clicked
-        $(addButton).click(function() {
-            //Check maximum number of input fields
-            if (x < maxField) {
-                x++; //Increment field counter
-                $(wrapper).append(fieldHTML); //Add field html
+            //Once add button is clicked
+            $(addButton).click(function() {
+                //Check maximum number of input fields
+                if (x < maxField) {
+                    x++; //Increment field counter
+                    $(wrapper).append(fieldHTML); //Add field html
+                }
+            });
+
+            //Once remove button is clicked
+            $(wrapper).on('click', '.remove_button', function(e) {
+                e.preventDefault();
+                $(this).parent('div').remove(); //Remove field html
+                x--; //Decrement field counter
+            });
+        });
+    </script>
+
+    {{-- * regarding pure javascript / regarding javascript   --}}
+
+    <script type="text/javascript">
+        function sum() {
+
+            var hour1 = document.getElementById('hour1').value;
+            // alert(hour1);
+            var hour2 = document.getElementById('hour2').value;
+            var hour3 = document.getElementById('hour3').value;
+            var hour4 = document.getElementById('hour4').value;
+            var hour5 = document.getElementById('hour5').value;
+            //  alert(hour2);
+            var result = parseFloat(hour1) + parseFloat(hour2) + parseFloat(hour3) + parseFloat(hour4) + parseFloat(
+                hour5);
+            //alert(result);
+            if (!isNaN(result)) {
+                document.getElementById('totalhours').value = result;
             }
-        });
-
-        //Once remove button is clicked
-        $(wrapper).on('click', '.remove_button', function(e) {
-            e.preventDefault();
-            $(this).parent('div').remove(); //Remove field html
-            x--; //Decrement field counter
-        });
-    });
-</script>
-
-{{-- * regarding pure javascript / regarding javascript   --}}
-
-<script type="text/javascript">
-    function sum() {
-
-        var hour1 = document.getElementById('hour1').value;
-        // alert(hour1);
-        var hour2 = document.getElementById('hour2').value;
-        var hour3 = document.getElementById('hour3').value;
-        var hour4 = document.getElementById('hour4').value;
-        var hour5 = document.getElementById('hour5').value;
-        //  alert(hour2);
-        var result = parseFloat(hour1) + parseFloat(hour2) + parseFloat(hour3) + parseFloat(hour4) + parseFloat(
-            hour5);
-        //alert(result);
-        if (!isNaN(result)) {
-            document.getElementById('totalhours').value = result;
         }
-    }
-</script>
-{{-- * regarding option tag   --}}
+    </script>
+    {{-- * regarding option tag   --}}
 
-<script>
-    $(function() {
-        $('#datepickers').on('change', function() {
-            var refreshpage = $('.refresh');
-            refreshpage.val('');
-            $('.refreshoption option').remove();
+    <script>
+        $(function() {
+            $('#datepickers').on('change', function() {
+                var refreshpage = $('.refresh');
+                refreshpage.val('');
+                $('.refreshoption option').remove();
+            });
         });
-    });
-</script>
+    </script>
 
-{{-- * navbar / regarding navbar/ regarding url  --}}
+    {{-- * navbar / regarding navbar/ regarding url  --}}
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const menuItems = document.querySelectorAll('nav.sidebar-nav li a');
-        const currentUrl = document.URL;
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const menuItems = document.querySelectorAll('nav.sidebar-nav li a');
+            const currentUrl = document.URL;
 
-        menuItems.forEach((link) => {
-            const href = link.href;
+            menuItems.forEach((link) => {
+                const href = link.href;
 
-            if (href === currentUrl) {
-                $(link).attr("aria-expanded", "true");
+                if (href === currentUrl) {
+                    $(link).attr("aria-expanded", "true");
 
-                const parent = link.closest("li");
-                $(parent).addClass("mm-active").css({
-                    "background-color": "#37a000",
-                    "box-shadow": "0 0 10px 1px rgba(55, 160, 0, .7)"
-                });
-
-                const secondLevel = parent.querySelector("ul.nav-second-level");
-                const thirdLevel = parent.querySelector("ul.nav-third-level");
-
-                if (secondLevel) {
-                    const parentMenu = secondLevel.closest("li");
-                    $(parentMenu).addClass("mm-active").css({
+                    const parent = link.closest("li");
+                    $(parent).addClass("mm-active").css({
                         "background-color": "#37a000",
                         "box-shadow": "0 0 10px 1px rgba(55, 160, 0, .7)"
                     });
-                    secondLevel.classList.add("mm-show");
-                }
 
-                if (thirdLevel) {
-                    $(thirdLevel).addClass("mm-show");
+                    const secondLevel = parent.querySelector("ul.nav-second-level");
+                    const thirdLevel = parent.querySelector("ul.nav-third-level");
 
-                    const secondLevel = thirdLevel.closest("ul.nav-second-level");
-                    const parentMenu = secondLevel.closest("li");
-                    $(parentMenu).addClass("mm-active").css({
-                        "background-color": "#37a000",
-                        "box-shadow": "0 0 10px 1px rgba(55, 160, 0, .7)"
-                    });
-                    secondLevel.classList.add("mm-show");
+                    if (secondLevel) {
+                        const parentMenu = secondLevel.closest("li");
+                        $(parentMenu).addClass("mm-active").css({
+                            "background-color": "#37a000",
+                            "box-shadow": "0 0 10px 1px rgba(55, 160, 0, .7)"
+                        });
+                        secondLevel.classList.add("mm-show");
+                    }
+
+                    if (thirdLevel) {
+                        $(thirdLevel).addClass("mm-show");
+
+                        const secondLevel = thirdLevel.closest("ul.nav-second-level");
+                        const parentMenu = secondLevel.closest("li");
+                        $(parentMenu).addClass("mm-active").css({
+                            "background-color": "#37a000",
+                            "box-shadow": "0 0 10px 1px rgba(55, 160, 0, .7)"
+                        });
+                        secondLevel.classList.add("mm-show");
+                    }
                 }
-            }
+            });
         });
-    });
-</script>
+    </script>
 
 
-{{-- <script>
+    {{-- <script>
     $(document).ready(function() {
         var currentUrl = window.location.href;
 
@@ -2007,224 +3534,225 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
 </script> --}}
 
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const menuItems = document.querySelectorAll('nav.sidebar-nav li a');
-        const currentUrl = document.URL;
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const menuItems = document.querySelectorAll('nav.sidebar-nav li a');
+            const currentUrl = document.URL;
 
-        menuItems.forEach((link) => {
-            const href = link.href;
+            menuItems.forEach((link) => {
+                const href = link.href;
 
-            if (href === currentUrl) {
-                link.setAttribute("aria-expanded", "true");
+                if (href === currentUrl) {
+                    link.setAttribute("aria-expanded", "true");
 
-                const parent = link.closest("li");
-                parent.classList.add("mm-active");
-                parent.style.backgroundColor = "green";
-                parent.style.boxShadow = "0 0 10px 1px rgba(55, 160, 0, .7)";
+                    const parent = link.closest("li");
+                    parent.classList.add("mm-active");
+                    parent.style.backgroundColor = "green";
+                    parent.style.boxShadow = "0 0 10px 1px rgba(55, 160, 0, .7)";
 
-                const secondLevel = parent.querySelector("ul.nav-second-level");
-                const thirdLevel = parent.querySelector("ul.nav-third-level");
+                    const secondLevel = parent.querySelector("ul.nav-second-level");
+                    const thirdLevel = parent.querySelector("ul.nav-third-level");
 
-                if (secondLevel) {
-                    const parentMenu = secondLevel.closest("li");
-                    parentMenu.classList.add("mm-active");
-                    parentMenu.style.backgroundColor = "green";
-                    parentMenu.style.boxShadow = "0 0 10px 1px rgba(55, 160, 0, .7)";
-                    secondLevel.classList.add("mm-show");
-                }
-
-                if (thirdLevel) {
-                    thirdLevel.classList.add("mm-show");
-
-                    const secondLevel = thirdLevel.closest("ul.nav-second-level");
-                    const parentMenu = secondLevel.closest("li");
-                    parentMenu.classList.add("mm-active");
-                    parentMenu.style.backgroundColor = "green";
-                    parentMenu.style.boxShadow = "0 0 10px 1px rgba(55, 160, 0, .7)";
-                    secondLevel.classList.add("mm-show");
-                }
-            }
-        });
-    });
-</script>
-
-
-{{-- * php in javascript  / regarding php  --}}
-
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                //   [0, "DESC"]
-                //   [2, "DESC"]
-            ],
-            searching: false,
-
-            @if (Auth::user()->role_id == 11 || Auth::user()->role_id == 13)
-                columnDefs: [{
-                    targets: [1, 2, 4, 5, 6, 7, 8, 9],
-                    orderable: false
-                }],
-            @else
-                columnDefs: [{
-                    targets: [1, 3, 4, 5, 6, 7, 8, 9],
-                    orderable: false
-                }],
-            @endif
-
-            buttons: [{
-                    extend: 'excelHtml5',
-                    //   enabled: false,
-                    filename: 'Timesheet_Download',
-                    exportOptions: {
-                        columns: ':visible'
-                    },
-
-                    customize: function(xlsx) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                        //   set column width
-                        $('col', sheet).eq(0).attr('width', 15);
-                        $('col', sheet).eq(1).attr('width', 15);
-                        $('col', sheet).eq(3).attr('width', 30);
-                        $('col', sheet).eq(4).attr('width', 30);
-                        $('col', sheet).eq(5).attr('width', 30);
-                        $('col', sheet).eq(6).attr('width', 30);
-                        $('col', sheet).eq(7).attr('width', 30);
-                        //   remove extra spaces
-                        $('c', sheet).each(function() {
-                            var originalText = $(this).find('is t').text();
-                            var cleanedText = originalText.replace(/\s+/g, ' ').trim();
-                            $(this).find('is t').text(cleanedText);
-                        });
+                    if (secondLevel) {
+                        const parentMenu = secondLevel.closest("li");
+                        parentMenu.classList.add("mm-active");
+                        parentMenu.style.backgroundColor = "green";
+                        parentMenu.style.boxShadow = "0 0 10px 1px rgba(55, 160, 0, .7)";
+                        secondLevel.classList.add("mm-show");
                     }
-                },
-                'colvis'
-            ]
-        });
-    });
-</script>
 
-<script>
-    $(document).ready(function() {
-        $('#category7').change(function() {
-            var search7 = $(this).val();
-            var search4 = $('#category4').val();
-            var search1 = $('#category1').val();
+                    if (thirdLevel) {
+                        thirdLevel.classList.add("mm-show");
 
-            var filterUrl = '';
-            @if (Auth::user()->role_id == 13 && Request::is('timesheet/teamlist'))
-                filterUrl = '/filter-patnerteam';
-            @elseif (Auth::user()->role_id == 11)
-                filterUrl = '/filter-dataadmin';
-            @endif
-
-            // Send an AJAX request to fetch filtered data based on the selected partner
-            $.ajax({
-                type: 'GET',
-                //   url: '/filter-dataadmin',
-                url: filterUrl,
-                data: {
-                    teamname: search7,
-                    partnersearch: search1,
-                    totalhours: search4
-                },
-                success: function(data) {
-                    // Replace the table body with the filtered data
-                    $('table tbody').html(""); // Clear the table body
-                    if (data.length === 0) {
-                        // If no data is found, display a "No data found" message
-                        $('table tbody').append(
-                            '<tr><td colspan="5" class="text-center">No data found</td></tr>'
-                        );
-                    } else {
-                        $.each(data, function(index, item) {
-
-                            // Create the URL dynamically
-                            var url = '/weeklylist?id=' + item.id +
-                                '&teamid=' + item.teamid +
-                                '&partnerid=' + item.partnerid +
-                                '&startdate=' + item.startdate +
-                                '&enddate=' + item.enddate;
-
-                            // Format created_at date
-                            var formattedDate = moment(item.created_at).format(
-                                'DD-MM-YYYY');
-                            var formattedTime = moment(item.created_at).format(
-                                'hh:mm A');
-
-                            // Add the rows to the table
-                            $('table tbody').append('<tr>' +
-                                '<td><a href="' + url + '">' + item
-                                .team_member +
-                                '</a></td>' +
-                                '<td>' + item.week + '</td>' +
-                                '<td>' + formattedDate + ' ' + formattedTime +
-                                '</td>' +
-                                '<td>' + item.totaldays + '</td>' +
-                                '<td>' + item.totaltime + '</td>' +
-                                //   '<td>' + item.partnername + '</td>' +
-                                '</tr>');
-                        });
-                        //   remove pagination after filter
-                        $('.paging_simple_numbers').remove();
-                        $('.dataTables_info').remove();
+                        const secondLevel = thirdLevel.closest("ul.nav-second-level");
+                        const parentMenu = secondLevel.closest("li");
+                        parentMenu.classList.add("mm-active");
+                        parentMenu.style.backgroundColor = "green";
+                        parentMenu.style.boxShadow = "0 0 10px 1px rgba(55, 160, 0, .7)";
+                        secondLevel.classList.add("mm-show");
                     }
                 }
             });
         });
-    });
-</script>
-{{-- * regarding datatable / regarding filter / regarding basic class / regarding button  --}}
+    </script>
 
 
+    {{-- * php in javascript  / regarding php  --}}
 
-{{-- button name in text  --}}
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                //   [0, "DESC"]
-                //   [2, "DESC"]
-            ],
-            layout: {
-                topStart: 'buttons'
-            },
-            buttons: [{
-                extend: 'copy',
-                text: 'Copy to clipboard'
-            }]
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                dom: 'Bfrtip',
+                "order": [
+                    //   [0, "DESC"]
+                    //   [2, "DESC"]
+                ],
+                searching: false,
+
+                @if (Auth::user()->role_id == 11 || Auth::user()->role_id == 13)
+                    columnDefs: [{
+                        targets: [1, 2, 4, 5, 6, 7, 8, 9],
+                        orderable: false
+                    }],
+                @else
+                    columnDefs: [{
+                        targets: [1, 3, 4, 5, 6, 7, 8, 9],
+                        orderable: false
+                    }],
+                @endif
+
+                buttons: [{
+                        extend: 'excelHtml5',
+                        //   enabled: false,
+                        filename: 'Timesheet_Download',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+
+                        customize: function(xlsx) {
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                            //   set column width
+                            $('col', sheet).eq(0).attr('width', 15);
+                            $('col', sheet).eq(1).attr('width', 15);
+                            $('col', sheet).eq(3).attr('width', 30);
+                            $('col', sheet).eq(4).attr('width', 30);
+                            $('col', sheet).eq(5).attr('width', 30);
+                            $('col', sheet).eq(6).attr('width', 30);
+                            $('col', sheet).eq(7).attr('width', 30);
+                            //   remove extra spaces
+                            $('c', sheet).each(function() {
+                                var originalText = $(this).find('is t').text();
+                                var cleanedText = originalText.replace(/\s+/g, ' ').trim();
+                                $(this).find('is t').text(cleanedText);
+                            });
+                        }
+                    },
+                    'colvis'
+                ]
+            });
         });
-    });
-</script>
+    </script>
 
+    <script>
+        $(document).ready(function() {
+            $('#category7').change(function() {
+                var search7 = $(this).val();
+                var search4 = $('#category4').val();
+                var search1 = $('#category1').val();
 
-{{-- print button  --}}
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                //   [0, "DESC"]
-                //   [2, "DESC"]
-            ],
-            layout: {
-                topStart: 'buttons'
-            },
-            buttons: [{
-                extend: 'print',
-                name: 'print'
-            }]
+                var filterUrl = '';
+                @if (Auth::user()->role_id == 13 && Request::is('timesheet/teamlist'))
+                    filterUrl = '/filter-patnerteam';
+                @elseif (Auth::user()->role_id == 11)
+                    filterUrl = '/filter-dataadmin';
+                @endif
+
+                // Send an AJAX request to fetch filtered data based on the selected partner
+                $.ajax({
+                    type: 'GET',
+                    //   url: '/filter-dataadmin',
+                    url: filterUrl,
+                    data: {
+                        teamname: search7,
+                        partnersearch: search1,
+                        totalhours: search4
+                    },
+                    success: function(data) {
+                        // Replace the table body with the filtered data
+                        $('table tbody').html(""); // Clear the table body
+                        if (data.length === 0) {
+                            // If no data is found, display a "No data found" message
+                            $('table tbody').append(
+                                '<tr><td colspan="5" class="text-center">No data found</td></tr>'
+                            );
+                        } else {
+                            $.each(data, function(index, item) {
+
+                                // Create the URL dynamically
+                                var url = '/weeklylist?id=' + item.id +
+                                    '&teamid=' + item.teamid +
+                                    '&partnerid=' + item.partnerid +
+                                    '&startdate=' + item.startdate +
+                                    '&enddate=' + item.enddate;
+
+                                // Format created_at date
+                                var formattedDate = moment(item.created_at).format(
+                                    'DD-MM-YYYY');
+                                var formattedTime = moment(item.created_at).format(
+                                    'hh:mm A');
+
+                                // Add the rows to the table
+                                $('table tbody').append('<tr>' +
+                                    '<td><a href="' + url + '">' + item
+                                    .team_member +
+                                    '</a></td>' +
+                                    '<td>' + item.week + '</td>' +
+                                    '<td>' + formattedDate + ' ' + formattedTime +
+                                    '</td>' +
+                                    '<td>' + item.totaldays + '</td>' +
+                                    '<td>' + item.totaltime + '</td>' +
+                                    //   '<td>' + item.partnername + '</td>' +
+                                    '</tr>');
+                            });
+                            //   remove pagination after filter
+                            $('.paging_simple_numbers').remove();
+                            $('.dataTables_info').remove();
+                        }
+                    }
+                });
+            });
         });
-    });
-</script>
+    </script>
+    {{-- * regarding datatable / regarding filter / regarding basic class / regarding button  --}}
 
-{{--  no need to script code only need jquery like  --}}
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-{{-- <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+
+    {{-- button name in text  --}}
+
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                dom: 'Bfrtip',
+                "order": [
+                    //   [0, "DESC"]
+                    //   [2, "DESC"]
+                ],
+                layout: {
+                    topStart: 'buttons'
+                },
+                buttons: [{
+                    extend: 'copy',
+                    text: 'Copy to clipboard'
+                }]
+            });
+        });
+    </script>
+
+
+    {{-- print button  --}}
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                dom: 'Bfrtip',
+                "order": [
+                    //   [0, "DESC"]
+                    //   [2, "DESC"]
+                ],
+                layout: {
+                    topStart: 'buttons'
+                },
+                buttons: [{
+                    extend: 'print',
+                    name: 'print'
+                }]
+            });
+        });
+    </script>
+
+    {{--  no need to script code only need jquery like  --}}
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    {{-- <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
@@ -2232,124 +3760,132 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
 <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script> --}}
 
-<script>
-    // no need to script code only need jquery like 
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                //   [0, "DESC"]
-                //   [2, "DESC"]
-            ],
-            searching: false,
-            buttons: [
-                'colvis',
-                'excel',
-                'print'
-            ]
-        });
-    });
-</script>
-
-
-
-
-{{-- remove basic class and add examplee id --}}
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            "order": [
-                //   [2, "desc"]
-            ],
-            //   searching: false,
-            columnDefs: [{
-                targets: [0, 3, 4],
-                orderable: false
-            }],
-            buttons: []
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            //   dom: 'Bfrtip',
-            //   dom: 'lrtip',
-            //   dom: '<"wrapper"flipt>',
-            dom: '<"top"i>rt<"bottom"flp><"clear">',
-            //   dom: '<lf<t>ip>',
-            //   dom: 'Blfrtip',
-            "order": [
-                [0, "desc"]
-            ],
-            buttons: []
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "order": [], // Disable initial sorting
-
-            columnDefs: [{
-                    targets: [4],
-                    orderable: false
-                } // Disable sorting for the fifth column (Total Hour)
-            ],
-
-            //   buttons: [{
-            //           extend: 'copyHtml5',
-            //           exportOptions: {
-            //               columns: [0, ':visible']
-            //           }
-            //       },
-            //       {
-            //           extend: 'excelHtml5',
-            //   enabled: false,
-            //           exportOptions: {
-            //               columns: ':visible'
-            //           }
-            //       },
-            //       {
-            //           extend: 'pdfHtml5',
-            //           exportOptions: {
-            //               columns: [0, 1, 2, 5]
-            //           }
-            //       },
-            //       'colvis'
-            //   ]
-        });
-    });
-</script>
-{{-- *  --}}
-<script>
-    $(function() {
-        $('#client1').on('change', function() {
-            var cid = $(this).val();
-            // alert(category_id);
-            $.ajax({
-                type: "get",
-                url: "{{ url('timesheet/create') }}",
-                data: "cid=" + cid,
-                success: function(res) {
-                    $('#assignment1').html(res);
-                },
-                error: function() {},
+    <script>
+        // no need to script code only need jquery like 
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                dom: 'Bfrtip',
+                "order": [
+                    //   [0, "DESC"]
+                    //   [2, "DESC"]
+                ],
+                searching: false,
+                buttons: [
+                    'colvis',
+                    'excel',
+                    'print'
+                ]
             });
         });
-    });
-</script>
-{{-- * form on submit / regarding submit   --}}
-<style>
-    .dt-buttons {
-        margin-bottom: -34px;
-    }
-</style>
-{{-- ! 29-01-24 --}}
-{{-- <script>
+    </script>
+
+
+
+
+    {{-- remove basic class and add examplee id --}}
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                "order": [
+                    //   [2, "desc"]
+                ],
+                //   searching: false,
+                columnDefs: [{
+                    targets: [0, 3, 4],
+                    orderable: false
+                }],
+                buttons: []
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                //   dom: 'Bfrtip',
+                //   dom: 'lrtip',
+                //   dom: '<"wrapper"flipt>',
+                dom: '<"top"i>rt<"bottom"flp><"clear">',
+                //   dom: '<lf<t>ip>',
+                //   dom: 'Blfrtip',
+                "order": [
+                    [0, "desc"]
+                ],
+                buttons: []
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                dom: 'Bfrtip',
+                "order": [], // Disable initial sorting
+
+                columnDefs: [{
+                        targets: [4],
+                        orderable: false
+                    } // Disable sorting for the fifth column (Total Hour)
+                ],
+
+                //   buttons: [{
+                //           extend: 'copyHtml5',
+                //           exportOptions: {
+                //               columns: [0, ':visible']
+                //           }
+                //       },
+                //       {
+                //           extend: 'excelHtml5',
+                //   enabled: false,
+                //           exportOptions: {
+                //               columns: ':visible'
+                //           }
+                //       },
+                //       {
+                //           extend: 'pdfHtml5',
+                //           exportOptions: {
+                //               columns: [0, 1, 2, 5]
+                //           }
+                //       },
+                //       'colvis'
+                //   ]
+            });
+        });
+    </script>
+    {{-- *  --}}
+    <script>
+        $(function() {
+            $('#client1').on('change', function() {
+                var cid = $(this).val();
+                // alert(category_id);
+                $.ajax({
+                    type: "get",
+                    url: "{{ url('timesheet/create') }}",
+                    data: "cid=" + cid,
+                    success: function(res) {
+                        $('#assignment1').html(res);
+                    },
+                    error: function() {},
+                });
+            });
+        });
+    </script>
+    {{-- * form on submit / regarding submit   --}}
+    <style>
+        .dt-buttons {
+            margin-bottom: -34px;
+        }
+    </style>
+    {{-- ! 29-01-24 --}}
+    {{-- <script>
     $(document).ready(function() {
         $('#examplee').DataTable({
             dom: 'Bfrtip',
@@ -2385,579 +3921,579 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
 </script> --}}
 
 
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "order": [
-                //   [0, "DESC"]
-                //   [2, "DESC"]
-            ],
-            buttons: [{
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: [0, ':visible']
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    //   enabled: false,
-                    filename: 'Timesheet_Download',
-                    exportOptions: {
-                        columns: ':visible'
-                    },
-
-                    customize: function(xlsx) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                        //   set column width
-                        $('col', sheet).eq(0).attr('width', 15);
-                        $('col', sheet).eq(1).attr('width', 15);
-                        $('col', sheet).eq(3).attr('width', 30);
-                        $('col', sheet).eq(4).attr('width', 30);
-                        $('col', sheet).eq(5).attr('width', 30);
-                        $('col', sheet).eq(6).attr('width', 30);
-                        $('col', sheet).eq(7).attr('width', 30);
-                        //   remove extra spaces
-                        $('c', sheet).each(function() {
-                            var originalText = $(this).find('is t').text();
-                            var cleanedText = originalText.replace(/\s+/g, ' ').trim();
-                            $(this).find('is t').text(cleanedText);
-                        });
-                    }
-                },
-
-                {
-                    extend: 'pdfHtml5',
-                    filename: 'Timesheet Download',
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5]
-                    }
-                },
-                'colvis'
-            ]
-        });
-    });
-</script>
-
-
-{{-- validation for comparision date and block year for 4 disit --}}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        var startDateInput = $('#startdate');
-        var endDateInput = $('#enddate');
-
-        function compareDates() {
-            var startDate = new Date(startDateInput.val());
-            var endDate = new Date(endDateInput.val());
-
-            if (startDate > endDate) {
-                alert('End date should be greater than or equal to the Start date');
-                endDateInput.val(''); // Clear the end date input
-            }
-        }
-
-        startDateInput.on('input', compareDates);
-        endDateInput.on('blur', compareDates);
-    });
-</script>
-
-{{-- validation for block 4 digit to  year --}}
-
-<script>
-    $(document).ready(function() {
-        $('#startdate').on('change', function() {
-            var startclear = $('#startdate');
-            var startDateInput1 = $('#startdate').val();
-            var startDate = new Date(startDateInput1);
-            var startyear = startDate.getFullYear();
-            var yearLength = startyear.toString().length;
-            if (yearLength > 4) {
-                alert('Enter four digits for the year');
-                startclear.val('');
-            }
-        });
-
-        $('#enddate').on('change', function() {
-            var endclear = $('#enddate');
-            var endDateInput1 = $('#enddate').val();
-            var endtDate = new Date(endDateInput1);
-            var endyear = endtDate.getFullYear();
-            var endyearLength = endyear.toString().length;
-            if (endyearLength > 4) {
-                alert('Enter four digits for the year');
-                endclear.val('');
-            }
-        });
-
-        //   condition on submit
-        $('form').submit(function(event) {
-            var year = $('#year').val();
-            var startdate = $('#startdate').val();
-            var enddate = $('#enddate').val();
-
-            var startclear = $('#startdate');
-            var startDateInput1 = $('#startdate').val();
-            var startDate = new Date(startDateInput1);
-            var startyear = startDate.getFullYear();
-            var yearvalue = $('#year').val();
-            if (year && startdate) {
-                if (yearvalue != startyear) {
-                    alert('Enter Start Date According Year');
-                    startclear.val('');
-                    // Prevent form submission
-                    event.preventDefault();
-                    // Exit the function
-                    return;
-                }
-            }
-
-            var endclear = $('#enddate');
-            var endDateInput1 = $('#enddate').val();
-            var endtDate = new Date(endDateInput1);
-            var endyear = endtDate.getFullYear();
-            var yearvalue = $('#year').val();
-            if (year && enddate) {
-                if (yearvalue != endyear) {
-                    alert('Enter End Date According Year');
-                    endclear.val('');
-                    // Prevent form submission
-                    event.preventDefault();
-                    // Exit the function
-                    return;
-                }
-            }
-
-            if (year === "" && startdate === "" && enddate === "") {
-                alert("Please select year.");
-                event.preventDefault();
-                return;
-            }
-            if (startdate !== "" && enddate === "") {
-                alert("Please select End date.");
-                event.preventDefault();
-                return;
-            }
-            //   if (year !== "" && startdate !== "" && enddate === "") {
-            //       alert("Please select End date.");
-            //       event.preventDefault();
-            //       return;
-            //   }
-            //   if (startdate !== "" && enddate !== "" && year === "") {
-            //       alert("Please select Year.");
-            //       event.preventDefault();
-            //       return;
-            //   }
-        });
-    });
-</script>
-{{-- *regarding form submit --}}
-<script>
-    $(document).ready(function() {
-        $('#startdate').on('change', function() {
-            var startclear = $('#startdate');
-            var startDateInput1 = $('#startdate').val();
-            var startDate = new Date(startDateInput1);
-            var startyear = startDate.getFullYear();
-            var yearLength = startyear.toString().length;
-            if (yearLength > 4) {
-                alert('Enter four digits for the year');
-                startclear.val('');
-            }
-        });
-
-        $('#enddate').on('change', function() {
-            var endclear = $('#enddate');
-            var endDateInput1 = $('#enddate').val();
-            var endtDate = new Date(endDateInput1);
-            var endyear = endtDate.getFullYear();
-            var endyearLength = endyear.toString().length;
-            if (endyearLength > 4) {
-                alert('Enter four digits for the year');
-                endclear.val('');
-            }
-        });
-
-        // Add form submission handling
-        $('form').submit(function(event) {
-            var year = $('#year').val();
-            var startdate = $('#startdate').val();
-            var enddate = $('#enddate').val();
-
-            var startclear = $('#startdate');
-            var startDateInput1 = $('#startdate').val();
-            var startDate = new Date(startDateInput1);
-            var startyear = startDate.getFullYear();
-
-            var endclear = $('#enddate');
-            var endDateInput1 = $('#enddate').val();
-            var endDate = new Date(endDateInput1);
-            var endyear = endDate.getFullYear();
-
-            var yearvalue = $('#year').val();
-            if (yearvalue != startyear || yearvalue != endyear) {
-                alert('Enter Start and End Date According to the selected Year');
-                startclear.val('');
-                endclear.val('');
-                event.preventDefault(); // Prevent form submission
-                return; // Exit the function
-            }
-
-            if (year !== "" && startdate !== "" && enddate === "") {
-                alert("Please select End date.");
-                event.preventDefault();
-                return;
-            }
-
-            if (year === "" || startdate === "" || enddate === "") {
-                alert("Please select filter data.");
-                event.preventDefault(); // Prevent form submission
-            }
-        });
-    });
-</script>
-
-{{-- * regarding ajax --}}
-{{-- * regarding ajax / table heading replace / regarding select box   --}}
-
-{{-- data dynamically get in select box using ajax  --}}
-<script>
-    $(function() {
-
-        $('#datepickers').on('change', function() {
-            var timesheetdate = $(this).val();
-            //   var datepickers = $('#datepickers').val();
-
-            var refreshpage = $('.refresh');
-            refreshpage.val('');
-            $('.refreshoption option').remove();
-
-            //   alert(datepickers);
-            $.ajax({
-                type: "get",
-                url: "{{ url('timesheet/create') }}",
-                // url: '/timesheetrequest/reminder/list',
-                data: {
-                    timesheetdate: timesheetdate
-                },
-                success: function(res) {
-                    $('#client').html(res);
-                    $('#client1').html(res);
-                    $('#client2').html(res);
-                    $('#client3').html(res);
-                    $('#client4').html(res);
-                },
-                error: function() {},
-            });
-        });
-    });
-</script>
-{{-- data dynamically get in select box using ajax  --}}
-<script>
-    function handleClientChange(clientId) {
-        $('#' + clientId).on('change', function() {
-            var cid = $(this).val();
-            var datepickers = $('#datepickers').val();
-            var clientNumber = parseInt(clientId.replace('client', ''));
-
-            if (cid == 33) {
-                // Perform an AJAX request to fetch the holiday name based on the selected date
-                $.ajax({
-                    type: "get",
-                    url: "{{ url('holidaysselect') }}", // Assuming this is the correct URL for fetching holiday name
-                    data: {
-                        cid: cid,
-                        datepickers: datepickers
-                    },
-                    success: function(response) {
-                        // Assuming response contains the holiday name
-                        var location = 'N/A';
-                        var workitem = response.holidayName;
-                        var time = 0;
-                        //   console.log(response);
-
-                        //   var assignmentSelect = $('.assignmentvalue');
-                        //   assignmentSelect.empty();
-                        //   assignmentSelect.append($('<option>', {
-                        //       value: response.assignmentid,
-                        //       text: response.assignmentname(response
-                        //           .assignmentname / response
-                        //           .assignmentgenerate_id)
-                        //   }));
-
-
-
-
-
-                        if (!isNaN(clientNumber)) {
-                            var assignmentSelect = $('.assignmentvalue' + clientNumber);
-                            assignmentSelect.empty();
-                            assignmentSelect.append($('<option>', {
-                                value: response.assignmentgenerate_id,
-                                text: response.assignment_name + ' (' +
-                                    response
-                                    .assignmentname + '/' + response
-                                    .assignmentgenerate_id + ')'
-                            }));
-
-                            var assignmentSelect = $('.partnervalue' + clientNumber);
-                            assignmentSelect.empty();
-                            assignmentSelect.append($('<option>', {
-                                value: response.team_memberid,
-                                text: response.team_member
-                            }));
-
-                            $('.workitemnvalue' + clientNumber).val(workitem).prop(
-                                'readonly', true);
-                            $('.locationvalue' + clientNumber).val(location).prop(
-                                'readonly', true);
-                            $('#totalhours').val(time);
-                            $('#hour' + (clientNumber + 1)).prop('readonly', true);
-                        } else {
-
-                            var assignmentSelect = $('.assignmentvalue');
-                            assignmentSelect.empty();
-                            assignmentSelect.append($('<option>', {
-                                value: response.assignmentgenerate_id,
-                                text: response.assignment_name + ' (' +
-                                    response
-                                    .assignmentname + '/' + response
-                                    .assignmentgenerate_id + ')'
-                            }));
-
-                            var assignmentSelect = $('.partnervalue');
-                            assignmentSelect.empty();
-                            assignmentSelect.append($('<option>', {
-                                value: response.team_memberid,
-                                text: response.team_member
-                            }));
-
-
-                            $('.workitemnvalue').val(workitem).prop('readonly', true);
-                            $('.locationvalue').val(location).prop('readonly', true);
-                            $('#totalhours').val(time);
-                            $("#hour1").prop("readonly", true);
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                dom: 'Bfrtip',
+                "order": [
+                    //   [0, "DESC"]
+                    //   [2, "DESC"]
+                ],
+                buttons: [{
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: [0, ':visible']
                         }
                     },
-                    error: function() {
-                        // Handle error if AJAX request fails
+                    {
+                        extend: 'excelHtml5',
+                        //   enabled: false,
+                        filename: 'Timesheet_Download',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+
+                        customize: function(xlsx) {
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                            //   set column width
+                            $('col', sheet).eq(0).attr('width', 15);
+                            $('col', sheet).eq(1).attr('width', 15);
+                            $('col', sheet).eq(3).attr('width', 30);
+                            $('col', sheet).eq(4).attr('width', 30);
+                            $('col', sheet).eq(5).attr('width', 30);
+                            $('col', sheet).eq(6).attr('width', 30);
+                            $('col', sheet).eq(7).attr('width', 30);
+                            //   remove extra spaces
+                            $('c', sheet).each(function() {
+                                var originalText = $(this).find('is t').text();
+                                var cleanedText = originalText.replace(/\s+/g, ' ').trim();
+                                $(this).find('is t').text(cleanedText);
+                            });
+                        }
+                    },
+
+                    {
+                        extend: 'pdfHtml5',
+                        filename: 'Timesheet Download',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        });
+    </script>
+
+
+    {{-- validation for comparision date and block year for 4 disit --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var startDateInput = $('#startdate');
+            var endDateInput = $('#enddate');
+
+            function compareDates() {
+                var startDate = new Date(startDateInput.val());
+                var endDate = new Date(endDateInput.val());
+
+                if (startDate > endDate) {
+                    alert('End date should be greater than or equal to the Start date');
+                    endDateInput.val(''); // Clear the end date input
+                }
+            }
+
+            startDateInput.on('input', compareDates);
+            endDateInput.on('blur', compareDates);
+        });
+    </script>
+
+    {{-- validation for block 4 digit to  year --}}
+
+    <script>
+        $(document).ready(function() {
+            $('#startdate').on('change', function() {
+                var startclear = $('#startdate');
+                var startDateInput1 = $('#startdate').val();
+                var startDate = new Date(startDateInput1);
+                var startyear = startDate.getFullYear();
+                var yearLength = startyear.toString().length;
+                if (yearLength > 4) {
+                    alert('Enter four digits for the year');
+                    startclear.val('');
+                }
+            });
+
+            $('#enddate').on('change', function() {
+                var endclear = $('#enddate');
+                var endDateInput1 = $('#enddate').val();
+                var endtDate = new Date(endDateInput1);
+                var endyear = endtDate.getFullYear();
+                var endyearLength = endyear.toString().length;
+                if (endyearLength > 4) {
+                    alert('Enter four digits for the year');
+                    endclear.val('');
+                }
+            });
+
+            //   condition on submit
+            $('form').submit(function(event) {
+                var year = $('#year').val();
+                var startdate = $('#startdate').val();
+                var enddate = $('#enddate').val();
+
+                var startclear = $('#startdate');
+                var startDateInput1 = $('#startdate').val();
+                var startDate = new Date(startDateInput1);
+                var startyear = startDate.getFullYear();
+                var yearvalue = $('#year').val();
+                if (year && startdate) {
+                    if (yearvalue != startyear) {
+                        alert('Enter Start Date According Year');
+                        startclear.val('');
+                        // Prevent form submission
+                        event.preventDefault();
+                        // Exit the function
+                        return;
                     }
-                });
-            } else {
-                // Continue with the rest of your logic
+                }
+
+                var endclear = $('#enddate');
+                var endDateInput1 = $('#enddate').val();
+                var endtDate = new Date(endDateInput1);
+                var endyear = endtDate.getFullYear();
+                var yearvalue = $('#year').val();
+                if (year && enddate) {
+                    if (yearvalue != endyear) {
+                        alert('Enter End Date According Year');
+                        endclear.val('');
+                        // Prevent form submission
+                        event.preventDefault();
+                        // Exit the function
+                        return;
+                    }
+                }
+
+                if (year === "" && startdate === "" && enddate === "") {
+                    alert("Please select year.");
+                    event.preventDefault();
+                    return;
+                }
+                if (startdate !== "" && enddate === "") {
+                    alert("Please select End date.");
+                    event.preventDefault();
+                    return;
+                }
+                //   if (year !== "" && startdate !== "" && enddate === "") {
+                //       alert("Please select End date.");
+                //       event.preventDefault();
+                //       return;
+                //   }
+                //   if (startdate !== "" && enddate !== "" && year === "") {
+                //       alert("Please select Year.");
+                //       event.preventDefault();
+                //       return;
+                //   }
+            });
+        });
+    </script>
+    {{-- *regarding form submit --}}
+    <script>
+        $(document).ready(function() {
+            $('#startdate').on('change', function() {
+                var startclear = $('#startdate');
+                var startDateInput1 = $('#startdate').val();
+                var startDate = new Date(startDateInput1);
+                var startyear = startDate.getFullYear();
+                var yearLength = startyear.toString().length;
+                if (yearLength > 4) {
+                    alert('Enter four digits for the year');
+                    startclear.val('');
+                }
+            });
+
+            $('#enddate').on('change', function() {
+                var endclear = $('#enddate');
+                var endDateInput1 = $('#enddate').val();
+                var endtDate = new Date(endDateInput1);
+                var endyear = endtDate.getFullYear();
+                var endyearLength = endyear.toString().length;
+                if (endyearLength > 4) {
+                    alert('Enter four digits for the year');
+                    endclear.val('');
+                }
+            });
+
+            // Add form submission handling
+            $('form').submit(function(event) {
+                var year = $('#year').val();
+                var startdate = $('#startdate').val();
+                var enddate = $('#enddate').val();
+
+                var startclear = $('#startdate');
+                var startDateInput1 = $('#startdate').val();
+                var startDate = new Date(startDateInput1);
+                var startyear = startDate.getFullYear();
+
+                var endclear = $('#enddate');
+                var endDateInput1 = $('#enddate').val();
+                var endDate = new Date(endDateInput1);
+                var endyear = endDate.getFullYear();
+
+                var yearvalue = $('#year').val();
+                if (yearvalue != startyear || yearvalue != endyear) {
+                    alert('Enter Start and End Date According to the selected Year');
+                    startclear.val('');
+                    endclear.val('');
+                    event.preventDefault(); // Prevent form submission
+                    return; // Exit the function
+                }
+
+                if (year !== "" && startdate !== "" && enddate === "") {
+                    alert("Please select End date.");
+                    event.preventDefault();
+                    return;
+                }
+
+                if (year === "" || startdate === "" || enddate === "") {
+                    alert("Please select filter data.");
+                    event.preventDefault(); // Prevent form submission
+                }
+            });
+        });
+    </script>
+
+    {{-- * regarding ajax --}}
+    {{-- * regarding ajax / table heading replace / regarding select box   --}}
+
+    {{-- data dynamically get in select box using ajax  --}}
+    <script>
+        $(function() {
+
+            $('#datepickers').on('change', function() {
+                var timesheetdate = $(this).val();
+                //   var datepickers = $('#datepickers').val();
+
+                var refreshpage = $('.refresh');
+                refreshpage.val('');
+                $('.refreshoption option').remove();
+
+                //   alert(datepickers);
                 $.ajax({
                     type: "get",
                     url: "{{ url('timesheet/create') }}",
+                    // url: '/timesheetrequest/reminder/list',
                     data: {
-                        cid: cid,
-                        datepickers: datepickers
+                        timesheetdate: timesheetdate
                     },
                     success: function(res) {
-                        // clear previous data 
-                        if (!isNaN(clientNumber)) {
-                            $('.assignmentvalue' + clientNumber).empty();
-                            $('.partnervalue' + clientNumber).empty();
-                            $('.workitemnvalue' + clientNumber).val('').prop('readonly',
-                                false);
-                            $('.locationvalue' + clientNumber).val('').prop('readonly',
-                                false);
-                            $("#hour" + (clientNumber + 1)).prop("readonly", false);
+                        $('#client').html(res);
+                        $('#client1').html(res);
+                        $('#client2').html(res);
+                        $('#client3').html(res);
+                        $('#client4').html(res);
+                    },
+                    error: function() {},
+                });
+            });
+        });
+    </script>
+    {{-- data dynamically get in select box using ajax  --}}
+    <script>
+        function handleClientChange(clientId) {
+            $('#' + clientId).on('change', function() {
+                var cid = $(this).val();
+                var datepickers = $('#datepickers').val();
+                var clientNumber = parseInt(clientId.replace('client', ''));
 
-                        } else {
-                            $('.assignmentvalue').empty();
-                            $('.partnervalue').empty();
-                            $('.workitemnvalue').val('').prop('readonly', false);
-                            $('.locationvalue').val('').prop('readonly', false);
-                            $("#hour1").prop("readonly", false);
+                if (cid == 33) {
+                    // Perform an AJAX request to fetch the holiday name based on the selected date
+                    $.ajax({
+                        type: "get",
+                        url: "{{ url('holidaysselect') }}", // Assuming this is the correct URL for fetching holiday name
+                        data: {
+                            cid: cid,
+                            datepickers: datepickers
+                        },
+                        success: function(response) {
+                            // Assuming response contains the holiday name
+                            var location = 'N/A';
+                            var workitem = response.holidayName;
+                            var time = 0;
+                            //   console.log(response);
+
+                            //   var assignmentSelect = $('.assignmentvalue');
+                            //   assignmentSelect.empty();
+                            //   assignmentSelect.append($('<option>', {
+                            //       value: response.assignmentid,
+                            //       text: response.assignmentname(response
+                            //           .assignmentname / response
+                            //           .assignmentgenerate_id)
+                            //   }));
+
+
+
+
+
+                            if (!isNaN(clientNumber)) {
+                                var assignmentSelect = $('.assignmentvalue' + clientNumber);
+                                assignmentSelect.empty();
+                                assignmentSelect.append($('<option>', {
+                                    value: response.assignmentgenerate_id,
+                                    text: response.assignment_name + ' (' +
+                                        response
+                                        .assignmentname + '/' + response
+                                        .assignmentgenerate_id + ')'
+                                }));
+
+                                var assignmentSelect = $('.partnervalue' + clientNumber);
+                                assignmentSelect.empty();
+                                assignmentSelect.append($('<option>', {
+                                    value: response.team_memberid,
+                                    text: response.team_member
+                                }));
+
+                                $('.workitemnvalue' + clientNumber).val(workitem).prop(
+                                    'readonly', true);
+                                $('.locationvalue' + clientNumber).val(location).prop(
+                                    'readonly', true);
+                                $('#totalhours').val(time);
+                                $('#hour' + (clientNumber + 1)).prop('readonly', true);
+                            } else {
+
+                                var assignmentSelect = $('.assignmentvalue');
+                                assignmentSelect.empty();
+                                assignmentSelect.append($('<option>', {
+                                    value: response.assignmentgenerate_id,
+                                    text: response.assignment_name + ' (' +
+                                        response
+                                        .assignmentname + '/' + response
+                                        .assignmentgenerate_id + ')'
+                                }));
+
+                                var assignmentSelect = $('.partnervalue');
+                                assignmentSelect.empty();
+                                assignmentSelect.append($('<option>', {
+                                    value: response.team_memberid,
+                                    text: response.team_member
+                                }));
+
+
+                                $('.workitemnvalue').val(workitem).prop('readonly', true);
+                                $('.locationvalue').val(location).prop('readonly', true);
+                                $('#totalhours').val(time);
+                                $("#hour1").prop("readonly", true);
+                            }
+                        },
+                        error: function() {
+                            // Handle error if AJAX request fails
+                        }
+                    });
+                } else {
+                    // Continue with the rest of your logic
+                    $.ajax({
+                        type: "get",
+                        url: "{{ url('timesheet/create') }}",
+                        data: {
+                            cid: cid,
+                            datepickers: datepickers
+                        },
+                        success: function(res) {
+                            // clear previous data 
+                            if (!isNaN(clientNumber)) {
+                                $('.assignmentvalue' + clientNumber).empty();
+                                $('.partnervalue' + clientNumber).empty();
+                                $('.workitemnvalue' + clientNumber).val('').prop('readonly',
+                                    false);
+                                $('.locationvalue' + clientNumber).val('').prop('readonly',
+                                    false);
+                                $("#hour" + (clientNumber + 1)).prop("readonly", false);
+
+                            } else {
+                                $('.assignmentvalue').empty();
+                                $('.partnervalue').empty();
+                                $('.workitemnvalue').val('').prop('readonly', false);
+                                $('.locationvalue').val('').prop('readonly', false);
+                                $("#hour1").prop("readonly", false);
+                            }
+
+                            $('#' + clientId.replace('client', 'assignment')).html(res);
+
+                        },
+                        error: function() {
+                            // Handle error if AJAX request fails
+                        },
+                    });
+                }
+            });
+        }
+    </script>
+
+    <script>
+        //** status wise
+        $('#status1').change(function() {
+            var status1 = $(this).val();
+            var employee1 = $('#employee1').val();
+            var leave1 = $('#leave1').val();
+            $.ajax({
+                type: 'GET',
+                url: '/filtering-applyleve',
+                data: {
+                    status: status1,
+                    employee: employee1,
+                    leave: leave1
+                },
+                success: function(data) {
+                    // Replace the table body with the filtered data
+                    //  $('table tbody').html("");
+                    $('table thead, table tbody').html("");
+                    // Clear the table body
+                    if (data.length === 0) {
+                        // If no data is found, display a "No data found" message
+                        $('table tbody').append(
+                            '<tr><td colspan="8" class="text-center">No data found</td></tr>'
+                        );
+                    } else {
+
+                        // Add existing table heading
+                        $('table thead').append(
+                            '<tr>' +
+                            '<th style="display: none;">id</th>' +
+                            '<th>Employee</th>' +
+                            '<th>Date of Requestaaaaa</th>' +
+                            '<th>Status</th>' +
+                            '<th>Leave Type</th>' +
+                            '<th>Leave Period</th>' +
+                            '<th>Days</th>' +
+                            '<th>Approver</th>' +
+                            '<th>Reason for Leave</th>' +
+                            '</tr>'
+                        );
+
+                        $.each(data, function(index, item) {
+
+                            // Create the URL dynamically
+                            var url = '/applyleave/' + item.id;
+
+                            var createdAt = new Date(item.created_at)
+                                .toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                });
+                            var fromDate = new Date(item.from)
+                                .toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                });
+                            var toDate = new Date(item.to)
+                                .toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                });
+
+                            var holidays = Math.floor((new Date(item.to) -
+                                new Date(item.from)) / (24 * 60 * 60 *
+                                1000)) + 1;
+
+                            // Add the rows to the table
+                            $('table tbody').append('<tr>' +
+                                '<td><a href="' + url + '">' + item
+                                .team_member +
+                                '</a></td>' +
+                                '<td>' + createdAt + '</td>' +
+                                '<td>' + getStatusBadge(item.status) + '</td>' +
+                                '<td>' + item.name + '</td>' +
+                                '<td>' + fromDate + ' to ' + toDate +
+                                '</td>' +
+                                '<td>' + holidays + '</td>' +
+                                '<td>' + item.approvernames + '</td>' +
+                                '<td style="width: 7rem;text-wrap: wrap;">' +
+                                item.reasonleave + '</td>' +
+                                '</tr>');
+                        });
+
+
+
+                        // Function to handle the status badge
+                        function getStatusBadge(status) {
+                            if (status == 0) {
+                                return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
+                            } else if (status == 1) {
+                                return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
+                            } else if (status == 2) {
+                                return '<span class="badge badge-danger">Rejected</span>';
+                            } else {
+                                return '';
+                            }
                         }
 
-                        $('#' + clientId.replace('client', 'assignment')).html(res);
+                        //   remove pagination after filter
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+                        // Change id aatribute dynamically in ajax
+                        $('#examplee').attr('id', 'examplee1');
+                        $('#examplee').removeAttr('id');
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $(function() {
+            $('#category').on('change', function() {
+                var category_id = $(this).val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('tags/create') }}",
+                    data: "category_id=" + category_id,
+                    success: function(res) {
+
+                        $('#subcategory_id').html(res);
+
 
                     },
                     error: function() {
-                        // Handle error if AJAX request fails
+
                     },
                 });
-            }
-        });
-    }
-</script>
-
-<script>
-    //** status wise
-    $('#status1').change(function() {
-        var status1 = $(this).val();
-        var employee1 = $('#employee1').val();
-        var leave1 = $('#leave1').val();
-        $.ajax({
-            type: 'GET',
-            url: '/filtering-applyleve',
-            data: {
-                status: status1,
-                employee: employee1,
-                leave: leave1
-            },
-            success: function(data) {
-                // Replace the table body with the filtered data
-                //  $('table tbody').html("");
-                $('table thead, table tbody').html("");
-                // Clear the table body
-                if (data.length === 0) {
-                    // If no data is found, display a "No data found" message
-                    $('table tbody').append(
-                        '<tr><td colspan="8" class="text-center">No data found</td></tr>'
-                    );
-                } else {
-
-                    // Add existing table heading
-                    $('table thead').append(
-                        '<tr>' +
-                        '<th style="display: none;">id</th>' +
-                        '<th>Employee</th>' +
-                        '<th>Date of Requestaaaaa</th>' +
-                        '<th>Status</th>' +
-                        '<th>Leave Type</th>' +
-                        '<th>Leave Period</th>' +
-                        '<th>Days</th>' +
-                        '<th>Approver</th>' +
-                        '<th>Reason for Leave</th>' +
-                        '</tr>'
-                    );
-
-                    $.each(data, function(index, item) {
-
-                        // Create the URL dynamically
-                        var url = '/applyleave/' + item.id;
-
-                        var createdAt = new Date(item.created_at)
-                            .toLocaleDateString('en-GB', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric'
-                            });
-                        var fromDate = new Date(item.from)
-                            .toLocaleDateString('en-GB', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric'
-                            });
-                        var toDate = new Date(item.to)
-                            .toLocaleDateString('en-GB', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric'
-                            });
-
-                        var holidays = Math.floor((new Date(item.to) -
-                            new Date(item.from)) / (24 * 60 * 60 *
-                            1000)) + 1;
-
-                        // Add the rows to the table
-                        $('table tbody').append('<tr>' +
-                            '<td><a href="' + url + '">' + item
-                            .team_member +
-                            '</a></td>' +
-                            '<td>' + createdAt + '</td>' +
-                            '<td>' + getStatusBadge(item.status) + '</td>' +
-                            '<td>' + item.name + '</td>' +
-                            '<td>' + fromDate + ' to ' + toDate +
-                            '</td>' +
-                            '<td>' + holidays + '</td>' +
-                            '<td>' + item.approvernames + '</td>' +
-                            '<td style="width: 7rem;text-wrap: wrap;">' +
-                            item.reasonleave + '</td>' +
-                            '</tr>');
-                    });
-
-
-
-                    // Function to handle the status badge
-                    function getStatusBadge(status) {
-                        if (status == 0) {
-                            return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
-                        } else if (status == 1) {
-                            return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
-                        } else if (status == 2) {
-                            return '<span class="badge badge-danger">Rejected</span>';
-                        } else {
-                            return '';
-                        }
-                    }
-
-                    //   remove pagination after filter
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    // Change id aatribute dynamically in ajax
-                    $('#examplee').attr('id', 'examplee1');
-                    $('#examplee').removeAttr('id');
-                }
-            }
-        });
-    });
-</script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>
-    $(function() {
-        $('#category').on('change', function() {
-            var category_id = $(this).val();
-
-            $.ajax({
-                type: "GET",
-                url: "{{ url('tags/create') }}",
-                data: "category_id=" + category_id,
-                success: function(res) {
-
-                    $('#subcategory_id').html(res);
-
-
-                },
-                error: function() {
-
-                },
             });
-        });
-        $('#subcategory_id').on('change', function() {
-            var subcategory_id = $(this).val();
+            $('#subcategory_id').on('change', function() {
+                var subcategory_id = $(this).val();
 
-            $.ajax({
-                type: "GET",
-                url: "{{ url('tags/create') }}",
-                data: "subcategory_id=" + subcategory_id,
-                success: function(res) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('tags/create') }}",
+                    data: "subcategory_id=" + subcategory_id,
+                    success: function(res) {
 
-                    $('#step_id').html(res);
+                        $('#step_id').html(res);
 
 
-                },
-                error: function() {
+                    },
+                    error: function() {
 
-                },
+                    },
+                });
             });
-        });
-        $('#step_id').on('change', function() {
-            var step_id = $(this).val();
+            $('#step_id').on('change', function() {
+                var step_id = $(this).val();
 
-            $.ajax({
-                type: "GET",
-                url: "{{ url('tags/create') }}",
-                data: "step_id=" + step_id,
-                success: function(res) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('tags/create') }}",
+                    data: "step_id=" + step_id,
+                    success: function(res) {
 
-                    $('#audit_id').html(res);
+                        $('#audit_id').html(res);
 
 
-                },
-                error: function() {
+                    },
+                    error: function() {
 
-                },
+                    },
+                });
             });
-        });
 
-    });
-</script>
-{{-- ! Old code 03-01-24  --}}
-{{-- <script>
+        });
+    </script>
+    {{-- ! Old code 03-01-24  --}}
+    {{-- <script>
      $(document).ready(function() {
          $('#examplee').DataTable({
              dom: 'Bfrtip',
@@ -2993,76 +4529,76 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
      });
  </script> --}}
 
-<script>
-    $(document).ready(function() {
-        $('#examplee').DataTable({
-            dom: 'Bfrtip',
-            "pageLength": 25,
-            "order": [
-                [3, "asc"]
-            ],
-            buttons: [{
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: [0, ':visible']
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    filename: 'Apply Report List',
-                    //  Change value Acreated to created and AApproved to Approved
-                    customizeData: function(data) {
-                        for (var i = 0; i < data.body.length; i++) {
-                            for (var j = 0; j < data.body[i].length; j++) {
-                                if (data.body[i][j] === 'ACreated') {
-                                    data.body[i][j] = 'Created';
-                                } else if (data.body[i][j] === 'BApproved') {
-                                    data.body[i][j] = 'Approved';
-                                } else if (data.body[i][j] === 'Rejected') {
-                                    data.body[i][j] = 'Rejected';
+    <script>
+        $(document).ready(function() {
+            $('#examplee').DataTable({
+                dom: 'Bfrtip',
+                "pageLength": 25,
+                "order": [
+                    [3, "asc"]
+                ],
+                buttons: [{
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: [0, ':visible']
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        filename: 'Apply Report List',
+                        //  Change value Acreated to created and AApproved to Approved
+                        customizeData: function(data) {
+                            for (var i = 0; i < data.body.length; i++) {
+                                for (var j = 0; j < data.body[i].length; j++) {
+                                    if (data.body[i][j] === 'ACreated') {
+                                        data.body[i][j] = 'Created';
+                                    } else if (data.body[i][j] === 'BApproved') {
+                                        data.body[i][j] = 'Approved';
+                                    } else if (data.body[i][j] === 'Rejected') {
+                                        data.body[i][j] = 'Rejected';
+                                    }
                                 }
                             }
+                        },
+                        exportOptions: {
+                            columns: ':visible'
                         }
                     },
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    filename: 'Apply Report List',
-                    //  Change value Acreated to created and AApproved to Approved
-                    customize: function(doc) {
-                        // Assuming the status column is at index 3, adjust as needed
-                        for (var i = 0; i < doc.content[1].table.body.length; i++) {
-                            var originalValue = doc.content[1].table.body[i][3].text;
-                            if (originalValue === 'ACreated') {
-                                doc.content[1].table.body[i][3].text = 'Created';
-                            } else if (originalValue === 'BApproved') {
-                                doc.content[1].table.body[i][3].text = 'Approved';
-                            } else if (originalValue === 'CRejected') {
-                                doc.content[1].table.body[i][3].text = 'Rejected';
+                    {
+                        extend: 'pdfHtml5',
+                        filename: 'Apply Report List',
+                        //  Change value Acreated to created and AApproved to Approved
+                        customize: function(doc) {
+                            // Assuming the status column is at index 3, adjust as needed
+                            for (var i = 0; i < doc.content[1].table.body.length; i++) {
+                                var originalValue = doc.content[1].table.body[i][3].text;
+                                if (originalValue === 'ACreated') {
+                                    doc.content[1].table.body[i][3].text = 'Created';
+                                } else if (originalValue === 'BApproved') {
+                                    doc.content[1].table.body[i][3].text = 'Approved';
+                                } else if (originalValue === 'CRejected') {
+                                    doc.content[1].table.body[i][3].text = 'Rejected';
+                                }
                             }
+                        },
+                        exportOptions: {
+                            columns: [0, 1, 2, 5]
                         }
                     },
-                    exportOptions: {
-                        columns: [0, 1, 2, 5]
-                    }
-                },
-                'colvis'
-            ]
+                    'colvis'
+                ]
+            });
         });
-    });
-</script>
+    </script>
 
-{{-- add library for excell download after filter  --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    {{-- add library for excell download after filter  --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
-{{-- filter on apply leave --}}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-{{-- ! 11-01-2023 --}}
-{{-- 
+    {{-- filter on apply leave --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {{-- ! 11-01-2023 --}}
+    {{-- 
 <script>
     $(document).ready(function() {
 
@@ -4179,643 +5715,643 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
     });
 </script> --}}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Common function to render table rows
-        function renderTableRows(data) {
-            $('table tbody').html("");
-            $('#clickExcell').show();
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Common function to render table rows
+            function renderTableRows(data) {
+                $('table tbody').html("");
+                $('#clickExcell').show();
 
-            if (data.length === 0) {
-                $('table tbody').append('<tr><td colspan="8" class="text-center">No data found</td></tr>');
-            } else {
-                $.each(data, function(index, item) {
-                    var url = '/applyleave/' + item.id;
-                    var createdAt = formatDate(item.created_at);
-                    var fromDate = formatDate(item.from);
-                    var toDate = formatDate(item.to);
-                    var holidays = Math.floor((new Date(item.to) - new Date(item.from)) / (24 * 60 *
-                        60 * 1000)) + 1;
+                if (data.length === 0) {
+                    $('table tbody').append('<tr><td colspan="8" class="text-center">No data found</td></tr>');
+                } else {
+                    $.each(data, function(index, item) {
+                        var url = '/applyleave/' + item.id;
+                        var createdAt = formatDate(item.created_at);
+                        var fromDate = formatDate(item.from);
+                        var toDate = formatDate(item.to);
+                        var holidays = Math.floor((new Date(item.to) - new Date(item.from)) / (24 * 60 *
+                            60 * 1000)) + 1;
 
-                    $('table tbody').append('<tr>' +
-                        '<td><a href="' + url + '">' + item.team_member + '</a></td>' +
-                        '<td>' + createdAt + '</td>' +
-                        '<td>' + getStatusBadge(item.status) + '</td>' +
-                        '<td>' + item.name + '</td>' +
-                        '<td>' + fromDate + ' to ' + toDate + '</td>' +
-                        '<td>' + holidays + '</td>' +
-                        '<td>' + item.approvernames + '</td>' +
-                        '<td style="width: 7rem;text-wrap: wrap;">' + item.reasonleave + '</td>' +
-                        '</tr>');
+                        $('table tbody').append('<tr>' +
+                            '<td><a href="' + url + '">' + item.team_member + '</a></td>' +
+                            '<td>' + createdAt + '</td>' +
+                            '<td>' + getStatusBadge(item.status) + '</td>' +
+                            '<td>' + item.name + '</td>' +
+                            '<td>' + fromDate + ' to ' + toDate + '</td>' +
+                            '<td>' + holidays + '</td>' +
+                            '<td>' + item.approvernames + '</td>' +
+                            '<td style="width: 7rem;text-wrap: wrap;">' + item.reasonleave + '</td>' +
+                            '</tr>');
+                    });
+                }
+            }
+
+            // Common function to export data to Excel
+            function exportToExcel(data) {
+                const filteredData = data.map(item => {
+                    const holidays = Math.floor((new Date(item.to) - new Date(item.from)) / (24 * 60 * 60 *
+                        1000)) + 1;
+                    const createdAt = formatDate(item.created_at);
+                    const fromDate = formatDate(item.from);
+                    const toDate = formatDate(item.to);
+
+                    return {
+                        Employee: item.team_member,
+                        Date_of_Request: createdAt,
+                        status: getStatusText(item.status),
+                        Leave_Type: item.name,
+                        from: fromDate,
+                        to: toDate,
+                        Days: holidays,
+                        Approver: item.approvernames,
+                        Reason_for_Leave: item.reasonleave
+                    };
+                });
+
+                const ws = XLSX.utils.json_to_sheet(filteredData);
+                const headerCellStyle = {
+                    font: {
+                        bold: true
+                    }
+                };
+
+                ws['!cols'] = [{
+                        wch: 15
+                    },
+                    {
+                        wch: 20
+                    },
+                    {
+                        wch: 15
+                    },
+                    {
+                        wch: 20
+                    },
+                    {
+                        wch: 15
+                    },
+                    {
+                        wch: 15
+                    },
+                    {
+                        wch: 20
+                    },
+                    {
+                        wch: 30
+                    }
+                ];
+
+                Object.keys(ws).filter(key => key.startsWith('A')).forEach(key => {
+                    ws[key].s = headerCellStyle;
+                });
+
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
+                const excelBuffer = XLSX.write(wb, {
+                    bookType: "xlsx",
+                    type: "array"
+                });
+                const dataBlob = new Blob([excelBuffer], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                });
+                saveAs(dataBlob, "Apply_Report_Filter_List.xlsx");
+            }
+
+            // Common function to format date
+            function formatDate(dateString) {
+                return new Date(dateString).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
                 });
             }
-        }
 
-        // Common function to export data to Excel
-        function exportToExcel(data) {
-            const filteredData = data.map(item => {
-                const holidays = Math.floor((new Date(item.to) - new Date(item.from)) / (24 * 60 * 60 *
-                    1000)) + 1;
-                const createdAt = formatDate(item.created_at);
-                const fromDate = formatDate(item.from);
-                const toDate = formatDate(item.to);
-
-                return {
-                    Employee: item.team_member,
-                    Date_of_Request: createdAt,
-                    status: getStatusText(item.status),
-                    Leave_Type: item.name,
-                    from: fromDate,
-                    to: toDate,
-                    Days: holidays,
-                    Approver: item.approvernames,
-                    Reason_for_Leave: item.reasonleave
-                };
-            });
-
-            const ws = XLSX.utils.json_to_sheet(filteredData);
-            const headerCellStyle = {
-                font: {
-                    bold: true
-                }
-            };
-
-            ws['!cols'] = [{
-                    wch: 15
-                },
-                {
-                    wch: 20
-                },
-                {
-                    wch: 15
-                },
-                {
-                    wch: 20
-                },
-                {
-                    wch: 15
-                },
-                {
-                    wch: 15
-                },
-                {
-                    wch: 20
-                },
-                {
-                    wch: 30
-                }
-            ];
-
-            Object.keys(ws).filter(key => key.startsWith('A')).forEach(key => {
-                ws[key].s = headerCellStyle;
-            });
-
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
-            const excelBuffer = XLSX.write(wb, {
-                bookType: "xlsx",
-                type: "array"
-            });
-            const dataBlob = new Blob([excelBuffer], {
-                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            });
-            saveAs(dataBlob, "Apply_Report_Filter_List.xlsx");
-        }
-
-        // Common function to format date
-        function formatDate(dateString) {
-            return new Date(dateString).toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-        }
-
-        // Common function to get status text
-        function getStatusText(status) {
-            return status === 0 ? 'Created' : status === 1 ? 'Approved' : status === 2 ? 'Rejected' : '';
-        }
-
-        // Common function to get status badge
-        function getStatusBadge(status) {
-            if (status === 0) {
-                return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
-            } else if (status === 1) {
-                return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
-            } else if (status === 2) {
-                return '<span class="badge badge-danger">Rejected</span>';
-            } else {
-                return '';
+            // Common function to get status text
+            function getStatusText(status) {
+                return status === 0 ? 'Created' : status === 1 ? 'Approved' : status === 2 ? 'Rejected' : '';
             }
-        }
 
-        // Function to handle status change
-        function handleStatusChange() {
-            var status1 = $('#status1').val();
-            var employee1 = $('#employee1').val();
-            var leave1 = $('#leave1').val();
-
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    renderTableRows(data);
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    if (data.length > 0) {
-                        $('#clickExcell').on('click', function() {
-                            exportToExcel(data);
-                        });
-                    }
+            // Common function to get status badge
+            function getStatusBadge(status) {
+                if (status === 0) {
+                    return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
+                } else if (status === 1) {
+                    return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
+                } else if (status === 2) {
+                    return '<span class="badge badge-danger">Rejected</span>';
+                } else {
+                    return '';
                 }
-            });
-        }
+            }
 
-        // Function to handle leave type change
-        function handleLeaveTypeChange() {
-            var leave1 = $('#leave1').val();
-            var employee1 = $('#employee1').val();
-            var status1 = $('#status1').val();
+            // Function to handle status change
+            function handleStatusChange() {
+                var status1 = $('#status1').val();
+                var employee1 = $('#employee1').val();
+                var leave1 = $('#leave1').val();
 
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    renderTableRows(data);
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    if (data.length > 0) {
-                        $('#clickExcell').on('click', function() {
-                            exportToExcel(data);
-                        });
-                    }
-                }
-            });
-        }
-
-        // Function to handle employee change
-        function handleEmployeeChange() {
-            var employee1 = $('#employee1').val();
-            var leave1 = $('#leave1').val();
-            var status1 = $('#status1').val();
-
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    renderTableRows(data);
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    if (data.length > 0) {
-                        $('#clickExcell').on('click', function() {
-                            exportToExcel(data);
-                        });
-                    }
-                }
-            });
-        }
-
-        // Function to handle leave period end date change
-        function handleleaveperiodendChange() {
-            var endperiod1 = $('#endperiod1').val();
-            var startperiod1 = $('#startperiod1').val();
-
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    startperiod: startperiod1,
-                    endperiod: endperiod1,
-                },
-                success: function(data) {
-                    renderTableRows(data);
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    if (data.length > 0) {
-                        $('#clickExcell').on('click', function() {
-                            exportToExcel(data);
-                        });
-                    }
-                }
-            });
-        }
-
-        //  end Request Date end date wise
-        function handleEndRequestDateChange() {
-            var end1 = $('#end1').val();
-            var start1 = $('#start1').val();
-            var status1 = $('#status1').val();
-            var employee1 = $('#employee1').val();
-            var leave1 = $('#leave1').val();
-
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    end: end1,
-                    start: start1,
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    renderTableRows(data);
-                    $('.paging_simple_numbers').remove();
-                    $('.dataTables_info').remove();
-                    if (data.length > 0) {
-                        $('#clickExcell').on('click', function() {
-                            exportToExcel(data);
-                        });
-                    }
-                }
-            });
-        }
-
-        // Event handlers
-        $('#status1').change(handleStatusChange);
-        $('#leave1').change(handleLeaveTypeChange);
-        $('#employee1').change(handleEmployeeChange);
-        $('#endperiod1').change(handleleaveperiodendChange);
-        $('#end1').change(handleEndRequestDateChange);
-
-        //** start date wise
-        $('#start1').change(function() {
-            var start1 = $(this).val();
-            var end1 = $('#end1').val();
-            var status1 = $('#status1').val();
-            var employee1 = $('#employee1').val();
-            var leave1 = $('#leave1').val();
-            //  alert(start1);
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    end: end1,
-                    start: start1,
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    // Replace the table body with the filtered data
-                    $('table tbody').html("");
-                    // Clear the table body
-                    if (data.length === 0) {
-                        // If no data is found, display a "No data found" message
-                        $('table tbody').append(
-                            '<tr><td colspan="8" class="text-center">No data found</td></tr>'
-                        );
-                    } else {
-                        $.each(data, function(index, item) {
-
-                            // Create the URL dynamically
-                            var url = '/applyleave/' + item.id;
-
-                            var createdAt = new Date(item.created_at)
-                                .toLocaleDateString('en-GB', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric'
-                                });
-                            var fromDate = new Date(item.from)
-                                .toLocaleDateString('en-GB', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric'
-                                });
-                            var toDate = new Date(item.to)
-                                .toLocaleDateString('en-GB', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric'
-                                });
-
-                            var holidays = Math.floor((new Date(item.to) -
-                                new Date(item.from)) / (24 * 60 * 60 *
-                                1000)) + 1;
-
-                            // Add the rows to the table
-                            $('table tbody').append('<tr>' +
-                                '<td><a href="' + url + '">' + item
-                                .team_member +
-                                '</a></td>' +
-                                '<td>' + createdAt + '</td>' +
-                                '<td>' + getStatusBadge(item.status) + '</td>' +
-                                '<td>' + item.name + '</td>' +
-                                '<td>' + fromDate + ' to ' + toDate +
-                                '</td>' +
-                                '<td>' + holidays + '</td>' +
-                                '<td>' + item.approvernames + '</td>' +
-                                '<td style="width: 7rem;text-wrap: wrap;">' +
-                                item.reasonleave + '</td>' +
-                                '</tr>');
-                        });
-
-                        // Function to handle the status badge
-                        function getStatusBadge(status) {
-                            if (status == 0) {
-                                return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
-                            } else if (status == 1) {
-                                return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
-                            } else if (status == 2) {
-                                return '<span class="badge badge-danger">Rejected</span>';
-                            } else {
-                                return '';
-                            }
-                        }
-
-                        //   remove pagination after filter
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        renderTableRows(data);
                         $('.paging_simple_numbers').remove();
                         $('.dataTables_info').remove();
-                    }
-                }
-            });
-        });
-
-    });
-</script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-<script>
-    $(document).ready(function() {
-
-        //   team name wise
-        $('#employee1').change(function() {
-            var employee1 = $(this).val();
-            var leave1 = $('#leave1').val();
-            var status1 = $('#status1').val();
-
-            $.ajax({
-                type: 'GET',
-                url: '/filtering-applyleve',
-                data: {
-                    status: status1,
-                    employee: employee1,
-                    leave: leave1
-                },
-                success: function(data) {
-                    // Replace the table body with the filtered data
-                    $('table tbody').html("");
-                    //  shoe save excell button 
-                    $('#clickExcell').show();
-                    // Clear the table body
-                    if (data.length === 0) {
-                        // If no data is found, display a "No data found" message
-                        $('table tbody').append(
-                            '<tr><td colspan="8" class="text-center">No data found</td></tr>'
-                        );
-                    } else {
-                        $.each(data, function(index, item) {
-
-                            // Create the URL dynamically
-                            var url = '/applyleave/' + item.id;
-
-                            var createdAt = new Date(item.created_at)
-                                .toLocaleDateString('en-GB', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric'
-                                });
-                            var fromDate = new Date(item.from)
-                                .toLocaleDateString('en-GB', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric'
-                                });
-                            var toDate = new Date(item.to)
-                                .toLocaleDateString('en-GB', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric'
-                                });
-
-                            var holidays = Math.floor((new Date(item.to) -
-                                new Date(item.from)) / (24 * 60 * 60 *
-                                1000)) + 1;
-
-                            // Add the rows to the table
-                            $('table tbody').append('<tr>' +
-                                '<td><a href="' + url + '">' + item
-                                .team_member +
-                                '</a></td>' +
-                                '<td>' + createdAt + '</td>' +
-                                '<td>' + getStatusBadge(item.status) + '</td>' +
-                                '<td>' + item.name + '</td>' +
-                                '<td>' + fromDate + ' to ' + toDate +
-                                '</td>' +
-                                '<td>' + holidays + '</td>' +
-                                '<td>' + item.approvernames + '</td>' +
-                                '<td style="width: 7rem;text-wrap: wrap;">' +
-                                item.reasonleave + '</td>' +
-                                '</tr>');
-                        });
-
-
-
-                        // Function to handle the status badge
-                        function getStatusBadge(status) {
-                            if (status == 0) {
-                                return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
-                            } else if (status == 1) {
-                                return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
-                            } else if (status == 2) {
-                                return '<span class="badge badge-danger">Rejected</span>';
-                            } else {
-                                return '';
-                            }
-                        }
-
-                        //   remove pagination after filter
-                        $('.paging_simple_numbers').remove();
-                        $('.dataTables_info').remove();
-
-                        // Check if data is available
                         if (data.length > 0) {
-                            function exportToExcel() {
-                                // Exclude unwanted columns (created_at and type)
-                                const filteredData = data.map(item => {
+                            $('#clickExcell').on('click', function() {
+                                exportToExcel(data);
+                            });
+                        }
+                    }
+                });
+            }
 
-                                    const holidays = Math.floor((new Date(item.to) -
-                                        new Date(item.from)) / (24 * 60 *
-                                        60 *
-                                        1000)) + 1;
+            // Function to handle leave type change
+            function handleLeaveTypeChange() {
+                var leave1 = $('#leave1').val();
+                var employee1 = $('#employee1').val();
+                var status1 = $('#status1').val();
 
-                                    const createdAt = new Date(item.created_at)
-                                        .toLocaleDateString('en-GB', {
-                                            day: '2-digit',
-                                            month: '2-digit',
-                                            year: 'numeric'
-                                        });
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        renderTableRows(data);
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+                        if (data.length > 0) {
+                            $('#clickExcell').on('click', function() {
+                                exportToExcel(data);
+                            });
+                        }
+                    }
+                });
+            }
 
-                                    const fromDate = new Date(item.from)
-                                        .toLocaleDateString('en-GB', {
-                                            day: '2-digit',
-                                            month: '2-digit',
-                                            year: 'numeric'
-                                        });
-                                    const toDate = new Date(item.to)
-                                        .toLocaleDateString('en-GB', {
-                                            day: '2-digit',
-                                            month: '2-digit',
-                                            year: 'numeric'
-                                        });
+            // Function to handle employee change
+            function handleEmployeeChange() {
+                var employee1 = $('#employee1').val();
+                var leave1 = $('#leave1').val();
+                var status1 = $('#status1').val();
 
-                                    // Create a copy of the item to avoid modifying the original data
-                                    const newItem = {
-                                        Employee: item.team_member,
-                                        Date_of_Request: createdAt,
-                                        status: item.status === 0 ? 'Created' :
-                                            item.status === 1 ? 'Approved' :
-                                            item.status === 2 ? 'Rejected' : '',
-                                        Leave_Type: item.name,
-                                        from: fromDate,
-                                        to: toDate,
-                                        Days: holidays,
-                                        Approver: item.approvernames,
-                                        Reason_for_Leave: item.reasonleave
-                                    };
-                                    return newItem;
-                                });
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        renderTableRows(data);
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+                        if (data.length > 0) {
+                            $('#clickExcell').on('click', function() {
+                                exportToExcel(data);
+                            });
+                        }
+                    }
+                });
+            }
 
-                                const ws = XLSX.utils.json_to_sheet(filteredData);
+            // Function to handle leave period end date change
+            function handleleaveperiodendChange() {
+                var endperiod1 = $('#endperiod1').val();
+                var startperiod1 = $('#startperiod1').val();
 
-                                // Add style to make header text bold
-                                const headerCellStyle = {
-                                    font: {
-                                        bold: true
-                                    }
-                                };
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        startperiod: startperiod1,
+                        endperiod: endperiod1,
+                    },
+                    success: function(data) {
+                        renderTableRows(data);
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+                        if (data.length > 0) {
+                            $('#clickExcell').on('click', function() {
+                                exportToExcel(data);
+                            });
+                        }
+                    }
+                });
+            }
 
-                                ws['!cols'] = [{
-                                        wch: 15
-                                    },
-                                    {
-                                        wch: 20
-                                    },
-                                    {
-                                        wch: 15
-                                    },
-                                    {
-                                        wch: 20
-                                    },
-                                    {
-                                        wch: 15
-                                    },
-                                    {
-                                        wch: 15
-                                    },
-                                    {
-                                        wch: 20
-                                    },
-                                    {
-                                        wch: 30
-                                    }
-                                ];
+            //  end Request Date end date wise
+            function handleEndRequestDateChange() {
+                var end1 = $('#end1').val();
+                var start1 = $('#start1').val();
+                var status1 = $('#status1').val();
+                var employee1 = $('#employee1').val();
+                var leave1 = $('#leave1').val();
 
-                                // Apply style to header cells
-                                Object.keys(ws).filter(key => key.startsWith('A')).forEach(
-                                    key => {
-                                        ws[key].s = headerCellStyle;
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        end: end1,
+                        start: start1,
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        renderTableRows(data);
+                        $('.paging_simple_numbers').remove();
+                        $('.dataTables_info').remove();
+                        if (data.length > 0) {
+                            $('#clickExcell').on('click', function() {
+                                exportToExcel(data);
+                            });
+                        }
+                    }
+                });
+            }
+
+            // Event handlers
+            $('#status1').change(handleStatusChange);
+            $('#leave1').change(handleLeaveTypeChange);
+            $('#employee1').change(handleEmployeeChange);
+            $('#endperiod1').change(handleleaveperiodendChange);
+            $('#end1').change(handleEndRequestDateChange);
+
+            //** start date wise
+            $('#start1').change(function() {
+                var start1 = $(this).val();
+                var end1 = $('#end1').val();
+                var status1 = $('#status1').val();
+                var employee1 = $('#employee1').val();
+                var leave1 = $('#leave1').val();
+                //  alert(start1);
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        end: end1,
+                        start: start1,
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        // Replace the table body with the filtered data
+                        $('table tbody').html("");
+                        // Clear the table body
+                        if (data.length === 0) {
+                            // If no data is found, display a "No data found" message
+                            $('table tbody').append(
+                                '<tr><td colspan="8" class="text-center">No data found</td></tr>'
+                            );
+                        } else {
+                            $.each(data, function(index, item) {
+
+                                // Create the URL dynamically
+                                var url = '/applyleave/' + item.id;
+
+                                var createdAt = new Date(item.created_at)
+                                    .toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    });
+                                var fromDate = new Date(item.from)
+                                    .toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    });
+                                var toDate = new Date(item.to)
+                                    .toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
                                     });
 
-                                const wb = XLSX.utils.book_new();
-                                XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
-                                const excelBuffer = XLSX.write(wb, {
-                                    bookType: "xlsx",
-                                    type: "array"
-                                });
-                                const dataBlob = new Blob([excelBuffer], {
-                                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                });
-                                saveAs(dataBlob, "Apply_Report_Filter_List.xlsx");
+                                var holidays = Math.floor((new Date(item.to) -
+                                    new Date(item.from)) / (24 * 60 * 60 *
+                                    1000)) + 1;
+
+                                // Add the rows to the table
+                                $('table tbody').append('<tr>' +
+                                    '<td><a href="' + url + '">' + item
+                                    .team_member +
+                                    '</a></td>' +
+                                    '<td>' + createdAt + '</td>' +
+                                    '<td>' + getStatusBadge(item.status) + '</td>' +
+                                    '<td>' + item.name + '</td>' +
+                                    '<td>' + fromDate + ' to ' + toDate +
+                                    '</td>' +
+                                    '<td>' + holidays + '</td>' +
+                                    '<td>' + item.approvernames + '</td>' +
+                                    '<td style="width: 7rem;text-wrap: wrap;">' +
+                                    item.reasonleave + '</td>' +
+                                    '</tr>');
+                            });
+
+                            // Function to handle the status badge
+                            function getStatusBadge(status) {
+                                if (status == 0) {
+                                    return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
+                                } else if (status == 1) {
+                                    return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
+                                } else if (status == 2) {
+                                    return '<span class="badge badge-danger">Rejected</span>';
+                                } else {
+                                    return '';
+                                }
                             }
-                            //  // Call the function to export to Excel
-                            //  exportToExcel();
+
+                            //   remove pagination after filter
+                            $('.paging_simple_numbers').remove();
+                            $('.dataTables_info').remove();
                         }
-                        $('#clickExcell').on('click', function() {
-                            // Call the function to export to Excel
-                            exportToExcel();
-                        });
                     }
-                }
+                });
+            });
+
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+
+            //   team name wise
+            $('#employee1').change(function() {
+                var employee1 = $(this).val();
+                var leave1 = $('#leave1').val();
+                var status1 = $('#status1').val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/filtering-applyleve',
+                    data: {
+                        status: status1,
+                        employee: employee1,
+                        leave: leave1
+                    },
+                    success: function(data) {
+                        // Replace the table body with the filtered data
+                        $('table tbody').html("");
+                        //  shoe save excell button 
+                        $('#clickExcell').show();
+                        // Clear the table body
+                        if (data.length === 0) {
+                            // If no data is found, display a "No data found" message
+                            $('table tbody').append(
+                                '<tr><td colspan="8" class="text-center">No data found</td></tr>'
+                            );
+                        } else {
+                            $.each(data, function(index, item) {
+
+                                // Create the URL dynamically
+                                var url = '/applyleave/' + item.id;
+
+                                var createdAt = new Date(item.created_at)
+                                    .toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    });
+                                var fromDate = new Date(item.from)
+                                    .toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    });
+                                var toDate = new Date(item.to)
+                                    .toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    });
+
+                                var holidays = Math.floor((new Date(item.to) -
+                                    new Date(item.from)) / (24 * 60 * 60 *
+                                    1000)) + 1;
+
+                                // Add the rows to the table
+                                $('table tbody').append('<tr>' +
+                                    '<td><a href="' + url + '">' + item
+                                    .team_member +
+                                    '</a></td>' +
+                                    '<td>' + createdAt + '</td>' +
+                                    '<td>' + getStatusBadge(item.status) + '</td>' +
+                                    '<td>' + item.name + '</td>' +
+                                    '<td>' + fromDate + ' to ' + toDate +
+                                    '</td>' +
+                                    '<td>' + holidays + '</td>' +
+                                    '<td>' + item.approvernames + '</td>' +
+                                    '<td style="width: 7rem;text-wrap: wrap;">' +
+                                    item.reasonleave + '</td>' +
+                                    '</tr>');
+                            });
+
+
+
+                            // Function to handle the status badge
+                            function getStatusBadge(status) {
+                                if (status == 0) {
+                                    return '<span class="badge badge-pill badge-warning"><span style="display: none;">A</span>Created</span>';
+                                } else if (status == 1) {
+                                    return '<span class="badge badge-success"><span style="display: none;">B</span>Approved</span>';
+                                } else if (status == 2) {
+                                    return '<span class="badge badge-danger">Rejected</span>';
+                                } else {
+                                    return '';
+                                }
+                            }
+
+                            //   remove pagination after filter
+                            $('.paging_simple_numbers').remove();
+                            $('.dataTables_info').remove();
+
+                            // Check if data is available
+                            if (data.length > 0) {
+                                function exportToExcel() {
+                                    // Exclude unwanted columns (created_at and type)
+                                    const filteredData = data.map(item => {
+
+                                        const holidays = Math.floor((new Date(item.to) -
+                                            new Date(item.from)) / (24 * 60 *
+                                            60 *
+                                            1000)) + 1;
+
+                                        const createdAt = new Date(item.created_at)
+                                            .toLocaleDateString('en-GB', {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric'
+                                            });
+
+                                        const fromDate = new Date(item.from)
+                                            .toLocaleDateString('en-GB', {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric'
+                                            });
+                                        const toDate = new Date(item.to)
+                                            .toLocaleDateString('en-GB', {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric'
+                                            });
+
+                                        // Create a copy of the item to avoid modifying the original data
+                                        const newItem = {
+                                            Employee: item.team_member,
+                                            Date_of_Request: createdAt,
+                                            status: item.status === 0 ? 'Created' :
+                                                item.status === 1 ? 'Approved' :
+                                                item.status === 2 ? 'Rejected' : '',
+                                            Leave_Type: item.name,
+                                            from: fromDate,
+                                            to: toDate,
+                                            Days: holidays,
+                                            Approver: item.approvernames,
+                                            Reason_for_Leave: item.reasonleave
+                                        };
+                                        return newItem;
+                                    });
+
+                                    const ws = XLSX.utils.json_to_sheet(filteredData);
+
+                                    // Add style to make header text bold
+                                    const headerCellStyle = {
+                                        font: {
+                                            bold: true
+                                        }
+                                    };
+
+                                    ws['!cols'] = [{
+                                            wch: 15
+                                        },
+                                        {
+                                            wch: 20
+                                        },
+                                        {
+                                            wch: 15
+                                        },
+                                        {
+                                            wch: 20
+                                        },
+                                        {
+                                            wch: 15
+                                        },
+                                        {
+                                            wch: 15
+                                        },
+                                        {
+                                            wch: 20
+                                        },
+                                        {
+                                            wch: 30
+                                        }
+                                    ];
+
+                                    // Apply style to header cells
+                                    Object.keys(ws).filter(key => key.startsWith('A')).forEach(
+                                        key => {
+                                            ws[key].s = headerCellStyle;
+                                        });
+
+                                    const wb = XLSX.utils.book_new();
+                                    XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
+                                    const excelBuffer = XLSX.write(wb, {
+                                        bookType: "xlsx",
+                                        type: "array"
+                                    });
+                                    const dataBlob = new Blob([excelBuffer], {
+                                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                    });
+                                    saveAs(dataBlob, "Apply_Report_Filter_List.xlsx");
+                                }
+                                //  // Call the function to export to Excel
+                                //  exportToExcel();
+                            }
+                            $('#clickExcell').on('click', function() {
+                                // Call the function to export to Excel
+                                exportToExcel();
+                            });
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            //   Create Zip Folder button click event
+            $('#downloadButton').click(function(e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                var assignmentgenerateid = {{ $assignmentgenerateid }}; // Use the variable from Blade
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/assignmentzipfolder',
+                    data: {
+                        assignmentgenerateid: assignmentgenerateid,
+                    },
+                    success: function(data) {
+                        // Handle the success response here
+                    },
+                    error: function(error) {
+                        // Handle any errors here
+                    }
+                });
             });
         });
-
-    });
-</script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </script>
 
 
-<script>
-    $(document).ready(function() {
-        //   Create Zip Folder button click event
-        $('#downloadButton').click(function(e) {
-            e.preventDefault(); // Prevent the default form submission
 
-            var assignmentgenerateid = {{ $assignmentgenerateid }}; // Use the variable from Blade
+    {{-- validation for comparision date and block year for 4 disit --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var startDateInput = $('#startdate');
+            var endDateInput = $('#enddate');
 
-            $.ajax({
-                type: 'GET',
-                url: '/assignmentzipfolder',
-                data: {
-                    assignmentgenerateid: assignmentgenerateid,
-                },
-                success: function(data) {
-                    // Handle the success response here
-                },
-                error: function(error) {
-                    // Handle any errors here
+            function compareDates() {
+                var startDate = new Date(startDateInput.val());
+                var endDate = new Date(endDateInput.val());
+
+                if (startDate > endDate) {
+                    alert('End date should be greater than or equal to the Start date');
+                    endDateInput.val(''); // Clear the end date input
                 }
-            });
-        });
-    });
-</script>
-
-
-
-{{-- validation for comparision date and block year for 4 disit --}}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        var startDateInput = $('#startdate');
-        var endDateInput = $('#enddate');
-
-        function compareDates() {
-            var startDate = new Date(startDateInput.val());
-            var endDate = new Date(endDateInput.val());
-
-            if (startDate > endDate) {
-                alert('End date should be greater than or equal to the Start date');
-                endDateInput.val(''); // Clear the end date input
             }
-        }
 
-        startDateInput.on('input', compareDates);
-        endDateInput.on('blur', compareDates);
-    });
-</script>
+            startDateInput.on('input', compareDates);
+            endDateInput.on('blur', compareDates);
+        });
+    </script>
 
-{{-- validation for block 4 digit to  year --}}
-{{-- <script>
+    {{-- validation for block 4 digit to  year --}}
+    {{-- <script>
       $(document).ready(function() {
           $('#startdate').on('change', function() {
               var startclear = $('#startdate');
@@ -4872,59 +6408,59 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
       });
   </script> --}}
 
-<script>
-    $(document).ready(function() {
-        $('#startdate').on('change', function() {
-            var startclear = $('#startdate');
-            var startDateInput1 = $('#startdate').val();
-            var startDate = new Date(startDateInput1);
-            var startyear = startDate.getFullYear();
-            var yearLength = startyear.toString().length;
-            if (yearLength > 4) {
-                alert('Enter four digits for the year');
-                startclear.val('');
-            }
+    <script>
+        $(document).ready(function() {
+            $('#startdate').on('change', function() {
+                var startclear = $('#startdate');
+                var startDateInput1 = $('#startdate').val();
+                var startDate = new Date(startDateInput1);
+                var startyear = startDate.getFullYear();
+                var yearLength = startyear.toString().length;
+                if (yearLength > 4) {
+                    alert('Enter four digits for the year');
+                    startclear.val('');
+                }
+            });
+
+            $('#enddate').on('change', function() {
+                var endclear = $('#enddate');
+                var endDateInput1 = $('#enddate').val();
+                var endtDate = new Date(endDateInput1);
+                var endyear = endtDate.getFullYear();
+                var endyearLength = endyear.toString().length;
+                if (endyearLength > 4) {
+                    alert('Enter four digits for the year');
+                    endclear.val('');
+                }
+            });
+
+            // Add form submission handling
+            $('form').submit(function(event) {
+                var year = $('#year').val();
+                var startdate = $('#startdate').val();
+                var enddate = $('#enddate').val();
+
+                var startclear = $('#startdate');
+                var startDateInput1 = $('#startdate').val();
+                var startDate = new Date(startDateInput1);
+                var startyear = startDate.getFullYear();
+                var yearvalue = $('#year').val();
+                if (yearvalue != startyear) {
+                    alert('Enter Start Date According Year');
+                    startclear.val('');
+                    event.preventDefault(); // Prevent form submission
+                    return; // Exit the function
+                }
+
+                if (year === "" || startdate === "" || enddate === "") {
+                    alert("Please select filter data.");
+                    event.preventDefault(); // Prevent form submission
+                }
+            });
         });
+    </script>
 
-        $('#enddate').on('change', function() {
-            var endclear = $('#enddate');
-            var endDateInput1 = $('#enddate').val();
-            var endtDate = new Date(endDateInput1);
-            var endyear = endtDate.getFullYear();
-            var endyearLength = endyear.toString().length;
-            if (endyearLength > 4) {
-                alert('Enter four digits for the year');
-                endclear.val('');
-            }
-        });
-
-        // Add form submission handling
-        $('form').submit(function(event) {
-            var year = $('#year').val();
-            var startdate = $('#startdate').val();
-            var enddate = $('#enddate').val();
-
-            var startclear = $('#startdate');
-            var startDateInput1 = $('#startdate').val();
-            var startDate = new Date(startDateInput1);
-            var startyear = startDate.getFullYear();
-            var yearvalue = $('#year').val();
-            if (yearvalue != startyear) {
-                alert('Enter Start Date According Year');
-                startclear.val('');
-                event.preventDefault(); // Prevent form submission
-                return; // Exit the function
-            }
-
-            if (year === "" || startdate === "" || enddate === "") {
-                alert("Please select filter data.");
-                event.preventDefault(); // Prevent form submission
-            }
-        });
-    });
-</script>
-
-{{-- <script>
+    {{-- <script>
       $(document).ready(function() {
           $('#startdate').on('change', function() {
               var startclear = $('#startdate');
@@ -4983,11 +6519,11 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
       });
   </script> --}}
 
-{{-- * --}}
-{{-- * --}}
-{{-- * --}}
-{{-- * please wait / regarding second --}}
-{{-- @section('backEnd_content')
+    {{-- * --}}
+    {{-- * --}}
+    {{-- * --}}
+    {{-- * please wait / regarding second --}}
+    {{-- @section('backEnd_content')
     <div class="content-header row align-items-center m-0">
         <nav aria-label="breadcrumb" class="col-sm-4 order-sm-last mb-3 mb-sm-0 p-0 ">
             <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
@@ -5026,7 +6562,7 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
         </div>
     </div>
 @endsection --}}
-{{-- <script>
+    {{-- <script>
     $(document).ready(function() {
         // Create Zip Folder button click event
         $('#downloadButton').click(function(e) {
@@ -5080,229 +6616,229 @@ https://www.w3schools.com/jquery/trysel.asp?password=password&rr=on --}}
         });
     });
 </script> --}}
-{{-- * regarding jquery --}}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {{-- * regarding jquery --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-    $(document).ready(function() {
-        // Download button click event
-        $('#downloadzip').click(function() {
-            // Disable the button to prevent multiple clicks
-            $(this).prop('disabled', true);
+    <script>
+        $(document).ready(function() {
+            // Download button click event
+            $('#downloadzip').click(function() {
+                // Disable the button to prevent multiple clicks
+                $(this).prop('disabled', true);
 
-            // You can also hide the button if needed
-            // $(this).hide();
+                // You can also hide the button if needed
+                // $(this).hide();
+            });
         });
-    });
-</script>
-{{-- *regarding ajax --}}
-<nav aria-label="breadcrumb" class="col-sm-4 order-sm-last mb-3 mb-sm-0 p-0 ">
-    <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
-        <li style="margin-left: 13px;">
-            <button type="button" id="downloadButton" class="btn btn-outline-primary">Create Zip Folder</button>
-        </li>
-    </ol>
-</nav>
+    </script>
+    {{-- *regarding ajax --}}
+    <nav aria-label="breadcrumb" class="col-sm-4 order-sm-last mb-3 mb-sm-0 p-0 ">
+        <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
+            <li style="margin-left: 13px;">
+                <button type="button" id="downloadButton" class="btn btn-outline-primary">Create Zip Folder</button>
+            </li>
+        </ol>
+    </nav>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 
-<script>
-    $(document).ready(function() {
-        // Create Zip Folder button click event
-        $('#downloadButton').click(function(e) {
-            e.preventDefault(); // Prevent the default link behavior
+    <script>
+        $(document).ready(function() {
+            // Create Zip Folder button click event
+            $('#downloadButton').click(function(e) {
+                e.preventDefault(); // Prevent the default link behavior
 
-            // var assignmentgenerateid = {{ $assignmentgenerateid }};
-            // console.log(assignmentgenerateid);
-            alert('hi');
-            $.ajax({
-                type: 'GET',
-                url: '/assignmentzipfolder',
-                data: {
-                    assignmentgenerateid: assignmentgenerateid,
-                },
-                success: function(data) {
-                    // Handle the success response here
-                },
-                error: function(error) {
-                    // Handle any errors here
+                // var assignmentgenerateid = {{ $assignmentgenerateid }};
+                // console.log(assignmentgenerateid);
+                alert('hi');
+                $.ajax({
+                    type: 'GET',
+                    url: '/assignmentzipfolder',
+                    data: {
+                        assignmentgenerateid: assignmentgenerateid,
+                    },
+                    success: function(data) {
+                        // Handle the success response here
+                    },
+                    error: function(error) {
+                        // Handle any errors here
+                    }
+                });
+            });
+        });
+    </script>
+    balanceconfirmationreminder
+    {{-- * --}}
+    {{-- validation on date --}}
+    <script>
+        $(document).ready(function() {
+            $('.leaveDate').on('change', function() {
+                var leaveDate = $(this);
+                var leaveDateValue = leaveDate.val();
+
+                // Use a regular expression to match a four-digit year
+                var yearPattern = /^\d{4}$/;
+
+                if (!yearPattern.test(leaveDateValue)) {
+                    alert('Please enter a valid four-digit year');
+                    leaveDate.val('');
                 }
             });
         });
-    });
-</script>
-balanceconfirmationreminder
-{{-- * --}}
-{{-- validation on date --}}
-<script>
-    $(document).ready(function() {
-        $('.leaveDate').on('change', function() {
-            var leaveDate = $(this);
-            var leaveDateValue = leaveDate.val();
+    </script>
 
-            // Use a regular expression to match a four-digit year
-            var yearPattern = /^\d{4}$/;
 
-            if (!yearPattern.test(leaveDateValue)) {
-                alert('Please enter a valid four-digit year');
-                leaveDate.val('');
-            }
+    {{-- multiple date ho ager ek hi page me tab --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.leaveDate').on('change', function() {
+                var leaveDate = $(this);
+                var leaveDateValue = leaveDate.val();
+                var leaveDateGet = new Date(leaveDateValue);
+                var leaveyear = leaveDateGet.getFullYear();
+                // console.log(startyear);
+                var leaveyearLength = leaveyear.toString().length;
+                if (leaveyearLength > 4) {
+                    alert('Enter four digits for the year');
+                    leaveDate.val('');
+                }
+            });
         });
-    });
-</script>
+    </script>
 
 
-{{-- multiple date ho ager ek hi page me tab --}}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('.leaveDate').on('change', function() {
-            var leaveDate = $(this);
-            var leaveDateValue = leaveDate.val();
-            var leaveDateGet = new Date(leaveDateValue);
-            var leaveyear = leaveDateGet.getFullYear();
-            // console.log(startyear);
-            var leaveyearLength = leaveyear.toString().length;
-            if (leaveyearLength > 4) {
-                alert('Enter four digits for the year');
-                leaveDate.val('');
+
+    {{-- validation for comparision date and block year for 4 disit --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var startDateInput = $('#startDate');
+            var endDateInput = $('#endDate');
+
+            function compareDates() {
+                var startDate = new Date(startDateInput.val());
+                var endDate = new Date(endDateInput.val());
+
+                if (startDate > endDate) {
+                    alert('End date should be greater than or equal to the Start date');
+                    endDateInput.val(''); // Clear the end date input
+                }
             }
+
+            startDateInput.on('input', compareDates);
+            endDateInput.on('blur', compareDates);
         });
-    });
-</script>
+    </script>
+
+    {{-- validation for block 4 digit to  year --}}
+    <script>
+        $(document).ready(function() {
+            $('#startDate').on('change', function() {
+                var startclear = $('#startDate');
+                var startDateInput1 = $('#startDate').val();
+                var startDate = new Date(startDateInput1);
+                var startyear = startDate.getFullYear();
+                var yearLength = startyear.toString().length;
+                if (yearLength > 4) {
+                    alert('Enter four digits for the year');
+                    startclear.val('');
+                }
+            });
+            $('#endDate').on('change', function() {
+                var endclear = $('#endDate');
+                var endDateInput1 = $('#endDate').val();
+                var endtDate = new Date(endDateInput1);
+                var endyear = endtDate.getFullYear();
+                var endyearLength = endyear.toString().length;
+                if (endyearLength > 4) {
+                    alert('Enter four digits for the year');
+                    endclear.val('');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#startdate').on('change', function() {
+                var startclear = $('#startdate');
+                var startDateInput1 = $('#startdate').val();
+                var startDate = new Date(startDateInput1);
+                var startyear = startDate.getFullYear();
+                var yearLength = startyear.toString().length;
+                if (yearLength > 4) {
+                    alert('Enter four digits for the year');
+                    startclear.val('');
+                }
+                //   validation for year match
+                var yearvalue = $('#year').val();
+                if (yearvalue != startyear) {
+                    alert('Enter Start Date According Year');
+                    startclear.val('');
+                }
+            });
+            $('#enddate').on('change', function() {
+                var endclear = $('#enddate');
+                var endDateInput1 = $('#enddate').val();
+                var endtDate = new Date(endDateInput1);
+                var endyear = endtDate.getFullYear();
+                var endyearLength = endyear.toString().length;
+                if (endyearLength > 4) {
+                    alert('Enter four digits for the year');
+                    endclear.val('');
+                }
+                //   validation for year match
+                var yearvalue = $('#year').val();
+                if (yearvalue != endyear) {
+                    alert('Enter End Date According Year');
+                    endclear.val('');
+                }
+            });
+        });
+    </script>
 
 
-
-{{-- validation for comparision date and block year for 4 disit --}}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        var startDateInput = $('#startDate');
-        var endDateInput = $('#endDate');
-
-        function compareDates() {
-            var startDate = new Date(startDateInput.val());
-            var endDate = new Date(endDateInput.val());
-
-            if (startDate > endDate) {
-                alert('End date should be greater than or equal to the Start date');
-                endDateInput.val(''); // Clear the end date input
-            }
+    <script>
+        if ($teamname && $start || $end) {
+            $query - > where(function($q) use($teamname, $start, $end) {
+                $q - > where('timesheetreport.teamid', $teamname) -
+                    >
+                    whereBetween('timesheetreport.startdate', [$start, $end]) -
+                    >
+                    orWhereBetween('timesheetreport.enddate', [$start, $end]) -
+                    >
+                    orWhere(function($query) use($start, $end) {
+                        $query - > where('timesheetreport.startdate', '<=', $start) -
+                            >
+                            where('timesheetreport.enddate', '>=', $end);
+                    });
+            });
         }
+    </script>
 
-        startDateInput.on('input', compareDates);
-        endDateInput.on('blur', compareDates);
-    });
-</script>
+    <script>
+        //   remove pagination after filter
+        $('.paging_simple_numbers').remove();
+        $('.dataTables_info').remove();
+    </script>
 
-{{-- validation for block 4 digit to  year --}}
-<script>
-    $(document).ready(function() {
-        $('#startDate').on('change', function() {
-            var startclear = $('#startDate');
-            var startDateInput1 = $('#startDate').val();
-            var startDate = new Date(startDateInput1);
-            var startyear = startDate.getFullYear();
-            var yearLength = startyear.toString().length;
-            if (yearLength > 4) {
-                alert('Enter four digits for the year');
-                startclear.val('');
-            }
+    {{-- * --}}
+    {{-- * --}}
+    <div id="profileCompletion" class="alert alert-info" role="alert">
+
+    </div>
+    <script>
+        $(document).ready(function() {
+            var profileCompletionPercentage = {{ $formattedProfileCompletion }};
+            // alert(profileCompletionPercentage);
+            $('#profileCompletion').text(profileCompletionPercentage + '%');
         });
-        $('#endDate').on('change', function() {
-            var endclear = $('#endDate');
-            var endDateInput1 = $('#endDate').val();
-            var endtDate = new Date(endDateInput1);
-            var endyear = endtDate.getFullYear();
-            var endyearLength = endyear.toString().length;
-            if (endyearLength > 4) {
-                alert('Enter four digits for the year');
-                endclear.val('');
-            }
-        });
-    });
-</script>
+    </script>
+    {{-- * --}}
 
-<script>
-    $(document).ready(function() {
-        $('#startdate').on('change', function() {
-            var startclear = $('#startdate');
-            var startDateInput1 = $('#startdate').val();
-            var startDate = new Date(startDateInput1);
-            var startyear = startDate.getFullYear();
-            var yearLength = startyear.toString().length;
-            if (yearLength > 4) {
-                alert('Enter four digits for the year');
-                startclear.val('');
-            }
-            //   validation for year match
-            var yearvalue = $('#year').val();
-            if (yearvalue != startyear) {
-                alert('Enter Start Date According Year');
-                startclear.val('');
-            }
-        });
-        $('#enddate').on('change', function() {
-            var endclear = $('#enddate');
-            var endDateInput1 = $('#enddate').val();
-            var endtDate = new Date(endDateInput1);
-            var endyear = endtDate.getFullYear();
-            var endyearLength = endyear.toString().length;
-            if (endyearLength > 4) {
-                alert('Enter four digits for the year');
-                endclear.val('');
-            }
-            //   validation for year match
-            var yearvalue = $('#year').val();
-            if (yearvalue != endyear) {
-                alert('Enter End Date According Year');
-                endclear.val('');
-            }
-        });
-    });
-</script>
-
-
-<script>
-    if ($teamname && $start || $end) {
-        $query - > where(function($q) use($teamname, $start, $end) {
-            $q - > where('timesheetreport.teamid', $teamname) -
-                >
-                whereBetween('timesheetreport.startdate', [$start, $end]) -
-                >
-                orWhereBetween('timesheetreport.enddate', [$start, $end]) -
-                >
-                orWhere(function($query) use($start, $end) {
-                    $query - > where('timesheetreport.startdate', '<=', $start) -
-                        >
-                        where('timesheetreport.enddate', '>=', $end);
-                });
-        });
-    }
-</script>
-
-<script>
-    //   remove pagination after filter
-    $('.paging_simple_numbers').remove();
-    $('.dataTables_info').remove();
-</script>
-
-{{-- * --}}
-{{-- * --}}
-<div id="profileCompletion" class="alert alert-info" role="alert">
-
-</div>
-<script>
-    $(document).ready(function() {
-        var profileCompletionPercentage = {{ $formattedProfileCompletion }};
-        // alert(profileCompletionPercentage);
-        $('#profileCompletion').text(profileCompletionPercentage + '%');
-    });
-</script>
-{{-- * --}}
-
-{{-- <script>
+    {{-- <script>
         $(function() {
             $('body').on('click', '#editCompany', function(event) {
                 //        debugger;
@@ -5334,7 +6870,7 @@ balanceconfirmationreminder
             });
         });
     </script> --}}
-{{-- <script>
+    {{-- <script>
         $(function() {
             $('body').on('click', '#editCompany2', function(event) {
                 //        debugger;
@@ -5370,5 +6906,5 @@ balanceconfirmationreminder
 
 
 
-{{-- ###################################################################### --}}
-{{--  --------------------- 29 sep 2023 joining date--------------- --}}
+    {{-- ###################################################################### --}}
+    {{--  --------------------- 29 sep 2023 joining date--------------- --}}

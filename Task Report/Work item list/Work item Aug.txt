@@ -1,0 +1,17 @@
+01-08-24
+1.Client want to implement promotion process to users.staff to manager
+
+
+02-08-24
+1.Client want to implement promotion process to users.staff to manager
+2.All bugs fixed and client want to seprate employee code and client code,
+
+
+03-08-24
+1.All bugs fixed by me and uploaded on vsademo and tested by me 
+2.All promotion process and rejoining process code uploaded on vsalive and tested by me 
+
+
+05-08-24
+1.client want to seprate employee code and client code,
+2.support tester to testing and vsalive user problem fixed 

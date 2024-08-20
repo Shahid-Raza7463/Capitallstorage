@@ -1,3 +1,73 @@
+
+  public function assignmentotpstore(Request $request)
+  resources\views\backEnd\timesheet\timesheetdownload.blade.php
+#############################################################
+25-07-24  updated on vsalocal,vsademo,vsalive
+
+updated on vsalocal,vsademo
+
+vsalive updated code 
+vsademo updated code and database 
+
+newstaff
+teamrolehistory
+#############################################################
+1.password all project
+  1.3   Azaz~123    vsa
+  1.2   Azaz~1234    vsademo
+
+  1.1   Azaz~12345    vsalive
+
+#############################################################
+1.live vsademo
+
+Super admin- sukhbahadur1993@gmail.com
+password - Sukh@2023
+
+Manager id- manojsangwan@capitall.io
+password - Manoj@123
+
+Partner - harish@capitall.io
+password - Manoj@123
+
+Staff - sangwanm242@gmail.com
+password - X9L2pk9NKh@2023
+
+Manager : Poojakumari@capitall.io
+Password : ZXGBfThUec@2023
+
+##############################################################
+credential
+1.itsupport
+2.sunny
+3.bhasker
+4.kritikas@vsa.co.in
+itsupport_delhi@vsa.co.in
+
+
+http://127.0.0.1:8000/assignmentconfirmation/ABD100411
+TES100010
++request: Symfony\Component\HttpFoundation\InputBag {#52
+    #parameters: array:2 [
+      "assignmentid" => "ABD100411"
+      "status" => "0"
+    ]
+  }
+
+confirmationstatus
+resources\views\backEnd\assignmentconfirmation\index.blade.php
+replace this below file hare 
+
+
+
+use App\Models\Client;
+
+confirmationAccept
+
+ $client = DB::table('templates')->where('id', $request->template_id)->first();
+
+
+
 1.my local project in this folder
 C:\Shahid Raza\Capitall\Project\Send by Sir\Updated Code 17 jan 24\02-03-24 
 
@@ -8,6 +78,7 @@ C:\Shahid Raza\Capitall\Project\Send by Sir\Updated Code 17 jan 24\02-03-24
 new database 
 
 1.https://vsa.capitall.io/login
+https://compliancetest.capitall.io/user/login
 wifi check speed
 ping google.com -t
 aiws wifi password is #SarSet%556&4890
@@ -24,6 +95,22 @@ you are laravel and javascript expert
 you are laravel expert
 http://127.0.0.1:8000/viewassignment/BET100051
 2
+
+
+Login url 
+http://127.0.0.1:8000/expertaff-login
+abcde@gmail.com
+password Azaz~123
+
+change login url from 
+routes\auth.php file 
+
+
+
+live 
+https://www.expertaff.com/login
+abcde@gmail.com
+password 1111
 
 
 
@@ -44,4 +131,31 @@ http://127.0.0.1:8000/viewassignment/BET100051
 ye 4 table send karo
 
 
+home route
+app\Http\Controllers\BackEndController.php
 
+   DB::table('activitylogs')->insert([
+                    'user_id' => $id, 
+                    'ip_address' => $request->ip(), 
+                    'activitytitle' => $pagename, 
+                    'description' => 'New Assignment Budgeting Added'.' '.'( '. $assignmentname. ' )', 
+                    'created_at' => date('y-m-d'),       
+                    'updated_at' => date('y-m-d')       
+                ]);
+
+
+bugs
+################################################################################################################################
+
+
+applyleaves   all data remove
+leaverequest    all data remove
+timesheetreport    all data remove
+timesheetrequests    all data remove
+timesheets     all data remove
+timesheetusers   all data remove 
+
+and jis user se test karega us user se timesheet create kare one days ka 
+
+teammembers
+Users

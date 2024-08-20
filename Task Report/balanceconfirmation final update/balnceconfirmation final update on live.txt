@@ -1,0 +1,104 @@
+
+Blade 222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+add blade file 
+resources\views\backEnd\assignmentconfirmation\index.blade.php
+app\Http\Controllers\AssignmentconfirmationController.php
+app\Console\Commands\BalanceConfirmationReminder.php
+app\Console\Kernel.php
+app\Http\Controllers\HomeController.php
+
+
+resources\views\emails\assignmentdebtorform.blade.php
+resources\views\backEnd\assignmentconfirmationaccept.blade.php
+resources\views\backEnd\assignmentconfirmationamounthide.blade.php
+resources\views\emails\balanceconfrmclosed.blade.php
+resources\views\backEnd\assignmentteamreject.blade.php
+resources\views\backEnd\assignmentconfirmation\editentries.blade.php
+
+public\backEnd\balanceconfirmation.xlsx
+
+
+
+
+
+
+
+
+################################################################################################################################
+Route 222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+
+
+Route::get('/confirmationotpsend',  [AssignmentconfirmationController::class, 'confirmationotpsend']);
+Route::post('/confirmationstatus', [AssignmentconfirmationController::class, 'confirmationstatus']);
+Route::post('/acceptstatus', [AssignmentconfirmationController::class, 'acceptstatus']);
+Route::post('confirmation/autoreminder',   [AssignmentconfirmationController::class, 'autoreminder']);
+Route::get('/autoreminder/destroy/{id}', [AssignmentconfirmationController::class, 'autoreminderdestroy']);
+Route::get('/entries/destroy/{id}', [AssignmentconfirmationController::class, 'destroy']);
+Route::get('/entriesedit/{id}',  [AssignmentconfirmationController::class, 'entriesedit']);
+Route::post('/entriesupdated',   [AssignmentconfirmationController::class, 'entriesupdated']);
+Route::get('/otpskipconfirmation', [AssignmentconfirmationController::class, 'otpskipconfirmation']);
+Route::get('/balanceconfirmationreminder', [HomeController::class, 'balanceconfirmationreminder']);
+
+Route::get('/confirmationAccept/', [AssignmentconfirmationController::class, 'confirmationAccept']);
+Route::get('/assignmentconfirmationauthotp',  [AssignmentconfirmationController::class, 'confirmationauthotp']);
+Route::post('/assignmentconfirmationotp', [AssignmentconfirmationController::class, 'otpapstore'])->name('confirmationotp');
+Route::post('/assignmentconfirmationotphide', [AssignmentconfirmationController::class, 'otpapstore_hide'])->name('confirmationotp');
+Route::post('assignmentconfirmation/',   [AssignmentconfirmationController::class, 'confirmationConfirm']);
+Route::post('assignmentconfirmationhide/',   [AssignmentconfirmationController::class, 'confirmationConfirmhide']);
+Route::post('confirmation/confirm',   [AssignmentconfirmationController::class, 'confirmationConfirm']);
+
+
+
+
+
+
+
+###########################################################################################
+ye sabhi route middle ware ke under hai find text Route::group(['middleware' => ['twofactor']], function () {
+
+  Route::get('/assignmentconfirmation/{id}', [AssignmentconfirmationController::class, 'indexview']);
+  Route::post('/confirmation/excel', [AssignmentconfirmationController::class, 'debtorExcel']);
+  Route::get('/assignmentconfirmationtemplate',  [AssignmentconfirmationController::class, 'template']);
+  Route::post('/assignmentconfirmation/mail', [AssignmentconfirmationController::class, 'mail']);
+  Route::any('/assignmentpending/mail/{id}', [AssignmentconfirmationController::class, 'pendingmail']);
+  Route::post('/assignmentmaildraft', [AssignmentconfirmationController::class, 'saveMaildraft']);
+  Route::post('/assignmentfinalsave', [AssignmentconfirmationController::class, 'saveMail']);
+  Route::post('/update-debtor-status',  [AssignmentconfirmationController::class, 'updateStatus']);
+
+
+
+#############################################################################################################################
+add table 
+1. confirmationrem
+
+#############################################################################################################################
+add column
+
+1 assignmentbudgetings table me 
+   1.1  balanceconfirmationstatus	
+   1.2  balanceconfirmationotp
+
+#############################################################################################################################
+replace table 
+1.Template
+2.debtor  added some column so replace this 
+
+#############################################################################################################################
+sample download file path add fle hare 
+
+public\backEnd\balanceconfirmation.xlsx
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

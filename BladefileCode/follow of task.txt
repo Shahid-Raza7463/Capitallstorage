@@ -1,0 +1,99 @@
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+When admin reject users timesheet after that users edit and submit rejected timesheet
+
+Steps:-
+1.Navigate to the application
+2.Click on 'Human resoursec' dropdown.
+3.Click on 'Timesheet dropdown and navigate to 'Rejected Submitted timesheet.
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+
+
+While clicking on save button directly then system is first displaying confirmation message for submission and then system is displaying validation message to add description.
+
+Steps:-
+1.Navigate to the application.
+2.Click on 'Client' dropdown.
+3.Click on 'Client' dropdown and navigate to 'Assignment List' page.
+4.Click on Client name hyperlink, click on year and click on 'Assignment Id.
+5.Click on ‘Confirmation’ button.
+6.Click on ‘Send’ button and Enter subject and click on Send button.
+Expected Result:- System should first display validation message to select ‘Confirmation Type’.
+Actual Result:- System is firstly displaying confirmation message then system is displaying validation message.
+Open Screenshot 2024-04-15 at 3.52.28 PM.png
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+When manager,partner and admin add teammember in assignment then teammeber will be show in teammember list if assignment closed then it will show in assignment viewer list 
+
+Steps:-
+1.Navigate to the application
+2.Click on 'Client' dropdown.
+2.Click on 'Assignment List'.
+3.Click on Client name hyperlink, click on year and click on 'Assignment Id.
+4.click on Teammember List plus icon: 
+5.Add teammember hare UDIN List
+
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+on UDIN List section, after click plus button you can add udin documentation date from hare and this date will be show in udin list section 
+
+Steps:-
+1.Navigate to the application
+2.Click on 'Client' dropdown.
+2.Click on 'Assignment List'.
+3.Click on Client name hyperlink, click on year and click on 'Assignment Id.
+4.click on UDIN List: 
+5.click on plus button 
+
+
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+
+client want to attachment file on timesheet request create form
+
+Steps:-
+1.Navigate to the application
+2.Click on 'Human resoursec' dropdown.
+3.Click on 'Timesheet dropdown and navigate to 'my timesheet.
+4.click on 'Add Timesheet Request'
+
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+if timesheet rejected of users then user can apply leave on that days and all data will be come according leave 
+
+Steps:-
+1.Navigate to the application
+2.Click on 'Human resoursec' dropdown.
+3.Click on 'Timesheet dropdown and navigate to 'Rejected Submitted timesheet.
+
+
+
+
+222222222222222222222222222222222222222222222222
+
+I have mentioned the description. now we can test 
+
+4
+the unwanted sorting icon should be remove from All table only it will be on date and subbmited date  i have attaced image 
+
+
+
+3.the client code ,assignment code ,staffcode/ employee, partner code , assign partner code and approver code should be sepreted in all table  
+Check using Admin.partner,manager and staff id 
+
+
+
+2
+in table , the data should be in one line currently table design not good  ( i have attached image)
+Check using Admin.partner,manager and staff id 
+
+
+
+1
+Date formate should be 01-01-2024 on portal and in excell currently date formate are like january ,9 2024
+in excell, we need to check downloaded data also becouse after modification data can goes in excell with code (i have Attached image)
+
