@@ -10,8 +10,44 @@ class ZipController extends Controller
 //*
 // Start Hare 
 // Start Hare 
-//*
+//* regarding filter
 // Start Hare 
+$teammemberDatas = DB::table('assignmentmappings')
+->leftjoin('assignmentteammappings', 'assignmentteammappings.assignmentmapping_id', 'assignmentmappings.id')
+->leftjoin('teammembers', 'teammembers.id', 'assignmentteammappings.teammember_id')
+->leftjoin('titles', 'titles.id', 'teammembers.title_id')
+->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+->where('assignmentmappings.assignmentgenerate_id', $id)
+// filter null value hare 
+->whereNotNull('assignmentteammappings.id')
+->select('teammembers.*', 'roles.rolename', 'assignmentteammappings.type', 'titles.title', 'assignmentteammappings.id As assignmentteammappingsId', 'assignmentteammappings.status as assignmentteammappingsStatus', 'assignmentmappings.assignmentgenerate_id as assignmentgenerateid', 'assignmentteammappings.teamhour', 'assignmentmappings.leadpartner', 'assignmentteammappings.viewerteam')
+->orderBy('assignmentteammappingsId', 'desc')
+->get();
+// Start Hare 
+$teammemberDatas = DB::table('assignmentmappings')
+    ->leftJoin('assignmentteammappings', 'assignmentteammappings.assignmentmapping_id', '=', 'assignmentmappings.id')
+    ->leftJoin('teammembers', 'teammembers.id', '=', 'assignmentteammappings.teammember_id')
+    ->leftJoin('titles', 'titles.id', '=', 'teammembers.title_id')
+    ->leftJoin('roles', 'roles.id', '=', 'teammembers.role_id')
+    ->where('assignmentmappings.assignmentgenerate_id', $id)
+    ->select(
+        'teammembers.*',
+        'roles.rolename',
+        'assignmentteammappings.type',
+        'titles.title',
+        'assignmentteammappings.id As assignmentteammappingsId',
+        'assignmentteammappings.status as assignmentteammappingsStatus',
+        'assignmentmappings.assignmentgenerate_id as assignmentgenerateid',
+        'assignmentteammappings.teamhour',
+        'assignmentmappings.leadpartner',
+        'assignmentteammappings.viewerteam'
+    )
+    ->orderBy('assignmentteammappingsId', 'desc')
+    ->get()
+    ->filter(function ($item) {
+        return $item->assignmentteammappingsId !== null;
+    });
+
 
 // Start Hare 
 //* regarding title 

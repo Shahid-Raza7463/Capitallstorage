@@ -41,8 +41,59 @@
 {{-- *   --}}
 {{--  Start Hare --}}
 {{--  Start Hare --}}
-{{-- *   --}}
+{{-- * regarding check box   --}}
 {{--  Start Hare --}}
+
+
+222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+
+       <div class="col-6">
+            <div class="form-group">
+                <label class="font-weight-600">Name *</label>
+                <input type="checkbox" data-toggle="tooltip" id="enablebox" style="margin-left: 10px;"
+                    title="You want to submit without teammember, please click on check box">
+                <select required class="language form-control enablefalse" id="key" name="teammember_id[]">
+                    <option value="">Please Select One</option>
+                    @foreach ($teammember as $teammemberData)
+                        <option value="{{ $teammemberData->id }}" @if (!empty($store->financial) && $store->financial == $teammemberData->id) selected @endif>
+                            {{ $teammemberData->team_member }} ( {{ $teammemberData->role->rolename }} ) (
+                            {{ $teammemberData->staffcode }} )</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+    
+        <div class="col-5">
+            <div class="form-group">
+                <label class="font-weight-600">Type *</label>
+                <select required class="form-control key enablefalse" id="key" name="type[]">
+                    <option value="">Please Select One</option>
+                    <option value="0">Team Leader</option>
+                    <option value="2">Staff</option>
+                </select>
+            </div>
+        </div>
+
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#enablebox').on('change', function() {
+                    alert('hi');
+                    $('.enablefalse').prop('disabled', !this.checked);
+                });
+            });
+        </script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#enablebox').on('change', function() {
+                    // This will disable the dropdown when the checkbox is checked and enable it when unchecked
+                    $('.enablefalse').prop('disabled', this.checked);
+                });
+            });
+        </script>
 {{--  Start Hare --}}
 {{-- * regarding are you sure  --}}
 {{--  Start Hare --}}
