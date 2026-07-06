@@ -502,8 +502,8 @@ git add .
 git commit -m "your task"
 git fetch origin
 git rebase origin/ajanta-dev
-
 # resolve conflicts if any
+
 git add (conflict file path)
 git rebase --continue
 
@@ -533,8 +533,7 @@ git fetch origin
  error then n and enter 
 git merge origin/ajanta-dev
 222222222222222222222222222222222222222222222222
-
-new branch create and work  on it 
+Create new branch and work  on it 
 git checkout ajanta-dev
 git pull origin ajanta-dev
 git checkout -b shahid-ajantaV1
@@ -552,6 +551,7 @@ cd C:\xampp\htdocs\ifchub
 cd C:\xampp\htdocs\vsademo
 cd C:\xampp\htdocs\npci-dev
 cd C:\xampp\htdocs\kgsdemo
+cd C:\xampp\htdocs\vsalive
 cd C:\xampp\htdocs\capitall
 cd C:\xampp\htdocs\ajanta-dev
 
@@ -633,7 +633,6 @@ git commit -a -m "add git command"
 git pull origin npci-dev
 git push origin HEAD
 
-php artisan migrate:fresh --seed
 
 
 git stash

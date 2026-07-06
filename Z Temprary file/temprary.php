@@ -8,14 +8,212 @@ use Illuminate\Http\Request;
 class temprary extends Controller
 {
 
-    public function index() {}
+    public function index(
+
+  public function timesheetnotfilledlastweek(Request $request)
+  {
+
+    $teammember = DB::table('teammembers')
+      ->leftJoin('timesheetusers', 'timesheetusers.createdby', 'teammembers.id')
+      ->where('teammembers.status', 1)
+      ->where('timesheetusers.date', '<=', now()->subWeeks(1)->endOfWeek())
+      ->select('teammembers.emailid', 'teammembers.team_member', 'teammembers.id')
+      ->distinct('timesheetusers.createdby')
+      ->get();
+
+    foreach ($teammember as $user) {
+      $lastSubmissionDate = DB::table('timesheetusers')
+        ->where('createdby', $user->id)
+        ->where('date', '<=', now()->subWeeks(1)->endOfWeek())
+        ->where('status', '!=', 0)
+        ->where(function ($query) {
+          $query->whereRaw('DAYOFWEEK(date) = 1') // Sunday
+            ->orWhereRaw('DAYOFWEEK(date) = 7'); // Saturday
+        })
+        ->max('date');
+
+      $lastSubmissionDate = $lastSubmissionDate ? Carbon::parse($lastSubmissionDate)->format('d-m-Y') : '';
+      $user->last_submission_date = $lastSubmissionDate;
+    }
+
+    $excelData = $teammember->filter(function ($user) {
+      return !empty($user->last_submission_date);
+    })->map(function ($user) {
+      return [
+        'team_member' => $user->team_member,
+        'emailid' => $user->emailid,
+          'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+        'last_submission_date' => $user->last_submission_date,
+      ];
+    })->toArray();
+
+    $export = new TimesheetLastWeekExport(collect($excelData));
+    $excelFileName = 'Timesheet_last_week.xlsx';
+    Excel::store($export, $excelFileName);
+
+    // Modify the data for the email (excluding 'id')
+    $emailData = array(
+      'subject' => "Timesheet Not filled Last Week",
+      'teammember' => $teammember->map(function ($user) {
+        return (object) [
+          'team_member' => $user->team_member,
+          'emailid' => $user->emailid,
+          'last_submission_date' => $user->last_submission_date,
+        ];
+      }),
+    );
 
 
+    Mail::send('emails.timesheetnotfilledlastweekreminder', $emailData, function ($msg) use ($emailData, $excelFileName) {
+      $msg->to(auth()->user()->email);
+      // $msg->to('itsupport_delhi@vsa.co.in');
+      // $msg->to('shahidraza@capitall.io');
+      // Attach the Excel file to the email
+      $msg->attach(storage_path('app/' . $excelFileName), [
+        'as' => $excelFileName,
+        'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      ]);
+      $msg->subject($emailData['subject']);
+    });
+
+    $output = array('msg' => 'We have sent the Excel file successfully on mail');
+    return back()->with('success', $output);
+  }
+
+ $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
+      ->select('teamrolehistorydata.teammember_id', 'teamrolehistorydata.newstaff_code')
+      ->whereRaw('teamrolehistorydata.id = (SELECT MAX(teamrolehistorylatest.id) FROM teamrolehistory as teamrolehistorylatest WHERE teamrolehistorylatest.teammember_id = teamrolehistorydata.teammember_id)');
+
+    $teammember = DB::table('teammembers')
+      ->leftJoin('timesheetusers', 'timesheetusers.createdby', 'teammembers.id')
+      ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+        $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+      })
+      ->where('teammembers.status', 1)
+      ->where('timesheetusers.date', '<=', now()->subWeeks(1)->endOfWeek())
+      ->select(
+        'teammembers.emailid',
+        'teammembers.team_member',
+        'teammembers.id',
+        'teammembers.staffcode',
+        'latestrecord.newstaff_code'
+      )
+      ->distinct()
+      ->orderBy('teammembers.id', 'asc')
+      ->get();
+
+
+
+    ) {}
+
+
+      public function timesheetnotfilledlastweek(Request $request)
+  {
+    $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
+      ->select('teamrolehistorydata.teammember_id', 'teamrolehistorydata.newstaff_code')
+      ->whereRaw('teamrolehistorydata.id = (SELECT MAX(teamrolehistorylatest.id) FROM teamrolehistory as teamrolehistorylatest WHERE teamrolehistorylatest.teammember_id = teamrolehistorydata.teammember_id)');
+
+    $teammember = DB::table('teammembers')
+      ->leftJoin('timesheetusers', 'timesheetusers.createdby', 'teammembers.id')
+      ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+        $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+      })
+      ->where('teammembers.status', 1)
+      ->where('timesheetusers.date', '<=', now()->subWeeks(1)->endOfWeek())
+      ->select('teammembers.emailid', 'teammembers.team_member', 'teammembers.id', 'teammembers.staffcode', 'latestrecord.newstaff_code')
+      ->distinct('timesheetusers.createdby')
+      ->get();
+
+    foreach ($teammember as $user) {
+      $lastSubmissionDate = DB::table('timesheetusers')
+        ->where('createdby', $user->id)
+        ->where('date', '<=', now()->subWeeks(1)->endOfWeek())
+        ->where('status', '!=', 0)
+        ->where(function ($query) {
+          $query->whereRaw('DAYOFWEEK(date) = 1') // Sunday
+            ->orWhereRaw('DAYOFWEEK(date) = 7'); // Saturday
+        })
+        ->max('date');
+
+      $lastSubmissionDate = $lastSubmissionDate ? Carbon::parse($lastSubmissionDate)->format('d-m-Y') : '';
+      $user->last_submission_date = $lastSubmissionDate;
+    }
+
+    $excelData = $teammember->filter(function ($user) {
+      return !empty($user->last_submission_date);
+    })->map(function ($user) {
+      return [
+        'team_member' => $user->team_member,
+        'emailid' => $user->emailid,
+        'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+        'last_submission_date' => $user->last_submission_date,
+      ];
+    })->toArray();
+
+    $export = new TimesheetLastWeekExport(collect($excelData));
+    $excelFileName = 'Timesheet_last_week.xlsx';
+    Excel::store($export, $excelFileName);
+
+    // Modify the data for the email (excluding 'id')
+    $emailData = array(
+      'subject' => "Timesheet Not filled Last Week",
+      'teammember' => $teammember->map(function ($user) {
+        return (object) [
+          'team_member' => $user->team_member,
+          'emailid' => $user->emailid,
+          'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+          'last_submission_date' => $user->last_submission_date,
+        ];
+      }),
+    );
+
+
+    Mail::send('emails.timesheetnotfilledlastweekreminder', $emailData, function ($msg) use ($emailData, $excelFileName) {
+      $msg->to(auth()->user()->email);
+      // $msg->to('itsupport_delhi@vsa.co.in');
+      // $msg->to('shahidraza@capitall.io');
+      // Attach the Excel file to the email
+      $msg->attach(storage_path('app/' . $excelFileName), [
+        'as' => $excelFileName,
+        'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      ]);
+      $msg->subject($emailData['subject']);
+    });
+
+    $output = array('msg' => 'We have sent the Excel file successfully on mail');
+    return back()->with('success', $output);
+  }
+
+  
+    public function adminteammembers()
+    {
+        if (auth()->user()->role_id == 11) {
+            $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
+                ->select('teamrolehistorydata.teammember_id', 'teamrolehistorydata.newstaff_code')
+                ->whereRaw('teamrolehistorydata.id = (SELECT MAX(teamrolehistorylatest.id) FROM teamrolehistory as teamrolehistorylatest WHERE teamrolehistorylatest.teammember_id = teamrolehistorydata.teammember_id)');
+
+            $teammemberDatas = Teammember::with(['title', 'role'])
+                ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+                    $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+                })
+                ->where('teammembers.role_id', '!=', 11)
+                ->where('teammembers.status', 1)
+                ->select('teammembers.*', 'latestrecord.newstaff_code')
+                ->get();
+
+            return view('backEnd.teammember.allindex', compact('teammemberDatas'));
+        }
+    }
+              <td>
+                                        {{ $teammemberData->newstaff_code ?? ($teammemberData->staffcode ?? '') }}
+                                    </td>
      public function getFileUrl($fileName, $localPath = 'backEnd/image/teammember')
     {
         if (empty($fileName)) {
             return '#';
         }
+                    detailsFooter.textContent = rows.length ? `${rows.length} project${rows.length === 1 ? '' : 's'} found` : '';
+
 
         // agar temp path aa raha hai to usko ignore karo
         if (

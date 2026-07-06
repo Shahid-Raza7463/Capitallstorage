@@ -1,0 +1,101 @@
+Vsa all task created hare 
+
+1-07-2026
+1.Ajanta dashboard mathed with doc file 
+2.vsa issue checked (login issue)
+3.The data is coming correctly or not on ajanta dashboard
+4.right side pannel ui chnaged 
+5.sequence order fixed in Audit Count by Location
+
+
+
+2-07-2026
+1.test 4 dashboard tab 
+
+03-07-2026
+Assignee Dashboard — Action Items Tab bug list
+KPI Tiles 
+1.KPI: Open Observations / High Risk Observations : remove Department column from right side pannel after click on this KPI.
+
+
+
+Card 1 — Observation by Status 
+1.Side Panel Columns :ID | Observation Title | Location(s) | Status | Risk Rating | Owner | Target Date | Aging
+2.Side Panel View Icon  : Yes
+3.Side Panel Export  : Yes
+4.Secondary View : Yes — Tabular. Same columns as side panel. 
+5.Card Export : PDF, Word, Excel, SVG, PNG (with company logo) 
+
+
+
+Card 2 — Actionable by Status 
+1.Side Panel View Icon  : Yes
+2.Side Panel Export  : Yes
+3.Secondary View : Yes — Tabular. Same columns as side panel. 
+4.Card Export : PDF, Word, Excel, SVG, PNG (with company logo) 
+
+
+
+
+Card 3 — IRL by Status 
+1.Side Panel View Icon  : Yes
+2.Side Panel Export  : Yes
+3.Secondary View : Yes — Tabular. Same columns as side panel. 
+4.Card Export : PDF, Word, Excel, SVG, PNG (with company logo) 
+
+
+
+Card 4 — High Risk Observations 
+1.Card Export : PDF, Word, Excel, SVG, PNG (with company logo) 
+
+
+1,Vsa issue checked and not faund our side 
+
+
+
+04-07-2026
+1.cheked all deployed on Ajanta 
+2.the staff code should be display in timesheet submitted report in excel
+3.if timesheet rejected then first fill timeshett
+4.Remove created date column from attendence tab
+
+05-07-2026
+Sunday
+
+06-07-2026
+The staff code should be display in timesheet submitted report in excel
+If timesheet rejected then first fill timeshett, (I have checked and this is already runnig on portal)
+Remove created date column from attendence tab
+
+
+1.vsa issue checked (login issue)
+
+
+attendence issue 31 days in all month
+
+07-07-2026
+09-07-2026
+10-07-2026
+11-07-2026
+12-07-2026
+13-07-2026
+14-07-2026
+15-07-2026
+16-07-2026
+17-07-2026
+18-07-2026
+19-07-2026
+20-07-2026
+21-07-2026
+22-07-2026
+23-07-2026
+24-07-2026
+25-07-2026
+26-07-2026
+27-07-2026
+28-07-2026
+29-07-2026
+30-07-2026
+31-07-2026
+
+

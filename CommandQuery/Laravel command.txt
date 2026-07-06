@@ -479,7 +479,8 @@ php artisan make:factory NetworksFactory
  php artisan make:migration add_column_to_network_social_pages_table     
  php artisan make:migration modify_column_to_network_review_table  
 npm install lightbox2   
-php artisan event:generate  
+php artisan event:generate
+composer remove vendor/horizon
 php artisan config:clear  
 php artisan db:seed   
 php artisan db:seed --class=PermissionTableSeeder  

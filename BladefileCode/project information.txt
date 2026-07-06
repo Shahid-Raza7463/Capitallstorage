@@ -2,9 +2,15 @@
 28 march
 29 march  3 leave 
 
+ollama launch claude --model minimax-m2.5:cloud
 
+
+https://vsademo.capitall.io/home
 Sukh@202608
 
+
+php artisan migrate:refresh --path=\database\migrations\2026_03_14_164508_create_sub_observations_table.php
+php artisan migrate:fresh --seed
 
 cd C:\Users\KGS-429\Downloads
 set MINIO_ROOT_USER=minioadmin
@@ -1706,3 +1712,27 @@ Output:
 - Listing Screen UI
 - Light theme
 - High-quality mobile app mockup
+
+222222222222222222222222
+
+   return response()->json([
+        'counts' => $counts,
+        'auditHealth' => $auditHealth,
+        'auditCountByLocation' => $auditCountByLocation,
+        'riskExposureByLocation' => $riskExposureByLocation,
+        'highRiskObservations' => $highRiskObservations,
+    ]);
+
+    2222222222222222222222
+
+    https://cronapi.capitall.io/employeepayroll
+
+https://cronapi.capitall.io/attendance
+
+https://capitallio.sharepoint.com/:w:/s/NPCI-ImportantFiles/IQDdOX0N9EgMR5puuJZzDrSyAVdGc0TACyNNqPSMDIxLFRQ?e=eg5TCb
+
+https://capitallio.sharepoint.com/:w:/s/NPCI-ImportantFiles/IQB7oQfc6nLbTbzHp0Db3cb7Afk9vx9lO2t96CnKF3rJ1_Y?e=zLfVyS
+
+https://capitallio-my.sharepoint.com/:x:/r/personal/prashant_capitall_io/_layouts/15/Doc.aspx?sourcedoc=%7B4CC923BF-E940-4472-88F7-7454E1BEB361%7D&file=UAT%20Bugs.xlsx&fromShare=true&action=default&mobileredirect=true
+
+https://capitalldemo2.grc.capitall.io/admin/actionable/b189df4e-2498-4759-932d-1f8b17df91f8

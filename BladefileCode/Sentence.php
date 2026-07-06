@@ -492,6 +492,8 @@ class Sentence extends Command
 
     // What will be the payroll cycle — 25th to 26th or 1st to 30th?
 
+    //     Bhai party 21 Jan ko le lena.
+    // Paida 21 ko hue the, bas government hame 3 July ko wish krti h 🤣😆 to abhi 21 tak party ka wait kro sab log
     // If weekly timesheets are submitted, how should they be integrated with payroll?
 
     // If a casual leave is not approved, how should it be handled in payroll?
@@ -624,7 +626,7 @@ class Sentence extends Command
 
     // Pooja Kumari can you please retest the bugs that are resolved?
     // Need confirmation from Saurav to pick this as currently working on another task
-// Sumit Sir, I do not have any pending tasks right now. The 4 NPCI bugs assigned to me have been completed. Please let me know what I should work on next.
+    // Sumit Sir, I do not have any pending tasks right now. The 4 NPCI bugs assigned to me have been completed. Please let me know what I should work on next.
 
 
     //     2222222222222222222222222222222222

@@ -21,6 +21,22 @@ module.exports = {
         <Text style={Styles.heading}>Welcome to My Portfolio</Text>
       </View>
     </View>
+
+
+22222222222222222222222222222222222222222222222222222
+
+existing project me new branch so that your updated code will push in this 
+cd C:\xampp\htdocs\kgsdemo
+git status
+git init
+git remote add origin https://capitall-india-admin@bitbucket.org/capitallio/kgs-capitall.git
+git remote -v
+git checkout -b shahid-kgsdemo
+git add .
+git commit -m "Initial commit with updated composer and latest code"
+git push -u origin shahid-kgsdemo
+git push -u origin shahid-internal
+git push -u origin service-provider
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 regarding react native / enviroment / run on local 
 1.Open android Studio
@@ -1193,7 +1209,7 @@ adb devices
 adb reverse tcp:8081 tcp:8081
 
 222222222222222222222222222222
-make application using
+make application using / create app 
 
 cd C:\ReactNativeApp\FriendsList\android
 gradlew assembleRelease
@@ -1202,28 +1218,32 @@ gradlew.bat assembleRelease
 C:\ReactNativeApp\FriendsList\android\app\build\outputs\apk\release\app-release.apk
 
 
-222222222222222222
+#### App Name change
+
+1
+android/app/src/main/res/values/strings.xml
+   applicationId "com.mcqscan"
+   
+2
+app.json
+2 jagah change
+
+3
+android/app/build.gradle
+        applicationId "com.mcqscan"
+
+FriendsList ko Mcqscan kare 
+friendslist ko mcqscan kare
+
+APK banao aur GitHub me push kar do.
+
+
+2222222222222222222222222222222222222222222222222222222222222
 
 echo %JAVA_HOME%
 java -version
 
 
-2222222222222222222222222222222222222222222222222222
-Phir sirf ye 2 cheezein change karo:
-
-App Name
-
-android/app/src/main/res/values/strings.xml
-
-<string name="app_name">Convert PDF</string>
-Package Name
-
-android/app/build.gradle
-
-applicationId "com.shahid.convertpdf"
-namespace "com.shahid.convertpdf"
-
-APK banao aur GitHub me push kar do.
 
 2222222222222222222222222222222222222222
 
