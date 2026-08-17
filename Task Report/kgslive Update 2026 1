@@ -7586,15 +7586,16 @@ Payroll & Attendance Edit Control with Scheduler Protection ```start hare
 resources\views\backEnd\employeepayroll\payroll.blade.php
 
 
+
                                         <td>
                                             @if (auth()->user()->email == 'priyankasharma1@kgsomani.com' ||
                                                     auth()->user()->email == 'Tech1@capitall.io' ||
                                                     auth()->user()->email == 'sukhbahadur1993@gmail.com' ||
                                                     auth()->user()->email == 'accounts1@kgsomani.com' ||
                                                     auth()->user()->email == 'Sanjiv1@kgsomani.com')
-                                                <a style="color:green; cursor: pointer;" id="editCompany"
+                                                <a style="color:green; cursor: pointer;" id="employeepayrolldata"
                                                     data-toggle="modal" data-id="{{ $employeepayrollData->id }}"
-                                                    data-target="#exampleModal1">
+                                                    data-target="#employeepayrollmodel">
                                                     {{ $employeepayrollData->monthly_gross_salary ?? '' }}
                                                 </a>
                                             @else
@@ -7612,9 +7613,9 @@ resources\views\backEnd\employeepayroll\payroll.blade.php
 
 after this modal     <!-- Employee Payroll Modal --> add below model 
 
-    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4"
+     <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background: #37A000">
                     <h5 style="color: white"class="modal-title font-weight-600" id="exampleModalLabel1">Update Details
@@ -7630,107 +7631,73 @@ after this modal     <!-- Employee Payroll Modal --> add below model
                         <div class="row row-sm">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label class="font-weight-600">No of Day Present</label>
-                                    <input type="number" step="1" name="no_of_day_present" id="no_of_day_present"
-                                        class="form-control" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="font-weight-600">SL</label>
-                                    <input type="number" step="1" name="sl" id="sl"
-                                        class="form-control" placeholder="">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row-sm">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="font-weight-600">CL</label>
-                                    <input type="number" step="1" name="cl" id="cl"
-                                        class="form-control" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="font-weight-600">CO</label>
-                                    <input type="number" step="1" name="co" id="co"
-                                        class="form-control" placeholder="">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row-sm">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="font-weight-600">Birthday</label>
-                                    <input type="number" step="1" name="birthday" id="birthday"
-                                        class="form-control" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="font-weight-600">Day to be Paid</label>
-                                    <input type="number" step="1" name="day_to_be_paid" id="day_to_be_paid"
-                                        class="form-control" placeholder="">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row-sm">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="font-weight-600">Total Days</label>
-                                    <input type="number" step="1" name="totaldays" id="totaldays"
-                                        class="form-control" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="font-weight-600">Absent</label>
-                                    <input type="number" step="1" name="absent" id="absent"
-                                        class="form-control" placeholder="">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row-sm">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="font-weight-600">Gross Salary</label>
-                                    <input type="number" step="1" name="monthly_gross_salary"
-                                        id="monthly_gross_salary" class="form-control" placeholder="" readonly>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="font-weight-600">PF Amount</label>
-                                    <input type="number" step="1" name="employee_contribution" id="pfamount"
-                                        class="form-control" placeholder="" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row-sm">
-                            <div class="col-6">
-                                <div class="form-group">
                                     <label class="font-weight-600">Amount *</label>
-                                    <input type="number" step="1" name="amount" id="amount"
-                                        class="form-control" placeholder="" readonly>
+                                    <input type="text" name="amount" id="amount" readonly class="form-control"
+                                        placeholder="">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label class="font-weight-600">Total Amount to be Paid</label>
-                                    <input type="number" step="1" name="total_amount_to_paid"
-                                        id="total_amount_to_paid" class="form-control" placeholder="">
+                                    <label class="font-weight-600">Employee Contribution *</label>
+                                    <input type="number" name="employee_contribution" id="employee_contribution"
+                                        class="form-control" placeholder="">
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="row row-sm">
                             <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Employer Contribution *</label>
+                                    <input type="number" name="employer_contribution" id="employer_contribution"
+                                        class="form-control" placeholder="">
+                                </div>
+
+
                                 <input class="form-control" hidden value="" name="id" id="id"
                                     type="text">
                             </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Advance </label>
+                                    <input type="number" name="advance" id="advance" class="form-control"
+                                        placeholder="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-sm">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">TDS </label>
+                                    <input type="number" name="tds" id="tds" class="form-control"
+                                        placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Arrear </label>
+                                    <input type="number" name="Arrear" id="Arrear" class="form-control"
+                                        placeholder="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="font-weight-600">Bonus </label>
+                            <input type="number" name="bonus" id="bonus" class="form-control" placeholder="">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="font-weight-600">HR Comment </label>
+                            <textarea class="form-control" name="comment" id="comment" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="font-weight-600">Comment for Employee</label>
+                            <textarea class="form-control" name="commentforemployee" id="commentforemployee" rows="3"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -7747,17 +7714,55 @@ after this modal     <!-- Employee Payroll Modal --> add below model
 
 
   Route::get('echarts/ifc/{id}', [IfcController::class, 'echart']);
-  
+
   Route::get('/employee_payroll',  [EmployeepayrollController::class, 'employee_payroll']);
   Route::post('/employeepayroll_update',  [EmployeepayrollController::class, 'employeepayroll_update']);
+  Route::post('/employeepayrollupdate',  [EmployeepayrollController::class, 'employeepayrollupdate']);
 
 
 
+
+
+resources\views\backEnd\employeepayroll\payroll.blade.php
 
 
     <script>
         $(function() {
             $('body').on('click', '#editCompany', function(event) {
+                //        debugger;
+                var id = $(this).data('id');
+                debugger;
+                $.ajax({
+                    type: "GET",
+
+                    url: "{{ url('employee_payroll') }}",
+                    data: "id=" + id,
+                    success: function(response) {
+                        // alert(res);
+                        debugger;
+                        $("#id").val(response.id);
+                        $("#amount").val(response.amount);
+                        $("#advance").val(response.advance);
+                        $("#tds").val(response.tds);
+                        $("#Arrear").val(response.Arrear);
+                        $("#bonus").val(response.bonus);
+                        $("#comment").val(response.comment);
+                        $("#commentforemployee").val(response.commentforemployee);
+                        $("#employee_contribution").val(response.employee_contribution);
+                        $("#employer_contribution").val(response.employer_contribution);
+
+                    },
+                    error: function() {
+
+                    },
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(function() {
+            $('body').on('click', '#employeepayrolldata', function(event) {
                 var id = $(this).data('id');
                 debugger;
                 $.ajax({
@@ -7771,14 +7776,17 @@ after this modal     <!-- Employee Payroll Modal --> add below model
                         $("#no_of_day_present").val(response.no_of_day_present);
                         $("#sl").val(response.sl);
                         $("#cl").val(response.cl);
-                        $("#co").val(response.co);
                         $("#birthday").val(response.birthday);
+                        $("#lwp").val(response.lwp);
+                        $("#holiday").val(response.holiday);
+                        $("#old_holiday").val(response.holiday);
                         $("#day_to_be_paid").val(response.day_to_be_paid);
                         $("#totaldays").val(response.totaldays);
                         $("#absent").val(response.absent);
                         $("#monthly_gross_salary").val(response.monthly_gross_salary);
-                        $("#amount").val(response.amount);
+                        $("#amountdata").val(response.amount);
                         $("#pfamount").val(response.employee_contribution);
+                        $("#employer_pfamount").val(response.employer_contribution);
                         $("#total_amount_to_paid").val(response.total_amount_to_paid);
                     },
                     error: function() {
@@ -7790,7 +7798,10 @@ after this modal     <!-- Employee Payroll Modal --> add below model
     </script>
 	
 	
-	    <script>
+	   
+	   
+
+    <script>
         $(function() {
             function parsePayrollValue(selector) {
                 var value = parseFloat($(selector).val());
@@ -7798,36 +7809,66 @@ after this modal     <!-- Employee Payroll Modal --> add below model
             }
 
             function updateTotalAmountToPaid() {
+                var noOfDaysPresent = parsePayrollValue('#no_of_day_present');
+                var sl = parsePayrollValue('#sl');
+                var cl = parsePayrollValue('#cl');
+                var birthday = parsePayrollValue('#birthday');
+                var lwp = parsePayrollValue('#lwp');
+                var absent = parsePayrollValue('#absent');
+                var holiday = parsePayrollValue('#holiday');
+                var oldHoliday = parsePayrollValue('#old_holiday');
                 var monthlyGrossSalary = parsePayrollValue('#monthly_gross_salary');
                 var totalDays = parsePayrollValue('#totaldays');
-                var dayToBePaid = parsePayrollValue('#day_to_be_paid');
+                noOfDaysPresent = totalDays - sl - cl - lwp - absent - birthday - (holiday - oldHoliday);
+                var dayToBePaid = totalDays - lwp - absent;
                 var pfAmount = parsePayrollValue('#pfamount');
                 var amount = 0;
                 var total = 0;
 
+                $('#no_of_day_present').val(noOfDaysPresent);
+                $('#day_to_be_paid').val(dayToBePaid);
+
                 if (totalDays > 0) {
-                    amount = (monthlyGrossSalary / totalDays) * dayToBePaid;
+                    amount = (monthlyGrossSalary * dayToBePaid) / totalDays;
                 }
 
                 total = amount - pfAmount;
 
-                $('#amount').val(amount.toFixed(2));
+                $('#amountdata').val(amount.toFixed(2));
                 $('#total_amount_to_paid').val(total.toFixed(2));
             }
 
-            $('body').on('input', '#monthly_gross_salary, #totaldays, #day_to_be_paid, #pfamount',
+            // Validation for computed Days to be Paid and source fields
+            $('#editPayrollForm').on('submit', function(e) {
+                var dayToBePaid = parseFloat($('#day_to_be_paid').val()) || 0;
+                var noOfDaysPresent = parseFloat($('#no_of_day_present').val()) || 0;
+                var totalDays = parseFloat($('#totaldays').val()) || 0;
+
+                if (dayToBePaid > totalDays) {
+                    alert('Days to be Paid (' + dayToBePaid + ') cannot be greater than Total Days (' +
+                        totalDays + ').');
+                    e.preventDefault();
+                    return false;
+                }
+
+                if (noOfDaysPresent > totalDays) {
+                    alert('No of Days Present (' + noOfDaysPresent +
+                        ') cannot be greater than Total Days (' + totalDays + ').');
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $('body').on('input',
+                '#sl, #cl, #lwp, #absent, #birthday, #holiday, #monthly_gross_salary, #totaldays, #pfamount',
                 function() {
                     updateTotalAmountToPaid();
                 });
 
-            $('body').on('click', '#editCompany', function() {
+            $('body').on('click', '#employeepayrolldata', function() {
                 setTimeout(function() {
                     updateTotalAmountToPaid();
                 }, 200);
-            });
-
-            $('body').on('input', '#amount', function() {
-                updateTotalAmountToPaid();
             });
         });
     </script>
@@ -7840,7 +7881,7 @@ app\Http\Controllers\EmployeepayrollController.php
 public function employee_payroll(Request $request)
 public function payrollData(Request $request)
 
-   public function employee_payroll(Request $request)
+    public function employee_payroll(Request $request)
     {
 
         if ($request->ajax()) {
@@ -7850,6 +7891,22 @@ public function payrollData(Request $request)
                 return response()->json($outstationconveyances);
             }
         }
+    }
+	
+
+    public function payrollData(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $teammember = DB::table('teammembers')
+                ->join('attendances', 'attendances.employee_name', 'teammembers.id')
+                ->where('teammembers.id', $request->teammember_id)
+                ->where('month', $request->month)->first();
+            //dd( $teammember );
+            return response()->json($teammember);
+        }
+
+        abort(403, ' you have no permission to access this page ');
     }
 	
 	
@@ -7961,8 +8018,6 @@ public function payrollData(Request $request)
 
 
 
-regarding database 
-payroleaffect column  default 0 in employeepayrolls table 
 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 app\Http\Controllers\EmployeepayrollController.php
@@ -11393,87 +11448,2124 @@ app\Http\Controllers\EmployeepayrollController.php
  
   $currentDateTime = Carbon::now('Asia/Kolkata');
 
+
+
+09-07-2026
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+app\Http\Controllers\NeftController.php
+ public function payrollarticleneft()
+
+
+            $month = $payrollDate->format('F');
+            $year = $payrollDate->year;
+
+            $urlheader = request()->headers->get('referer');
+            $url = parse_url($urlheader);
+
+            $path = $url['path'] ?? '';
+
+            if ($path == '/payrollneft') {
+                $type = "Salary";
+            } elseif ($path == '/payrollarticleneft') {
+                $type = "ArticleStipned";
+            } else {
+                $type = "ArticleStipned";
+            }
+            // dd($month, $year);
+            $neftData = DB::table('nefts')
+                ->leftJoin('teammembers', 'teammembers.id', 'nefts.teammember_id')
+                ->where('nefts.month', $month)
+                ->where('nefts.year', $year)
+                ->where('nefts.type', $type)
+                ->select('nefts.*', 'teammembers.team_member', 'teammembers.verify')
+                ->get();
+
+
+09-07-2026 end hare 
+
+
+Payroll & Attendance Edit Control with Scheduler Protection 22 ```start hare   14-07-2026
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+app\Http\Controllers\PayrollController.php
+
+
+    public function payroll_index()
+    {
+        if (auth()->user()->role_id == 11 or auth()->user()->role_id == 17 or auth()->user()->role_id == 18) {
+            session()->forget('_old_input');
+            $months = $this->articlePayrollMonths();
+            $years = $this->articlePayrollYears();
+            $currentYear = Carbon::now()->year;
+            $currentMonth = Carbon::now()->format('F');
+
+            $payrollData = DB::table('articlepayrolls')
+                ->leftjoin('teammembers', 'teammembers.id', 'articlepayrolls.emailid')
+                ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+                // ->where('articlepayrolls.currentyear', '2023')
+                // ->where('articlepayrolls.month', 'September')
+                ->where('articlepayrolls.currentyear', $currentYear)
+                ->where('articlepayrolls.month', $currentMonth)
+                ->select('articlepayrolls.*', 'teammembers.team_member', 'teammembers.verify', 'roles.rolename')
+                ->latest()
+                ->get();
+
+            return view('backEnd.payroll.payrollarticleindex', compact('payrollData', 'months', 'years', 'currentMonth'));
+        }
+        abort(403, ' you have no permission to access this page ');
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+resources\views\backEnd\payroll\payrollarticleindex.blade.php
+
+        <nav aria-label="breadcrumb" class="col-sm-6 order-sm-last mb-3 mb-sm-0 p-0 ">
+            <ol class="breadcrumb d-inline-flex font-weight-600 fs-13 bg-white mb-0 float-sm-right">
+                <li class="breadcrumb-item">
+                    <a class="btn btn-info-soft btn-sm" data-toggle="modal" data-target="#emailUploadModal">Import</a>
+                </li>
+                <li class="breadcrumb-item"><a class="btn btn-info-soft btn-sm" data-toggle="modal"
+                        data-target="#exampleModal1">Add Excel</a></li>
+            </ol>
+        </nav>
+
+
+
+
+
+
+
+                    <form method="get" action="{{ url('/payrollarticless') }}" enctype="multipart/form-data"
+                        style="margin-bottom: -11px;">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-{{ Request::is('payrollarticless') ? '4' : '5' }} col-sm-5">
+                                <div class="form-group">
+                                    <strong><label for="month">Select Month *</label></strong>
+                                    <select required class="language form-control" name="month">
+                                        <option value="">Please Select One</option>
+                                        @foreach ($months as $month)
+                                            <option value="{{ $month }}"
+                                                {{ old('month') == $month ? 'selected' : '' }}>
+                                                {{ $month }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-5 mb-3">
+                                <div class="form-group">
+                                    <strong><label for="year">Select Year *</label></strong>
+                                    <select required class="language form-control" name="year">
+                                        <option value="">Please Select One</option>
+                                        @foreach ($years as $year)
+                                            <option value="{{ $year }}"
+                                                {{ old('year') == $year ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-1 col-sm-2 mb-3">
+                                <div class="form-group" style="width: fit-content;">
+                                    <label for="search">&nbsp;</label>
+                                    <button type="submit" class="btn btn-info-soft btn-sm">Search</button>
+                                </div>
+                            </div>
+
+                            @if (Request::is('payrollarticless'))
+                                <div class="col-1 d-flex justify-content-center align-items-center mb-3">
+                                    <div class="form-group">
+                                        <label class="fw-bold mb-2 invisible">Reset</label>
+                                        <a href="{{ url('/payrollarticle') }}" class="btn btn-outline-secondary w-100">
+                                            <i class="fas fa-redo-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </form>
+					
+					
+		
+
+		
+					
+					
+					
+					
+					
+	
+
+
+
+
+
+                    <form method="post">
+                        @csrf
+                        <table id="examplee" class="display nowrap">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <button type="submit"
+                                            onclick="return confirm('Are you sure you want to process this item?');"
+                                            formaction="payrollarticleneftprocess"
+                                            class="btn btn-danger-soft btn-sm">NEFT</button>
+                                        <input type="checkbox" id="chkAll">
+                                        <i class="os-icon os-icon-trash"></i>
+
+                                    </th>
+                                    <th>Bank Account Details</th>
+                                    <th>Status </th>
+                                    <th>Month </th>
+                                    <th>Name of Employee </th>
+                                    <th>Entity</th>
+                                    <th>Location</th>
+                                    <th>Category</th>
+                                    <th>Date Of Joining</th>
+                                    <th>Year</th>
+                                    <th>Stipend</th>
+                                    <th>Total No of days</th>
+                                    <th>No Of Days Present</th>
+                                    <th> Leave</th>
+                                    <th>Compensatory Off (CO)</th>
+                                    <th>Birthday Leave</th>
+                                    <th>Total Days to be paid</th>
+                                    <th>Total Stipend</th>
+                                    <th>Arrear</th>
+                                    <th>Amount to be paid</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($payrollData as $payrollDatas)
+                                    <tr>
+                                        <td><input type="checkbox" name="ids[]" style="width: 18px;margin-left: 16px;"
+                                                class="selectbox" value="{{ $payrollDatas->id }}"></td>
+                                        <td>
+                                            @if ($payrollDatas->verify == 1)
+                                                <span class="badge badge-pill badge-success">Verified</span>
+                                            @else
+                                                <span class="badge badge-pill badge-danger">Not Verified</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($payrollDatas->neftstatus == 1)
+                                                <span class="badge badge-pill badge-success">Neft Created</span>
+                                            @else
+                                                <span class="badge badge-pill badge-danger">Not Created</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $payrollDatas->month ?? '' }}</td>
+                                        <td>{{ $payrollDatas->team_member }}</td>
+                                        <td>{{ $payrollDatas->entity }}</td>
+                                        <td> {{ $payrollDatas->location }}</td>
+                                        <td> {{ $payrollDatas->category }}</td>
+                                        <td> {{ $payrollDatas->doj }}</td>
+                                        <td> {{ $payrollDatas->year }}</td>
+                                        <td> {{ $payrollDatas->stipend }}</td>
+                                        <td> {{ $payrollDatas->totalnoofdays }}</td>
+                                        <td> {{ $payrollDatas->noofdayspresent }}</td>
+                                        <td> {{ $payrollDatas->leave }}</td>
+                                        <td> {{ $payrollDatas->co }}</td>
+                                        <td> {{ $payrollDatas->birthdayleave }}</td>
+                                        <td> {{ $payrollDatas->totaldaystobepaid }}</td>
+                                        <td> {{ $payrollDatas->totalstipend }}</td>
+                                        <td> {{ $payrollDatas->arrear }}</td>
+                                        <td> {{ $payrollDatas->amounttobepaid }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </form>	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--/.body content-->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="detailsForm" method="post" action="{{ url('payrollarticle/upload') }}"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header" style="background: #37A000">
+                        <h5 style="color: white" class="modal-title font-weight-600" id="exampleModalLabel4">Add Excel
+                        </h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="details-form-field form-group row">
+                            <label for="name" class="col-sm-3 col-form-label font-weight-600">Select Month :</label>
+                            <div class="col-sm-9">
+                                <select name="month" required class="form-control">
+                                    @foreach ($months as $month)
+                                        <option value="{{ $month }}">{{ $month }}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="details-form-field form-group row">
+                            <label for="yearvalue" class="col-sm-3 col-form-label font-weight-600">Select Year :</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="yearvalue" name="yearvalue" required>
+                                    @foreach ($years as $year)
+                                        <option value="{{ $year }}">{{ $year }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="details-form-field form-group row">
+                            <label for="name" class="col-sm-3 col-form-label font-weight-600">Upload Excel: <span
+                                    class="required-star">*</span></label>
+                            <div class="col-sm-9">
+                                <input class="form-control" name="file" type="file" required>
+
+                            </div>
+                        </div>
+
+                        <div class="details-form-field form-group row">
+                            <label for="address" class="col-sm-3 col-form-label font-weight-600">Sample Excel:</label>
+                            <div class="col-sm-9">
+                                <a href="{{ url('backEnd/Payrollarticle.xlsx') }}" class="btn btn-success btn">Download<i
+                                        class="fas fa-file-excel" style="margin-left: 3px;font-size: 20px;"></i></a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="emailUploadModal" tabindex="-1" role="dialog" aria-labelledby="emailUploadModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{ route('payroll.email.upload') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header" style="background: #37A000">
+                        <h5 style="color: white" class="modal-title font-weight-600" id="emailUploadModalLabel">Import
+                            Excel</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="details-form-field form-group row">
+                            <label for="emailFile" class="col-sm-3 col-form-label font-weight-600">Upload
+                                Excel: <span class="required-star">*</span></label>
+                            <div class="col-sm-9">
+                                <input type="file" class="form-control" id="emailFile" name="file" required>
+                            </div>
+                        </div>
+                        <div class="details-form-field form-group row">
+                            <label for="month" class="col-sm-3 col-form-label font-weight-600">Select Month :</label>
+                            <div class="col-sm-9">
+                                <select name="month" id="month" required class="form-control">
+                                    @foreach ($months as $month)
+                                        <option value="{{ $month }}">{{ $month }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="details-form-field form-group row">
+                            <label for="year" class="col-sm-3 col-form-label font-weight-600">Select Year :</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="year" name="year" required>
+                                    @foreach ($years as $year)
+                                        <option value="{{ $year }}">{{ $year }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="details-form-field form-group row">
+                            <label for="sampleEmailExcel" class="col-sm-3 col-form-label font-weight-600">Sample
+                                Excel:</label>
+                            <div class="col-sm-9">
+                                <a id="sampleEmailExcel" href="{{ url('backEnd/emailimport.xlsx') }}"
+                                    class="btn btn-success">Download<i class="fas fa-file-excel"
+                                        style="margin-left: 3px;font-size: 20px;"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+	
+	
+	
+	
+	
+	
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+  Route::post('/payroll/email-upload', [PayrollController::class, 'emailUpload'])->name('payroll.email.upload');
+  
+  
+
+
+
+app\Http\Controllers\PayrollController.php
+
+
+
+    public function emailUpload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+            'month' => 'required|string',
+            'year' => 'required|integer',
+        ]);
+
+        try {
+            $file = $request->file('file');
+            $data = Excel::toArray(new EmailImport, $file);
+
+            if (empty($data) || empty($data[0]) || count($data[0]) === 0) {
+                return back()->withErrors(['The uploaded Excel file is empty. Please upload a file with valid email data.']);
+            }
+
+            // CORRECTED FILTERING - Remove ALL empty rows (both null and empty string)
+            $filteredRows = array_filter($data[0], function ($row) {
+                // Check if email key exists
+                if (!array_key_exists('email', $row)) {
+                    return false;
+                }
+
+                // Get email value and trim
+                $email = isset($row['email']) ? trim($row['email'] ?? '') : '';
+
+                // Only keep rows with non-empty email
+                return !empty($email);
+            });
+
+            // Reset array keys to start from 0
+            $filteredRows = array_values($filteredRows);
+
+            // Check if we have any data after filtering
+            if (empty($filteredRows)) {
+                return back()->withErrors(['The uploaded Excel file contains no email data. All rows are blank. Please fill in email addresses and try again.']);
+            }
+
+            $errors = [];
+            $validRecords = [];
+            $seenEmails = [];
+
+            // Process filtered rows with proper row numbering
+            foreach ($filteredRows as $index => $row) {
+                // Row number = index + 2 (since Excel starts at row 1, header is row 1, data starts at row 2)
+                $rowNumber = $index + 2;
+                $email = isset($row['email']) ? trim($row['email'] ?? '') : '';
+
+                // Validation logic continues...
+                if (empty($email)) {
+                    $errors[] = "Row " . $rowNumber . ": Email is missing. Please provide a valid email address.";
+                    continue;
+                }
+
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $errors[] = "Row " . $rowNumber . ": Invalid email format '" . $email . "'. Please provide a valid email address.";
+                    continue;
+                }
+
+                $emailLower = strtolower($email);
+                if (in_array($emailLower, $seenEmails)) {
+                    $errors[] = "Row " . $rowNumber . ": Duplicate email '" . $email . "'. This email is already present in the uploaded file.";
+                    continue;
+                }
+                $seenEmails[] = $emailLower;
+
+                $teamMember = Teammember::where('emailid', $email)->first();
+                if (!$teamMember) {
+                    $errors[] = "Row " . $rowNumber . ": Email '" . $email . "' not found in team members.";
+                    continue;
+                }
+
+                $existingEntry = DB::table('articlepayrolls')
+                    ->where('emailid', $teamMember->id)
+                    ->where('month', $request->month)
+                    ->where('currentyear', $request->year)
+                    ->exists();
+
+                if ($existingEntry) {
+                    $errors[] = "Row " . $rowNumber . ": Email '" . $email . "' already exists for " . $request->month . " " . $request->year . ". Duplicate entry not allowed.";
+                    continue;
+                }
+
+                $validRecords[] = [
+                    'emailid' => $teamMember->id,
+                    'entity' => $teamMember->entity,
+                    'neftstatus' => 0,
+                    'month' => $request->month,
+                    'currentyear' => $request->year,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            if (!empty($errors)) {
+                return back()->withErrors($errors);
+            }
+
+            // Insert all valid records
+            DB::table('articlepayrolls')->insert($validRecords);
+
+            return redirect('/payrollarticless?month=' . urlencode($request->month) . '&year=' . $request->year)
+                ->with('success', count($validRecords) . ' Email IDs uploaded successfully.');
+        } catch (Exception $e) {
+            // Remove DB::rollBack() since you're not using transactions
+            Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            report($e);
+            return back()->withErrors(['msg' => $e->getMessage()])->withInput();
+        }
+    }
+	
+	
+	
+	
+	
+	
+	
 
 
 
 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+app\imports\EmailImport.php
 
+<?php
 
+namespace App\imports;
 
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
-
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+class EmailImport implements ToCollection, WithHeadingRow
+{
+    public function collection(Collection $rows)
+    {
+        return $rows;
+    }
+}
 
 
 
 
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
 
 
 
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
-
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
-
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
 
 
 
 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+  Route::post('/payrollarticle/upload', [PayrollController::class, 'payrollarticle_upload']);
+  
+  
+  
+app\Http\Controllers\PayrollController.php
+  
+  
+    public function payrollarticle_upload(Request $request)
+    {
+
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+            'month' => 'required|string',
+            'yearvalue' => 'required|integer',
+        ]);
+
+        try {
+            $file = $request->file;
+            $dataa = Excel::toArray(new Payrollarticleimport, $file);
+            // Check if Excel file is empty
+            if (empty($dataa) || empty($dataa[0]) || count($dataa[0]) === 0) {
+                return back()->withErrors(['The uploaded Excel file is empty. Please upload a file with valid payroll data.']);
+            }
+
+            $filteredRows = array_filter($dataa[0], function ($row) {
+                // Check if emailid key exists
+                if (!array_key_exists('emailid', $row)) {
+                    return false;
+                }
+
+                // Get email value and trim
+                $email = isset($row['emailid']) ? trim($row['emailid'] ?? '') : '';
+
+                // Only keep rows with non-empty email
+                return !empty($email);
+            });
+
+            $filteredRows = array_values($filteredRows);
+
+            // Check if we have any data after filtering
+            if (empty($filteredRows)) {
+                return back()->withErrors(['The uploaded Excel file contains no data. All rows are blank. Please fill in the data and try again.']);
+            }
+
+            $errors = [];
+            $mismatchErrors = [];
+            $validUpdates = [];
+            $seenEmails = [];
+
+            foreach ($filteredRows as $key => $value) {
+                $rowNumber = $key + 2;
+                $email = isset($value['emailid']) ? trim($value['emailid'] ?? '') : '';
+
+                // Email validation matching emailUpload logic
+                if (empty($email)) {
+                    $errors[] = "Row " . $rowNumber . ": Email is missing. Please provide a valid email address.";
+                    continue;
+                }
+
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $errors[] = "Row " . $rowNumber . ": Invalid email format '" . $email . "'. Please provide a valid email address.";
+                    continue;
+                }
+
+                $emailLower = strtolower($email);
+                if (in_array($emailLower, $seenEmails)) {
+                    $errors[] = "Row " . $rowNumber . ": Duplicate email '" . $email . "'. This email is already present in the uploaded file.";
+                    continue;
+                }
+                $seenEmails[] = $emailLower;
+
+                $teamMember = Teammember::where('emailid', $email)->first();
+                if (!$teamMember) {
+                    $errors[] = "Row " . $rowNumber . ": Email '" . $email . "' not found in team members.";
+                    continue;
+                }
+
+                // Check if matching record exists in articlepayrolls for this month/year
+                // (ensures email Excel was uploaded for the same month/year)
+                $existingRecord = DB::table('articlepayrolls')
+                    ->where('emailid', $teamMember->id)
+                    ->where('month', $request->month)
+                    ->where('currentyear', $request->yearvalue)
+                    ->exists();
+
+                if (!$existingRecord) {
+                    $mismatchErrors[] = "Row " . $rowNumber . ": No email import record found for '" . $email . "' in " . $request->month . " " . $request->yearvalue . ". Both Excel files must have same month and year.";
+                    continue;
+                }
+
+                // Validate payroll data fields
+                $validator = Validator::make($value, [
+                    'entity' => 'nullable|string',
+                    'category' => 'nullable|string',
+                    'doj' => 'nullable|date',
+                    'location' => 'nullable|string',
+                    'stipend' => 'required|numeric',
+                    'totalnoofdays' => 'required|integer',
+                    'noofdayspresent' => 'required|integer',
+                    'leave' => 'nullable|integer',
+                    'co' => 'nullable|integer',
+                    'birthdayleave' => 'nullable|integer',
+                    'totaldaystobepaid' => 'required|integer',
+                    'totalstipend' => 'required|numeric',
+                    'arrear' => 'nullable|numeric',
+                    'amounttobepaid' => 'required|numeric',
+                ]);
+
+                if ($validator->fails()) {
+                    $fieldErrors = $validator->errors()->all();
+                    foreach ($fieldErrors as $fieldError) {
+                        $errors[] = "Row " . $rowNumber . ": " . $fieldError;
+                    }
+                    continue;
+                }
+
+                // Collect valid update data
+                $validUpdates[] = [
+                    'teamid' => $teamMember->id,
+                    'data' => [
+                        'entity'            => $value['entity'],
+                        'category'          => $value['category'],
+                        'doj'               => $value['doj'],
+                        'location'          => $value['location'],
+                        'stipend'           => $value['stipend'],
+                        'totalnoofdays'     => $value['totalnoofdays'],
+                        'noofdayspresent'   => $value['noofdayspresent'],
+                        'leave'             => $value['leave'],
+                        'co'                => $value['co'],
+                        'birthdayleave'     => $value['birthdayleave'],
+                        'totaldaystobepaid' => $value['totaldaystobepaid'],
+                        'totalstipend'      => $value['totalstipend'],
+                        'arrear'            => $value['arrear'],
+                        'amounttobepaid'    => $value['amounttobepaid'],
+                        'updated_at'        => date('Y-m-d H:i:s'),
+                    ],
+                ];
+            }
+
+            if (!empty($mismatchErrors)) {
+                return back()->withErrors($mismatchErrors)->withInput();
+            }
+
+            // If there are any errors, return ALL errors without updating anything
+            if (!empty($errors)) {
+                return back()->withErrors($errors)->withInput();
+            }
+
+            // Update all valid records only when there are zero errors
+            foreach ($validUpdates as $update) {
+                DB::table('articlepayrolls')
+                    ->where('emailid', $update['teamid'])
+                    ->where('month', $request->month)
+                    ->where('currentyear', $request->yearvalue)
+                    ->update($update['data']);
+            }
+
+            // Redirect to filtered view with correct month/year so data is visible
+            return redirect('/payrollarticless?month=' . urlencode($request->month) . '&year=' . $request->yearvalue)
+                ->with('success', 'Payroll data uploaded successfully.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            report($e);
+            $output = array('msg' => $e->getMessage());
+            return back()->withErrors($output)->withInput();
+        }
+    }
+
+
+
+
+
 
 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+  Route::get('/payrollarticless', [PayrollController::class, 'payrollarticless']);
+  
+  
+  app\Http\Controllers\PayrollController.php
+  
+
+
+    public function payrollarticless(Request $request)
+    {
+        // dd($request);
+        if (auth()->user()->role_id == 11 or auth()->user()->role_id == 17 or auth()->user()->role_id == 18) {
+            $months = $this->articlePayrollMonths();
+            $years = $this->articlePayrollYears();
+
+            $payrollData = DB::table('articlepayrolls')
+                ->leftjoin('teammembers', 'teammembers.id', 'articlepayrolls.emailid')
+                ->leftjoin('roles', 'roles.id', 'teammembers.role_id')
+                ->where('articlepayrolls.month', $request->month)
+                ->where('articlepayrolls.currentyear', $request->year)
+                ->select('articlepayrolls.*', 'teammembers.team_member', 'teammembers.verify', 'roles.rolename')->get();
+
+            $request->flash();
+            return view('backEnd.payroll.payrollarticleindex', compact('payrollData', 'months', 'years'));
+        }
+        abort(403, ' you have no permission to access this page ');
+    }
+	
+	
+
+
+
+
+
+
+
+
+
+    public function payrollarticleneftprocess(Request $request)
+    {
+
+        if ($request->ids == null) {
+            return redirect()->back()->with('alert', 'Please tick one of the checkbox !');
+        } else {
+            $uniqueid = DB::table('articlepayrolls')->whereIn('id', $request->ids)
+                // ->where('month', 'September')
+                // ->where('currentyear', '2023')
+                ->select('emailid', 'amounttobepaid', 'id', 'category', 'month', 'currentyear')->get();
+
+            foreach ($uniqueid as $value) {
+                $userdetails = DB::table('teammembers')->where('id', $value->emailid)->first();
+                //  dd($userdetails);
+
+                if ($userdetails) {
+                    $id = DB::table('nefts')->insert([
+                        'teammember_id'         =>     $userdetails->id,
+                        'name_as_per_bankaccount'         =>     $userdetails->nameasperbank,
+                        'nameofbank'         =>     $userdetails->nameofbank,
+                        'bankaccountnumber'         =>     $userdetails->bankaccountnumber,
+                        'ifsccode'         =>     $userdetails->ifsccode,
+                        'paymenttype'         =>     1,
+                        'status'         =>     0,
+                        'year'         =>     $value->currentyear,
+                        'type'         =>     'ArticleStipned',
+                        'month'         =>     $value->month,
+                        'employeestatus'         =>     $value->category,
+                        'totalconveyance'         =>     $value->amounttobepaid,
+                        'createdby'         =>     auth()->user()->teammember_id,
+                        'updatedby'         =>     auth()->user()->teammember_id,
+                        'created_at'                =>       date('Y-m-d H:i:s'),
+                        'updated_at'              =>    date('Y-m-d H:i:s'),
+                    ]);
+                    DB::table('articlepayrolls')->where('id', $value->id)->update([
+                        'neftstatus'         =>     1,
+                    ]);
+                } else {
+                    $output = array('msg' => 'Submit Successfully');
+                    return redirect('payrollarticleneft')->with('status', $output);
+                }
+            }
+
+            try {
+                $output = array('msg' => 'Submit Successfully');
+                return redirect('payrollarticleneft')->with('status', $output);
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+                report($e);
+                $output = array('msg' => $e->getMessage());
+                return back()->withErrors($output)->withInput();
+            }
+        }
+    }
+
+
+
+
+
+
+    private function articlePayrollMonths()
+    {
+        return [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ];
+    }
+
+    private function articlePayrollYears()
+    {
+        return range(Carbon::now()->year, 2026);
+    }
+	
+	
+	
+	
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+app\Http\Controllers\NeftController.php
+
+
+
+    public function payrollarticleneft()
+    {
+        if (auth()->user()->role_id == 11 or auth()->user()->role_id == 17 or auth()->user()->role_id == 18) {
+            $months = $this->articlePayrollMonths();
+            $years = $this->articlePayrollYears();
+            session()->forget('_old_input');
+
+            $today = Carbon::now();
+
+            if ($today->day >= 26) {
+                // Next month
+                $payrollDate = $today->copy()->addMonth();
+            } else {
+                // Current month
+                $payrollDate = $today;
+            }
+
+            $month = $payrollDate->format('F');
+            $year = $payrollDate->year;
+
+            $urlheader = request()->headers->get('referer');
+            $url = parse_url($urlheader);
+
+            $path = $url['path'] ?? '';
+
+            if ($path == '/payrollneft') {
+                $type = "Salary";
+            } elseif ($path == '/payrollarticleneft') {
+                $type = "ArticleStipned";
+            } else {
+                $type = "ArticleStipned";
+            }
+            // dd($month, $year);
+            $neftData = DB::table('nefts')
+                ->leftJoin('teammembers', 'teammembers.id', 'nefts.teammember_id')
+                ->where('nefts.month', $month)
+                ->where('nefts.year', $year)
+                ->where('nefts.type', $type)
+                ->select('nefts.*', 'teammembers.team_member', 'teammembers.verify')
+                ->get();
+
+            return view('backEnd.neft.payrollneftindex', compact('neftData', 'months', 'years'));
+        }
+
+        abort(403, ' you have no permission to access this page ');
+    }
+	
+	
+
+
 
 
 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+resources\views\backEnd\neft\payrollneftindex.blade.php
+
+                    <form method="get" action="{{ url('/payrollarticleneftss') }}" enctype="multipart/form-data"
+                        style="margin-bottom: -11px;">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-{{ Request::is('payrollarticleneftss') ? '4' : '5' }} col-sm-5">
+                                <div class="form-group">
+                                    <strong><label for="month">Select Month *</label></strong>
+                                    <select required class="language form-control" name="month">
+                                        <option value="">Please Select One</option>
+                                        @foreach ($months as $month)
+                                            <option value="{{ $month }}"
+                                                {{ old('month') == $month ? 'selected' : '' }}>
+                                                {{ $month }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-5 mb-3">
+                                <div class="form-group">
+                                    <strong><label for="year">Select Year *</label></strong>
+                                    <select required class="language form-control" name="year">
+                                        <option value="">Please Select One</option>
+                                        @foreach ($years as $year)
+                                            <option value="{{ $year }}"
+                                                {{ old('year') == $year ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-1 col-sm-2 mb-3">
+                                <div class="form-group" style="width: fit-content;">
+                                    <label for="search">&nbsp;</label>
+                                    {{-- <button type="submit" class="btn btn-success btn-block">Search</button> --}}
+                                    <button type="submit" class="btn btn-info-soft btn-sm">Search</button>
+                                </div>
+                            </div>
+
+                            @if (Request::is('payrollarticleneftss'))
+                                <div class="col-1 d-flex justify-content-center align-items-center mb-3">
+                                    <div class="form-group">
+                                        <label class="fw-bold mb-2 invisible">Reset</label>
+                                        <a href="{{ url('/payrollarticleneft') }}" class="btn btn-outline-secondary w-100">
+                                            <i class="fas fa-redo-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </form>
+
 
 
 
 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+app\Http\Controllers\NeftController.php
+
+
+
+    public function payrollarticleneftss(Request $request)
+    {
+        if (auth()->user()->role_id == 11 or auth()->user()->role_id == 17 or auth()->user()->role_id == 18) {
+            $months = $this->articlePayrollMonths();
+            $years = $this->articlePayrollYears();
+
+            $urlheader = $request->headers->get('referer');
+            $url = parse_url($urlheader);
+
+            $path = $url['path'] ?? '';
+
+            if ($path == '/payrollneft') {
+                $type = "Salary";
+            } elseif ($path == '/payrollarticleneft') {
+                $type = "ArticleStipned";
+            } else {
+                $type = "Salary";
+            }
+
+            $neftData = DB::table('nefts')
+                ->leftJoin('teammembers', 'teammembers.id', 'nefts.teammember_id')
+                ->where('nefts.month', $request->month)
+                ->where('nefts.year', $request->year)
+                ->where('nefts.type', $type)
+                ->select('nefts.*', 'teammembers.team_member', 'teammembers.verify')->get();
+
+            $request->flash();
+            return view('backEnd.neft.payrollneftindex', compact('neftData', 'months', 'years'));
+        }
+        abort(403, ' you have no permission to access this page ');
+    }
+	
+	
+	
+	
+	
+
+
+
+   private function articlePayrollMonths()
+    {
+        return [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ];
+    }
+
+    private function articlePayrollYears()
+    {
+        return range(Carbon::now()->year, 2026);
+    }
+	
+	
 
 
 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+app\Http\Controllers\EmployeepayrollController.php
+rememmber in mind  ````baki
+
+
+    public function payrollGenerate(Request $request)
+    {
+
+
+        $currentMonth = Carbon::create(null, $request->requestedMonth)->format('F');
+        $currentYear = $request->requestedYear;
+        //    $previousYear = '2023';
+        // Create a Carbon date object for the current month
+        $currentMonthDate = Carbon::createFromDate($currentYear, $request->requestedMonth);
+
+        // Subtract one month from the current month date to get prev month date
+        $prevMonthDate = $currentMonthDate->copy()->subMonth()->subDays(0);
+        //dd($prevMonthDate);
+        // Get the month number for the previous month
+        //	$prevMonth = '02';
+        $prevMonth = $prevMonthDate->format('m');
+        //  $prevMonth = '11';
+        //dd($prevMonth);
+        // Get the month number for the current month
+        $currentMonthInDigit = $currentMonthDate->format('m');
+
+        // Get the total number of days in the previous month
+        //  $totalDays = $prevMonthDate->subDays(4)->daysInMonth;
+        $totalDays = $prevMonthDate->daysInMonth;
+        //dd($totalDays);
+
+        $periodEnd   = Carbon::create($request->requestedYear, $request->requestedMonth, 25);
+
+        // ===== Salary Structure =====
+        $salaryStructure = DB::table('salary_structures')
+            ->where('effective_from', '<=', $periodEnd->toDateString())
+            ->orderBy('effective_from', 'desc')
+            ->first();
+
+
+        //for dummy accounts only, for employees there is different code
+        $getholidaydates = DB::table('holidays')
+            ->whereBetween('startdate', ["$currentYear-$prevMonth-26", "$currentYear-$currentMonthInDigit-25"])
+            ->whereBetween('enddate', ["$currentYear-$prevMonth-26", "$currentYear-$currentMonthInDigit-25"])
+            ->get();
+        //     dd($getholidaydates);
+        $holidayCount = 0;
+        foreach ($getholidaydates as $holiday) {
+            $holidayCount += intval($holiday->number_of_dates);
+        }
+
+
+        $teammembers = Attendance::join('teammembers', 'teammembers.id', 'attendances.employee_name')
+            //  ->leftjoin('staffappointmentletters', 'staffappointmentletters.teammember_id', 'attendances.employee_name')
+            /*   ->where(function ($query) {
+                $query->whereNotNull('staffappointmentletters.otp')
+                    ->orWhereIn('teammembers.id', ['558', '418', '645', '549', '318', '660', '647', '685']);   //manual attendance - support staff
+            })*/
+            ->where(function ($query) {
+                $query->whereNotIn('teammembers.role_id', [15, 19, 13])
+                    ->orWhereIn('teammembers.id', ['558', '418', '645', '549', '318', '660', '647', '685']);   //manual attendance - support staff
+            })
+            ->where(function ($query) {
+                $query->whereNull('timesheet_applicable')
+                    ->orWhere('timesheet_applicable', 'Yes');
+            })
+            ->where('teammembers.monthly_gross_salary', '!=', 0)
+            ->whereNotNull('teammembers.joining_date')
+            ->where('teammembers.status', '=', 1)
+            ->whereNotIn('teammembers.id', ['336', '169', '256', '341', '161', '170', '310', '641', '640', '649', '637', '447']) //from 310 Secretarial KGS, Bharat, Gaurav Amoli, Ashish Sharma, Sachin Shukla, 
+            ->where('attendances.month', $currentMonth)
+            ->whereYear('attendances.created_at', $currentYear)
+            ->distinct()
+            //->pluck('teammembers.id')
+            ->get();
+
+        //  dd($teammembers);
+
+
+        $teammemberfullpay = Teammember::whereIn('timesheet_applicable', ['Yes', 'No'])
+            ->where('teammembers.monthly_gross_salary', '!=', 0)
+            ->where('teammembers.role_id', 13)
+            ->whereNotNull('teammembers.monthly_gross_salary')
+            ->whereNotIn('teammembers.id', [17, 22, 550])
+            ->get();
+
+        foreach ($teammemberfullpay as $team) {
+
+
+            $holidayTeam = Attendance::where('employee_name', $team->id)->where('month', $currentMonth)
+                ->where('year', $currentYear)->first();
+            //dd($holidayTeam->weekend);
+            if ($holidayTeam) {
+                $weekend = $holidayTeam->weekend;
+            } else {
+                $weekend = 0;
+            }
+
+            if ($team->timesheet_applicable !== null) {
+                if ($team->monthly_gross_salary !== null) {
+                    $amount = $team->monthly_gross_salary;
+                } else {
+                    $amount = 0;
+                }
+            }
+
+            if ($team->pf_applicable == 'Yes') {
+                $basic = $amount * ($salaryStructure->basic_percent / 100);
+
+                $hra = $basic * ($salaryStructure->hra_percent / 100);
+
+                $lta = $basic * ($salaryStructure->lta_percent / 100);
+
+                $telephonic = $amount * ($salaryStructure->telephonic_percent / 100);
+
+                $conveyance = $amount * ($salaryStructure->conveyance_percent / 100);
+
+                $medical = $amount * ($salaryStructure->medical_percent / 100);
+
+                $education = $salaryStructure->education_fixed;
+
+                $special = $amount - $basic - $hra - $lta - $telephonic - $conveyance - $medical - $education;
+                $totalallowance = $basic + $lta + $telephonic + $conveyance + $medical + $education + $special;
+
+                $basicspecialallowance = $basic + $totalallowance;
+
+                if ($basicspecialallowance < 15000) {
+                    $pfAmount = $basicspecialallowance * 0.12;
+
+                    //   dd($pfAmount);
+                    $pfAmountEmployer = $pfAmount;
+                } else {
+                    $pfAmount = 15000 * 0.12;
+                    //      dd($pfAmount);
+                    $pfAmountEmployer = $pfAmount;
+                }
+                $totalAmount = $amount - $pfAmount;
+                $totalAmountpaid = number_format($totalAmount, 2, '.', '');
+                $pfAmount = number_format($pfAmount, 2, '.', '');
+                $pfAmountEmployer = number_format($pfAmountEmployer, 2, '.', '');
+            } else {
+                $totalAmountpaid = number_format($amount, 2, '.', '');
+                $pfAmount = 0;
+                $pfAmountEmployer = 0;
+            }
+
+
+            $payrollData = [
+                'month' => $currentMonth,
+                'year' => $currentYear,
+                'teammember_id' => $team->id,
+                'no_of_day_present' => $totalDays,
+                'sl' => 0,
+                'cl' => 0,
+                'co' => 0,
+                'birthday' => 0,
+                'totaldays' => $totalDays,
+                'day_to_be_paid' => $totalDays,
+                'amount' => $amount,
+                'employee_contribution' => $pfAmount,
+                'employer_contribution' => $pfAmountEmployer,
+                'advance' => 0,
+                'tds' => 0,
+                'Arrear' => 0,
+                'bonus' => 0,
+                'total_amount_to_paid' => $totalAmountpaid,
+                'lwp' => 0,
+                'holiday' => $holidayCount,
+                'monthly_gross_salary' => $team->monthly_gross_salary,
+            ];
+
+
+
+            $existedPayroll = Employeepayroll::where([
+                'month' => $currentMonth,
+                'year' => $currentYear,
+                'teammember_id' => $team->id,
+            ])->first();
+
+            if ($existedPayroll) {
+                if ($existedPayroll->payroleaffect == 1) {
+                    continue;
+                }
+
+                if ($existedPayroll->level_one == '0') {
+                    $existedPayroll->update($payrollData);
+                }
+            } else {
+                Employeepayroll::create($payrollData);
+            }
+        }
+        // dd($teammembers);
+
+        foreach ($teammembers as $team) {
+            //dd($team);
+
+            $holidayTeam = Attendance::where('employee_name', $team->id)->where('month', $currentMonth)
+                ->where('year', $currentYear)->first();
+
+
+            $increment = DB::table('incrementletters')
+                ->where('teammember_id', $team->employee_name)
+                ->where('final_status', 1)
+                ->latest()
+                ->take(1)
+                ->first();
+
+            //dd($currentYear-$prevMonth-26);
+
+            if ($increment != null) {
+                $effectiveDate = \Carbon\Carbon::parse($increment->effective_date);
+                $effectiveDates = $increment->effective_date;
+                if ($effectiveDate->greaterThan("$currentYear-$prevMonth-26") && $effectiveDate->lessThanOrEqualTo("$currentYear-$currentMonthInDigit-25")) {
+                    //  dd('hii');
+                    // If effective date is on the 26th, use the current month's last date as the last date for calculations
+                    if ($effectiveDate->isSameDay("$currentYear-$currentMonthInDigit-26")) {
+
+                        $lastDate = Carbon::create($currentYear, $currentMonthInDigit, Carbon::getLastDayOfMonth($currentMonthInDigit));
+                    } else {
+                        $lastDate = Carbon::create($currentYear, $currentMonthInDigit, 25);
+                    }
+                    $effectiveDate = Carbon::parse($increment->effective_date);
+                    $lastDate = Carbon::create($currentYear, $currentMonthInDigit, 25);
+                    $revisedDays = $lastDate->diffInDays($effectiveDate);
+                    $nonRevisedDays = $totalDays - $revisedDays;
+
+                    $salary = $team->monthly_gross_salary;
+
+
+                    $this->incrementPayrollGenerate(
+                        $team,
+                        $effectiveDate,
+                        $currentYear,
+                        $prevMonth,
+                        $currentMonthInDigit,
+                        $currentMonth,
+                        $totalDays,
+                        $effectiveDates,
+                        $increment,
+                        $previousmonth_date,
+                        $currentMonth_date
+                    );
+                } else {
+                    $salary =  $team->monthly_gross_salary;
+
+                    $getholidaydates = DB::table('holidays')
+                        ->whereBetween('startdate', ["$currentYear-$prevMonth-26", "$currentYear-$currentMonthInDigit-25"])
+                        ->whereBetween('enddate', ["$currentYear-$prevMonth-26", "$currentYear-$currentMonthInDigit-25"])
+                        ->where('startdate', '>', $team->joining_date)
+                        ->get();
+
+
+                    $holidayCount = 0;
+
+                    foreach ($getholidaydates as $holiday) {
+                        $holidayCount += intval($holiday->number_of_dates);
+                    }
+
+                    $co = $team->comp_off ?? 0;
+                    $cl = $team->casual_leave ?? 0;
+                    $sl = $team->sick_leave ?? 0;
+                    $birthday = $team->birthday_religious ?? 0;
+                    $dayspresent = $team->no_of_days_present ?? 0;
+                    $totalCount = 0;
+                    $lwpCount = $team->lwp ?? 0; // leave without pay
+                    $absentCount = $team->absent ?? 0;
+
+
+                    if ($dayspresent == 0) {
+                        $holidayCount = 0;
+                    }
+
+                    $presentDaysWithHoliday = $dayspresent +  $holidayTeam->weekend;
+                    $totalCount = $presentDaysWithHoliday + $cl + $sl + $co + $birthday;
+
+                    if ($salary !== null) {
+                        $amount = ($salary / $totalDays) * $totalCount;
+                    } else {
+                        $amount = 0;
+                    }
+
+                    if ($team->pf_applicable == 'Yes') {
+                        $basic = $amount * ($salaryStructure->basic_percent / 100);
+
+                        $hra = $basic * ($salaryStructure->hra_percent / 100);
+
+                        $lta = $basic * ($salaryStructure->lta_percent / 100);
+
+                        $telephonic = $amount * ($salaryStructure->telephonic_percent / 100);
+
+                        $conveyance = $amount * ($salaryStructure->conveyance_percent / 100);
+
+                        $medical = $amount * ($salaryStructure->medical_percent / 100);
+
+                        $education = $salaryStructure->education_fixed;
+
+                        $special = $amount - $basic - $hra - $lta - $telephonic - $conveyance - $medical - $education;
+                        $totalallowance = $basic + $lta + $telephonic + $conveyance + $medical + $education + $special;
+
+                        $basicspecialallowance = $basic + $totalallowance;
+
+                        if ($basicspecialallowance < 15000) {
+                            $pfAmount = $basicspecialallowance * 0.12;
+
+                            //   dd($pfAmount);
+                            $pfAmountEmployer = $pfAmount;
+                        } else {
+                            $pfAmount = 15000 * 0.12;
+                            //      dd($pfAmount);
+                            $pfAmountEmployer = $pfAmount;
+                        }
+
+                        $totalAmount = $amount - $pfAmount;
+                        $totalAmountpaid = number_format($totalAmount, 2, '.', '');
+                        $pfAmount = number_format($pfAmount, 2, '.', '');
+                        $pfAmountEmployer = number_format($pfAmountEmployer, 2, '.', '');
+                    } else {
+                        $totalAmountpaid = number_format($amount, 2, '.', '');
+                        $pfAmount = 0;
+                        $pfAmountEmployer = 0;
+                    }
+
+                    $payrollData = [
+                        'month' => $team->month,
+                        'year' => $currentYear,
+                        'teammember_id' => $team->employee_name,
+                        'no_of_day_present' => $presentDaysWithHoliday,
+                        'sl' => $sl,
+                        'cl' => $cl,
+                        'co' => $co,
+                        'birthday' => $birthday,
+                        'totaldays' => $totalDays,
+                        'day_to_be_paid' => $totalCount,
+                        'amount' => $amount,
+                        'employee_contribution' => $pfAmount,
+                        'employer_contribution' => $pfAmountEmployer,
+                        'advance' => 0,
+                        'tds' => 0,
+                        'Arrear' => 0,
+                        'bonus' => 0,
+                        'total_amount_to_paid' => $totalAmountpaid,
+                        'lwp' => $lwpCount,
+                        'holiday' => $holidayTeam->weekend,
+                        'absent' => $absentCount,
+                        'monthly_gross_salary' => $team->monthly_gross_salary,
+                    ];
+
+
+
+                    if ($dayspresent > 0) {
+                        $existedPayroll = Employeepayroll::where([
+                            'month' => $currentMonth,
+                            'year' => $currentYear,
+                            'teammember_id' => $team->employee_name,
+                        ])->first();
+
+                        if ($existedPayroll) {
+                            if ($existedPayroll->payroleaffect == 1) {
+                                continue;
+                            }
+
+                            if ($existedPayroll->level_one == '0') {
+                                $existedPayroll->update($payrollData);
+                            }
+                        } else {
+                            Employeepayroll::create($payrollData);
+                        }
+                    }
+                }
+            } else {
+                $salary =  $team->monthly_gross_salary;
+
+                $getholidaydates = DB::table('holidays')
+                    ->whereBetween('startdate', ["$currentYear-$prevMonth-26", "$currentYear-$currentMonthInDigit-25"])
+                    ->whereBetween('enddate', ["$currentYear-$prevMonth-26", "$currentYear-$currentMonthInDigit-25"])
+                    ->where('startdate', '>', $team->joining_date)
+                    ->get();
+
+                $holidayCount = 0;
+
+                foreach ($getholidaydates as $holiday) {
+                    $holidayCount += intval($holiday->number_of_dates);
+                }
+
+                $co = $team->comp_off ?? 0;
+                $cl = $team->casual_leave ?? 0;
+                $sl = $team->sick_leave ?? 0;
+                $birthday = $team->birthday_religious ?? 0;
+                $dayspresent = $team->no_of_days_present ?? 0;
+                $totalCount = 0;
+                $lwpCount = $team->lwp ?? 0; // leave without pay
+                $absentCount = $team->absent ?? 0;
+
+
+                if ($dayspresent == 0) {
+                    $holidayCount = 0;
+                }
+                if ($holidayTeam) {
+                    $weekend = $holidayTeam->weekend;
+                } else {
+                    $weekend = 0;
+                }
+
+                $presentDaysWithHoliday = $dayspresent +  $weekend;
+                $totalCount = $presentDaysWithHoliday + $cl + $sl + $co + $birthday;
+
+                if ($salary !== null) {
+                    $amount = ($salary / $totalDays) * $totalCount;
+                } else {
+                    $amount = 0;
+                }
+
+                if ($team->pf_applicable == 'Yes') {
+                    $basic = $amount * ($salaryStructure->basic_percent / 100);
+
+                    $hra = $basic * ($salaryStructure->hra_percent / 100);
+
+                    $lta = $basic * ($salaryStructure->lta_percent / 100);
+
+                    $telephonic = $amount * ($salaryStructure->telephonic_percent / 100);
+
+                    $conveyance = $amount * ($salaryStructure->conveyance_percent / 100);
+
+                    $medical = $amount * ($salaryStructure->medical_percent / 100);
+
+                    $education = $salaryStructure->education_fixed;
+
+                    $special = $amount - $basic - $hra - $lta - $telephonic - $conveyance - $medical - $education;
+                    $totalallowance = $basic + $lta + $telephonic + $conveyance + $medical + $education + $special;
+
+                    $basicspecialallowance = $basic + $totalallowance;
+
+                    if ($basicspecialallowance < 15000) {
+                        $pfAmount = $basicspecialallowance * 0.12;
+
+                        //   dd($pfAmount);
+                        $pfAmountEmployer = $pfAmount;
+                    } else {
+                        $pfAmount = 15000 * 0.12;
+                        //      dd($pfAmount);
+                        $pfAmountEmployer = $pfAmount;
+                    }
+
+                    $totalAmount = $amount - $pfAmount;
+                    $totalAmountpaid = number_format($totalAmount, 2, '.', '');
+                    $pfAmount = number_format($pfAmount, 2, '.', '');
+                    $pfAmountEmployer = number_format($pfAmountEmployer, 2, '.', '');
+                } else {
+                    $totalAmountpaid = number_format($amount, 2, '.', '');
+                    $pfAmount = 0;
+                    $pfAmountEmployer = 0;
+                }
+
+                $payrollData = [
+                    'month' => $team->month,
+                    'year' => $currentYear,
+                    'teammember_id' => $team->employee_name,
+                    'no_of_day_present' => $presentDaysWithHoliday,
+                    'sl' => $sl,
+                    'cl' => $cl,
+                    'co' => $co,
+                    'birthday' => $birthday,
+                    'totaldays' => $totalDays,
+                    'day_to_be_paid' => $totalCount,
+                    'amount' => $amount,
+                    'employee_contribution' => $pfAmount,
+                    'employer_contribution' => $pfAmountEmployer,
+                    'advance' => 0,
+                    'tds' => 0,
+                    'Arrear' => 0,
+                    'bonus' => 0,
+                    'total_amount_to_paid' => $totalAmountpaid,
+                    'lwp' => $lwpCount,
+                    'holiday' => $weekend,
+                    'absent' => $absentCount,
+                    'monthly_gross_salary' => $team->monthly_gross_salary,
+                ];
+
+
+
+                if ($dayspresent > 0) {
+                    $existedPayroll = Employeepayroll::where([
+                        'month' => $currentMonth,
+                        'year' => $currentYear,
+                        'teammember_id' => $team->employee_name,
+                    ])->first();
+
+                    if ($existedPayroll) {
+                        if ($existedPayroll->payroleaffect == 1) {
+                            continue;
+                        }
+
+                        if ($existedPayroll->level_one == '0') {
+                            $existedPayroll->update($payrollData);
+                        }
+                    } else {
+                        Employeepayroll::create($payrollData);
+                    }
+                }
+            }
+        }
+
+        $currentYear = $request->requestedYear;
+        $currentMonth = $request->requestedMonth;
+        $date = Carbon::create($currentYear, $currentMonth, 1)->format('Y-m');
+
+        // $date = Carbon::create($currentYear, $currentMonth, 1)->format('Y-m');
+        //dd($date);
+        $currentDateTime = Carbon::now('Asia/Kolkata');
+        // Format the current time as a string
+        $currentTime = $currentDateTime->format('Y-m-d H:i:s');
+        //dd($currentTime);
+        $actionName = class_basename($request->route()->getActionname());
+        $pagename = substr($actionName, 0, strpos($actionName, "Controller"));
+        $id = auth()->user()->teammember_id;
+        DB::table('activitylogs')->insert([
+            'user_id' => $id,
+            'ip_address' => $request->ip(),
+            'activitytitle' => $pagename,
+            'month_year' => $date,
+            //   'year' => $currentYear,
+            'generate_date_time' => $currentTime,
+            'description' => 'Employee Payroll Generated',
+            'created_at' => date('y-m-d'),
+            'updated_at' => date('y-m-d')
+        ]);
+
+
+        return redirect()->back()->with('success', 'Payroll data generated successfully.');
+    }
+
+
+
+
+
+
+
+
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+resources\views\backEnd\employeepayroll\payroll.blade.php
+
+
+                                        <td>
+                                            @if (auth()->user()->email == 'priyankasharma1@kgsomani.com' ||
+                                                    auth()->user()->email == 'Tech1@capitall.io' ||
+                                                    auth()->user()->email == 'sukhbahadur1993@gmail.com' ||
+                                                    auth()->user()->email == 'accounts1@kgsomani.com' ||
+                                                    auth()->user()->email == 'Sanjiv1@kgsomani.com')
+                                                <a style="color:green; cursor: pointer;" id="employeepayrolldata"
+                                                    data-toggle="modal" data-id="{{ $employeepayrollData->id }}"
+                                                    data-target="#employeepayrollmodel">
+                                                    {{ $employeepayrollData->monthly_gross_salary ?? '' }}
+                                                </a>
+                                            @else
+                                                {{ $employeepayrollData->monthly_gross_salary ?? '' }}
+                                            @endif
+                                        </td>
+                                        <td>{{ $employeepayrollData->totaldays ?? '' }}</td>
+										
+										
+
+
+
+
+
+add modal 
+
+
+
+    <!--edit modal-->
+
+    <div class="modal fade" id="employeepayrollmodel" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel4" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #37A000">
+                    <h5 style="color: white"class="modal-title font-weight-600" id="exampleModalLabel1">Update Employee
+                        Details
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editPayrollForm" method="post" action="{{ url('employeepayrollupdate') }}"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" id="old_holiday" value="0">
+                    <div class="modal-body">
+                        <div class="row row-sm">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">No of Day Present</label>
+                                    <input type="number" step="any" name="no_of_day_present" id="no_of_day_present"
+                                        readonly min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">SL <span class="required-star">*</span></label>
+                                    <input type="number" step="any" name="sl" id="sl" required
+                                        min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-sm">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">CL <span class="required-star">*</span></label>
+                                    <input type="number" step="any" name="cl" id="cl" required
+                                        min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Birthday <span class="required-star">*</span></label>
+                                    <input type="number" step="any" name="birthday" id="birthday" required
+                                        min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-sm">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">LWP <span class="required-star">*</span></label>
+                                    <input type="number" step="any" name="lwp" id="lwp" required
+                                        min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Holidays <span class="required-star">*</span></label>
+                                    <input type="number" step="any" name="holiday" id="holiday" required
+                                        min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-sm">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Absent <span class="required-star">*</span></label>
+                                    <input type="number" step="any" name="absent" id="absent" required
+                                        min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Day to be Paid</label>
+                                    <input readonly type="number" step="any" name="day_to_be_paid"
+                                        id="day_to_be_paid" min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-sm">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Total Days <span class="required-star">*</span></label>
+                                    <input type="number" step="any" name="totaldays" id="totaldays" required
+                                        min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Gross Salary</label>
+                                    <input type="number" step="any" name="monthly_gross_salary" min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        id="monthly_gross_salary" class="form-control" placeholder="" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-sm">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Employee Contribution <span
+                                            class="required-star">*</span></label>
+                                    <input type="number" step="any" name="employee_contribution" id="pfamount"
+                                        required min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Employer Contribution <span
+                                            class="required-star">*</span></label>
+                                    <input type="number" step="any" name="employer_contribution"
+                                        id="employer_pfamount" required min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-sm">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Amount</label>
+                                    <input type="number" step="any" name="amount" id="amountdata" min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        class="form-control" placeholder="" readonly>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="font-weight-600">Total Amount to be Paid</label>
+                                    <input type="number" step="any" name="total_amount_to_paid" min="0"
+                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1)"
+                                        id="total_amount_to_paid" class="form-control" placeholder="" readonly>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" hidden value="" name="id" id="id"
+                                    type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+	
+	
+	
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+  Route::get('/employee_payroll',  [EmployeepayrollController::class, 'employee_payroll']);
+  Route::post('/employeepayroll_update',  [EmployeepayrollController::class, 'employeepayroll_update']);
+  Route::post('/employeepayrollupdate',  [EmployeepayrollController::class, 'employeepayrollupdate']);
+
+
+
+app\Http\Controllers\EmployeepayrollController.php
+
+
+    public function employeepayrollupdate(Request $request)
+    {
+        try {
+            $existing = DB::table('employeepayrolls')->where('id', $request->id)->first();
+            $holidayDifference = $request->holiday - ($existing->holiday ?? 0);
+            $noOfDayPresent = $request->totaldays - $request->sl - $request->cl - $request->lwp - $request->absent - $request->birthday - $holidayDifference;
+            $dayToBePaid = $request->totaldays - $request->lwp - $request->absent;
+
+            $newData = [
+                'no_of_day_present' => $noOfDayPresent,
+                'sl' => $request->sl,
+                'cl' => $request->cl,
+                'birthday' => $request->birthday,
+                'lwp' => $request->lwp,
+                'holiday' => $request->holiday,
+                'day_to_be_paid' => $dayToBePaid,
+                'totaldays' => $request->totaldays,
+                'absent' => $request->absent,
+                // 'amount'  => $request->amount,
+                // 'total_amount_to_paid'  => $request->total_amount_to_paid,
+                // 'employee_contribution' => $request->employee_contribution,
+                // 'monthly_gross_salary' => $request->monthly_gross_salary,
+            ];
+
+            $isChanged = false;
+            foreach ($newData as $key => $value) {
+                if ($existing->$key != $value) {
+                    $isChanged = true;
+                    break;
+                }
+            }
+
+            if (!$isChanged) {
+                $output = array('msg' => 'No changes are made.');
+                return back()->with('statuss', $output);
+            }
+
+            // DB::table('employeepayrolls')->where('id', $request->id)->update($newData);
+            DB::table('employeepayrolls')->where('id', $request->id)->update([
+                'no_of_day_present' => $noOfDayPresent,
+                'sl' => $request->sl,
+                'cl' => $request->cl,
+                'birthday' => $request->birthday,
+                'lwp' => $request->lwp,
+                'holiday' => $request->holiday,
+                'day_to_be_paid' => $dayToBePaid,
+                'totaldays' => $request->totaldays,
+                'absent' => $request->absent,
+                'amount'  => $request->amount,
+                'total_amount_to_paid'  => $request->total_amount_to_paid,
+                'payroleaffect'  => 1,
+                // 'monthly_gross_salary' => $request->monthly_gross_salary,
+                // 'employee_contribution' => $request->employee_contribution,
+            ]);
+
+            if ($isChanged) {
+                $updatedPayroll = DB::table('employeepayrolls')->where('id', $request->id)->first();
+                $actionName = class_basename($request->route()->getActionname());
+                $pagename = substr($actionName, 0, strpos($actionName, "Controller"));
+                $changes = [];
+                foreach ($newData as $field => $value) {
+                    $oldValue = $existing->$field ?? null;
+                    $newValue = $updatedPayroll->$field ?? null;
+
+                    $normalizedOldValue = is_string($oldValue) ? trim($oldValue) : $oldValue;
+                    $normalizedNewValue = is_string($newValue) ? trim($newValue) : $newValue;
+
+                    if ($normalizedOldValue !== $normalizedNewValue) {
+                        if ($normalizedOldValue === null || $normalizedOldValue === '') {
+                            $changes[$field] = "($field is changed from null to $newValue)";
+                        } else {
+                            $changes[$field] = "($field is changed from $oldValue to $newValue)";
+                        }
+                    }
+                }
+
+                $employeeName = DB::table('teammembers')
+                    ->where('id', $updatedPayroll->teammember_id)
+                    ->value('team_member');
+
+                $description = "(Employee Name: " . ($employeeName ?? 'N/A') . ", Payroll ID: " . $request->id;
+                if (!empty($changes)) {
+                    $description .= ", " . implode(', ', $changes);
+                }
+                $description .= ")";
+
+                DB::table('activitylogs')->insert([
+                    'user_id' => auth()->user()->teammember_id,
+                    'teammember_id' => $updatedPayroll->teammember_id,
+                    'ip_address' => $request->ip(),
+                    'activitytitle' => $pagename,
+                    'month_year' => ($updatedPayroll->year ?? now()->format('Y')) . '-' .
+                        Carbon::parse('1 ' . ($updatedPayroll->month ?? now()->format('F')))->format('m'),
+                    'generate_date_time' => now()->format('Y-m-d H:i:s'),
+                    'description' => substr($description, 0, 65535),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            return back()->with('success', 'Updated Successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            report($e);
+            return back()->withErrors(['msg' => $e->getMessage()])->withInput();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+resources\views\backEnd\employeepayroll\payroll.blade.php
+
+    <script>
+        $(function() {
+            $('body').on('click', '#employeepayrolldata', function(event) {
+                var id = $(this).data('id');
+                debugger;
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('employee_payroll') }}",
+                    data: "id=" + id,
+                    success: function(response) {
+                        // alert(res);
+                        debugger;
+                        $("#id").val(response.id);
+                        $("#no_of_day_present").val(response.no_of_day_present);
+                        $("#sl").val(response.sl);
+                        $("#cl").val(response.cl);
+                        $("#birthday").val(response.birthday);
+                        $("#lwp").val(response.lwp);
+                        $("#holiday").val(response.holiday);
+                        $("#old_holiday").val(response.holiday);
+                        $("#day_to_be_paid").val(response.day_to_be_paid);
+                        $("#totaldays").val(response.totaldays);
+                        $("#absent").val(response.absent);
+                        $("#monthly_gross_salary").val(response.monthly_gross_salary);
+                        $("#amountdata").val(response.amount);
+                        $("#pfamount").val(response.employee_contribution);
+                        $("#employer_pfamount").val(response.employer_contribution);
+                        $("#total_amount_to_paid").val(response.total_amount_to_paid);
+                    },
+                    error: function() {
+
+                    },
+                });
+            });
+        });
+    </script>
+	
+	
+    <script>
+        $(function() {
+            function parsePayrollValue(selector) {
+                var value = parseFloat($(selector).val());
+                return isNaN(value) ? 0 : value;
+            }
+
+            function updateTotalAmountToPaid() {
+                var noOfDaysPresent = parsePayrollValue('#no_of_day_present');
+                var sl = parsePayrollValue('#sl');
+                var cl = parsePayrollValue('#cl');
+                var birthday = parsePayrollValue('#birthday');
+                var lwp = parsePayrollValue('#lwp');
+                var absent = parsePayrollValue('#absent');
+                var holiday = parsePayrollValue('#holiday');
+                var oldHoliday = parsePayrollValue('#old_holiday');
+                var monthlyGrossSalary = parsePayrollValue('#monthly_gross_salary');
+                var totalDays = parsePayrollValue('#totaldays');
+                noOfDaysPresent = totalDays - sl - cl - lwp - absent - birthday - (holiday - oldHoliday);
+                var dayToBePaid = totalDays - lwp - absent;
+                var pfAmount = parsePayrollValue('#pfamount');
+                var amount = 0;
+                var total = 0;
+
+                $('#no_of_day_present').val(noOfDaysPresent);
+                $('#day_to_be_paid').val(dayToBePaid);
+
+                if (totalDays > 0) {
+                    amount = (monthlyGrossSalary * dayToBePaid) / totalDays;
+                }
+
+                total = amount - pfAmount;
+
+                $('#amountdata').val(amount.toFixed(2));
+                $('#total_amount_to_paid').val(total.toFixed(2));
+            }
+
+            // Validation for computed Days to be Paid and source fields
+            $('#editPayrollForm').on('submit', function(e) {
+                var dayToBePaid = parseFloat($('#day_to_be_paid').val()) || 0;
+                var noOfDaysPresent = parseFloat($('#no_of_day_present').val()) || 0;
+                var totalDays = parseFloat($('#totaldays').val()) || 0;
+
+                if (dayToBePaid > totalDays) {
+                    alert('Days to be Paid (' + dayToBePaid + ') cannot be greater than Total Days (' +
+                        totalDays + ').');
+                    e.preventDefault();
+                    return false;
+                }
+
+                if (noOfDaysPresent > totalDays) {
+                    alert('No of Days Present (' + noOfDaysPresent +
+                        ') cannot be greater than Total Days (' + totalDays + ').');
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $('body').on('input',
+                '#sl, #cl, #lwp, #absent, #birthday, #holiday, #monthly_gross_salary, #totaldays, #pfamount',
+                function() {
+                    updateTotalAmountToPaid();
+                });
+
+            $('body').on('click', '#employeepayrolldata', function() {
+                setTimeout(function() {
+                    updateTotalAmountToPaid();
+                }, 200);
+            });
+        });
+    </script>
+	
+	
+	
+	
+
+
+
+
+editor.formatOnSave
+
+excel file  
+
+regarding database 
+payroleaffect column  default 0 in employeepayrolls table 
+
+end hare 14-07-2026
+
+
+aman.
+21-07-2026
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+app\Http\Controllers\EmployeepayrollController.php
+
+    public function index(Request $request)
+    {
+
+                $isAuthorizedUser = in_array($userEmail, [
+            "priyankasharma@kgsomani.com",
+            "Kapil@kgsadvisors.in",
+            "Vinitayadav@capitall.io",
+            "accounts@kgsomani.com",
+            "tripti@kgsomani.com",
+            "sukhbahadur1993@gmail.com",
+            "anujsomani@kgsomani.com",
+            "Kapil@kgsadvisors.in"
+        ]);
+		
+		
+		
+
+
+resources\views\backEnd\employeepayroll\payroll.blade.php
+
+
+                                        <td>
+                                            @if (auth()->user()->email == 'priyankasharma@kgsomani.com' ||
+                                                    auth()->user()->email == 'Kapil@kgsadvisors.in' ||
+                                                    auth()->user()->email == 'anujsomani@kgsomani.com' ||
+                                                    auth()->user()->email == 'Vinitayadav@capitall.io' ||
+                                                    auth()->user()->email == 'sukhbahadur1993@gmail.com' ||
+                                                    auth()->user()->email == 'Kapil@kgsadvisors.in' ||
+                                                    auth()->user()->email == 'accounts@kgsomani.com' ||
+                                                    auth()->user()->email == 'tripti@kgsomani.com' ||
+                                                    auth()->user()->email == 'anujsomani@kgsomani.com')
+                                                <a style="color:green; cursor: pointer;" id="employeepayrolldata"
+                                                    data-toggle="modal" data-id="{{ $employeepayrollData->id }}"
+                                                    data-target="#employeepayrollmodel">
+                                                    {{ $employeepayrollData->monthly_gross_salary ?? '' }}
+                                                </a>
+                                            @else
+                                                {{ $employeepayrollData->monthly_gross_salary ?? '' }}
+                                            @endif
+                                        </td>		
+		
+
+
+
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+ALTER TABLE `leads`
+ADD COLUMN `linkedin` VARCHAR(255) NULL AFTER `updatedby`,
+ADD COLUMN `clientwebsite` VARCHAR(255) NULL AFTER `linkedin`,
+ADD COLUMN `clientstate` VARCHAR(255) NULL AFTER `clientwebsite`,
+ADD COLUMN `clientcountry` VARCHAR(255) NULL AFTER `clientstate`,
+ADD COLUMN `connection_id` BIGINT UNSIGNED NULL AFTER `clientcountry`,
+ADD COLUMN `nextfollowupdate` DATE NULL AFTER `connection_id`,
+ADD COLUMN `is_referred` TINYINT(1) NOT NULL DEFAULT 0 AFTER `nextfollowupdate`,
+ADD COLUMN `referred_person_name` VARCHAR(255) NULL AFTER `is_referred`,
+ADD COLUMN `referred_person_email` VARCHAR(255) NULL AFTER `referred_person_name`,
+ADD COLUMN `referred_person_phone` VARCHAR(255) NULL AFTER `referred_person_email`,
+ADD COLUMN `followup_reminder_sent_at` TIMESTAMP NULL AFTER `referred_person_phone`;
+
 
 
 

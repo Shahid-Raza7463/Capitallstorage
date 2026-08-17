@@ -14,7 +14,9 @@ regarding
 regarding
 
 22222222222222222222222222222222222222222222222222222222222222222222222222
-regarding
+regarding migration 
+
+php artisan migrate --path=database/migrations/2026_07_19_000001_add_new_creation_fields_to_leads_table.php
 
 22222222222222222222222222222222222222222222222222222222222222222222222222
 regarding
@@ -293,6 +295,10 @@ php artisan migrate:rollback --path=database/migrations/2026_05_08_000001_create
 php artisan migrate:status
 php artisan migrate --path=database\migrations\2026_05_08_000001_create_vendor_management_settings_table.php
  php artisan migrate:refresh --path=/database\migrations\2026_03_13_160100_create_working_paper_files_table.php  
+
+Agar database bilkul new/empty hai, to seedha ye command chalao:
+
+php artisan migrate
 
 
 SELECT * FROM migrations 
@@ -1394,6 +1400,7 @@ like   if (file_exists($maintenance = __DIR__.'/laravel/storage/framework/mainte
   http://shahid1.infinityfreeapp.com/
   http://linkchecker.infinityfreeapp.com/
   http://shahid1.infinityfreeapp.com/assets/web/css/index.css
+  http://shahid1.infinityfreeapp.com/assets/css/main.css
   http://linkchecker.infinityfreeapp.com/assets/web/css/index.css
   http://expertaff.infinityfreeapp.com/assets/web/css/index.css
   http://shahid1.infinityfreeapp.com/assets/web/css/responsive.css

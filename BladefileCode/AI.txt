@@ -1,6 +1,330 @@
 Analyze this project and explain structure
 
 22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+22222222222222222222222222222222222
+
+2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+regarding AI Prompt 
+
+
+regarding datatable using billpending 
+
+Mode: UI_REFACTOR
+Scope: timesheetreportsection datatable migration
+
+Reference Module:
+Route::get('/billspending', [DashboardReport::class, 'billspending']);
+
+
+Target Module:
+1.
+ Route::get('/timesheetreportsection',  [TimesheetController::class, 'TimesheetReportsection']);
+ Route::get('/timesheetfiltersection',  [TimesheetController::class, 'timesheetfiltersection']);
+
+
+Task:
+- Analyze billspending module completely
+- Implement same Saarni datatable pattern, ajax flow, blade structure, pagination, sorting, search, and reusable structure
+- Do not change any existing business logic
+- Do not change any functionality
+- Do not change existing queries/output
+- Keep existing filter UI/design unchanged
+- Keep existing filter logic unchanged
+- Existing data flow and results should remain exactly same
+- Create separate datatable blade/files/folders if required following same pattern
+- Only migrate listing/table section into Saarni datatable pattern
+
+Follow AGENTS.md
+
+
+222222222222222222222222222222222222222222
+
+Mode: BUG_FIX
+
+ Route::get('/timesheetreportsection',  [TimesheetController::class, 'TimesheetReportsection']);
+ Route::get('/timesheetfiltersection',  [TimesheetController::class, 'timesheetfiltersection']);
+
+Fix default loading :
+
+- abhi kiya ho raha hai ki jab mai timesheetreportsection url per aa raha hu to datatable implement to ho gya hai but loading kafi der tak ho raha hai jab tak is page ko closed na kar du tab tak means almost 2 hour se loading hi aa raha ahi 
+
+
+Keep current datatable implementation and functionality unchanged.
+
+Follow AGENTS.md
+
+
+
+regarding NPCI 
+222222222222222222222222222222222222222222222222
+
+Mode: BUG_FIX
+
+Route:
+1
+Route::get('/vendor-creation', [VendorManagementController::class, 'vendorCreationIndex'])->name('vendor-creation.index');
+Route::post('/vendor-creation', [VendorManagementController::class, 'vendorCreationStore'])->name('vendor-creation.store');
+
+Fix issue for KYC Documents:
+
+- in KYC document section following file format should be available for upload
+docx, .txt, .pdf, .pptx, .xlsx, .csv, .jpeg, .jpg, .png, .svg
+
+
+Follow AGENTS.md
+
+
+
+222222222222222222222222222
+
+
+Mode: BUG_FIX
+
+Route:
+1
+Route::get('/vendor-creation', [VendorManagementController::class, 'vendorCreationIndex'])->name('vendor-creation.index');
+
+Add GSTIN filed in form :
+
+- GSTIN Format validation: The system validates the 15-character format with Regex 
+- Must be unique, Show error if GSTIN already exists. Must be exactly 15 characters 
+
+Regex - ^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$
+
+without breaking existing flow.  
+
+
+Follow AGENTS.md
+
+2222222222222222222222222222222222222222
+Login : npcidev 
+ 
+Password: npci_dev_123 
+ 
+Dev ka 
+ 
+Login: npciqa
+ 
+Password : npci_qa_123
+ 
+
+
+ 22222222222222222222222222222222222
+
+
+ Design a modern mobile app UI.
+App Concept:
+Service Provider Directory App
+Home Screen:
+- Show category cards in a clean grid layout.
+- Categories:
+  1. Doctor 👨‍⚕️
+  2. 4 Wheeler Driver 🚗
+  3. Auto Driver 🛺
+  4. Majdoor 👷
+Behavior:
+- On tapping a category card, navigate to a listing screen.
+Listing Screen:
+- Search bar at top.
+- Filter button.
+- Provider cards with:
+  - Profile photo
+  - Name
+  - Profession
+  - Location
+  - Experience
+  - Rating
+  - Call button
+  - View Profile button
+Design Style:
+- Modern
+- Professional
+- Clean
+- Mobile-first
+- Material Design inspired
+- Attractive icons and illustrations
+- Rounded cards
+- Soft shadows
+- Responsive layout
+Output:
+- Home Screen UI
+- Listing Screen UI
+- Light theme
+- High-quality mobile app mockup
+
+22222222222222222222222222222222222
+regarding comapre with static and dynamic 
+
+
+Mode: ANALYSIS
+
+Target:
+- Static version of portfolio project
+
+Task:
+- Analyze the static version completely:
+  1. About section: Image dimensions, layout, spacing, text styling
+  2. Skills section: Text content, UI design, colors, layout, icons
+  3. Resume section: Text content, layout, sections, styling
+  4. Portfolio section: Image dimensions, grid layout, spacing, text styling
+  5. Android Applications section: UI design, image dimensions, grid layout, styling
+  6. Overall design: Colors, fonts, spacing, responsiveness
+
+Output:
+- Document all UI specifications and design patterns
+- Note image dimensions used in each section
+- Note text styling (font size, color, spacing)
+- Note layout structure (grid, flex, columns)
+- Note any specific CSS classes or styles used
+
+Next Step:
+- After analysis, mai dynamic version dunga and dynamic version me jo bhi deffrence aayega use solved karna hoga 
+
+Note: abhi sirf analyze karo koi change nahi karna hai 
+
+Follow AGENTS.md.
+
+22222222222222222222222222222
+
+
+Mode: BUG_FIX
+
+Reference:
+- Static version (UI and design)
+
+Target:
+- Dynamic version (current implementation)
+
+Issues:
+1. About section - Image height/width not matching static version
+2. Skills section - Text and UI design not matching static version
+3. Resume section - Text and UI design not matching static version
+4. Portfolio section - Text, image height/width, and UI design not matching static version
+5. Android Applications section - UI design, image height/width, and layout not matching static version
+
+Task:
+- Fix all sections to match static version exactly:
+  1. About: Restore original image dimensions
+  2. Skills: Restore original text and UI design
+  3. Resume: Restore original text and UI design
+  4. Portfolio: Restore original text, image dimensions, and UI design
+  5. Android Applications: Restore original UI design, image dimensions, and layout
+
+Rules:
+- Keep all functionality unchanged (dynamic data should still work)
+- Only fix UI/design to match static version
+- Data should remain dynamic but display should match static
+
+Note: This is The dynamic version 
+
+Follow AGENTS.md.
+
+22222222222222222222222222222222222
+| Model            | Local Messages / 5h | Agar zyada chat chahiye            |
+| ---------------- | ------------------: | ---------------------------------- |
+| **GPT-5.6 Luna** |          **50–280** | 🥇 Best                            |
+| GPT-5.6 Terra    |              20–110 | 🥈 Second                          |
+| GPT-5.4 mini     |              60–350 | 🥇 Sabse zyada (agar available ho) |
+| GPT-5.4          |              20–100 | Third                              |
+| GPT-5.6 Sol      |               15–90 | Heavy reasoning                    |
+| GPT-5.5          |               15–80 | Heavy reasoning                    |
+
+22222222222222222222222222222222222
+regarding prompt 
+
+Mode: BUG_FIX
+
+Reference:
+convertoassignment()
+
+Target:
+assignmentList()
+Form: #detailsForm (teammapping/update)
+
+Task:
+After adding team members, send the existing `clientindependenceform` email.
+
+Rules:
+- Reuse the mail logic from `convertoassignment()`.
+- Send only `clientindependenceform`.
+- Send only to newly added team members.
+
+Keep everything else unchanged.
+
+Follow AGENTS.md.  mujhe isi tarah hamesha propt dena ye sirf token 1 % khaya hai 100 me se 
+22222222222222222222222222222222222
+sample for ai / regarding ai sample 
+
+Mode: BUG_FIX
+
+Target:
+resources\views\backEnd\index.blade.php
+
+Task:
+- Hide horizontal scrollbar on dashboard cards by default.
+- Show horizontal scrollbar only on hover of that card/scroll area.
+
+Keep everything else unchanged.
+
+Follow AGENTS.md
+yaar ye prompt diya tha but sahi nahi huwa same hai 
+
+Ye updated prompt do, zyada specific hai:
+
+Mode: BUG_FIX
+
+Target:
+resources\views\backEnd\index.blade.php
+
+Issue:
+- Horizontal scrollbar is still visible on dashboard cards.
+- Previous fix did not work.
+
+Task:
+- Find exact card/body/table wrapper causing horizontal scrollbar.
+- Hide horizontal scrollbar by default.
+- Show scrollbar only when hovering that specific scrollable area.
+- Apply to all dashboard card scroll areas.
+
+CSS expected:
+- overflow-x: hidden by default
+- overflow-x: auto on hover
+- use scrollbar-width / ::-webkit-scrollbar if needed
+
+Keep everything else unchanged.
+
+Follow AGENTS.md
+
+Aur agar ultra-short chahiye:
+
+Mode: BUG_FIX
+
+Target:
+resources\views\backEnd\index.blade.php
+
+Horizontal scrollbar still visible.
+
+Fix:
+- Locate actual scroll wrapper.
+- Default: overflow-x hidden.
+- On hover: overflow-x auto.
+- Apply all dashboard cards.
+
+Keep rest unchanged.
+
+Follow AGENTS.md  mujhe is tarah se prompt dena sort and clean ok jab bhi bolu to 
+22222222222222222222222222222222222
 
 Task:
 Change only the UI/layout of this Blade file to match the dashboard UI structure used in the reference dashboard.

@@ -5,6 +5,531 @@ c:\xampp\htdocs\vsalive\app\Http\Controllers\11ActivitylogsController.php c:\xam
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+Haan, sahi pakda. git ls-files "storage/app/*.xlsx" Git pathspec behavior ki wajah se nested paths bhi match kar raha hai.
+
+Agar tumhe sirf storage/app ke root me directly jo .xlsx files hain unko tracking se hatana hai, storage/app/backEnd/... ko nahi, to ye safer way use karo.
+
+Pehle exact root-level tracked files dekho:
+
+git ls-files storage/app | findstr /R "^storage/app/[^/]*\.xlsx$"
+
+Tumhare case me expected root-level files:
+
+storage/app/Timesheet_Not_Submitted.xlsx
+storage/app/Timesheet_last_week.xlsx
+storage/app/Timesheet_not_filled_last_week.xlsx
+storage/app/teammember_data.xlsx
+
+Aur ye nahi hatni chahiye:
+
+storage/app/backEnd/image/document/kgsilr (6).xlsx
+
+Ab root-level files ko individually untrack karo:
+
+git rm --cached storage/app/Timesheet_Not_Submitted.xlsx
+git rm --cached storage/app/Timesheet_last_week.xlsx
+git rm --cached storage/app/Timesheet_not_filled_last_week.xlsx
+git rm --cached storage/app/teammember_data.xlsx
+
+.gitignore me root-level only ke liye ye rule rakho:
+
+/storage/app/*.xlsx
+
+Aur nested Excel ko explicitly allow karna ho to add kar sakte ho:
+
+!/storage/app/backEnd/**/*.xlsx
+
+Phir:
+
+git status
+
+Is tarah storage/app/backEnd/image/document/kgsilr (6).xlsx tracked rahegi, aur sirf storage/app root wali .xlsx ignore hongi.
+regarding rejoining
+
+public function timesheetnotfilledlastweek(Request $request)
+{
+    // 1. Previous week ka range
+    $previousWeekStart = now()->subWeeks(1)->startOfWeek(); // Monday
+    $previousWeekEnd = now()->subWeeks(1)->endOfWeek();     // Sunday
+
+    // 2. Latest team role history (staff code ke liye)
+    $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
+        ->select('teamrolehistorydata.teammember_id', 'teamrolehistorydata.newstaff_code')
+        ->whereRaw('teamrolehistorydata.id = (SELECT MAX(teamrolehistorylatest.id) FROM teamrolehistory as teamrolehistorylatest WHERE teamrolehistorylatest.teammember_id = teamrolehistorydata.teammember_id)');
+
+    // 3. Sabhi active members fetch karo
+    $allMembers = DB::table('teammembers')
+        ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+            $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+        })
+        ->where('teammembers.status', 1)
+        ->select(
+            'teammembers.id',
+            'teammembers.emailid',
+            'teammembers.team_member',
+            'teammembers.staffcode',
+            'latestrecord.newstaff_code'
+        )
+        ->get();
+
+    // 4. Har member ke liye check karo
+    foreach ($allMembers as $user) {
+        // ---------- Rejoining Date Fetch ----------
+        $rejoiningDate = $this->getRejoiningDate($user->id);
+
+        // ---------- Previous Week Timesheet Check (Rejoin ke baad wali) ----------
+        $hasSubmitted = DB::table('timesheetusers')
+            ->where('createdby', $user->id)
+            ->whereBetween('date', [$previousWeekStart, $previousWeekEnd])
+            ->where('status', '!=', 0);
+
+        // 🔥 IMPORTANT: Agar rejoin hua hai toh rejoin date ke baad ki entries check karo
+        if ($rejoiningDate) {
+            $hasSubmitted->where('date', '>=', $rejoiningDate);
+        }
+
+        $hasSubmitted = $hasSubmitted->exists();
+
+        if (!$hasSubmitted) {
+            // Last overall submission date fetch (rejoin ke baad wali)
+            $lastSubmission = DB::table('timesheetusers')
+                ->where('createdby', $user->id)
+                ->where('status', '!=', 0);
+
+            // 🔥 Sirf rejoin ke baad ki submissions count karo
+            if ($rejoiningDate) {
+                $lastSubmission->where('date', '>=', $rejoiningDate);
+            }
+
+            $lastSubmission = $lastSubmission->max('date');
+
+            $user->last_submission_date = $lastSubmission
+                ? Carbon::parse($lastSubmission)->format('d-m-Y')
+                : 'Never';
+            $user->has_submitted = false;
+            $user->rejoining_date = $rejoiningDate;
+        } else {
+            $user->last_submission_date = '';
+            $user->has_submitted = true;
+            $user->rejoining_date = $rejoiningDate;
+        }
+    }
+
+    // 5. Excel Data Prepare (Sirf un members ko jo submit nahi kiye aur Never nahi hain)
+    $excelData = $allMembers->filter(function ($user) {
+        return !$user->has_submitted && $user->last_submission_date !== 'Never';
+    })->map(function ($user) {
+        return [
+            'team_member' => $user->team_member,
+            'emailid' => $user->emailid,
+            'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+            'last_submission_date' => $user->last_submission_date,
+            'rejoining_date' => $user->rejoining_date ?? 'N/A',
+        ];
+    })->toArray();
+
+    // 6. Excel Export
+    if (!empty($excelData)) {
+        $export = new TimesheetLastWeekExport(collect($excelData));
+        $excelFileName = 'Timesheet_not_filled_last_week.xlsx';
+        Excel::store($export, $excelFileName);
+
+        // 7. Email Data
+        $emailData = array(
+            'subject' => "Timesheet Not Filled Last Week",
+            'teammember' => $allMembers->filter(function ($user) {
+                return !$user->has_submitted && $user->last_submission_date !== 'Never';
+            })->map(function ($user) {
+                return (object) [
+                    'team_member' => $user->team_member,
+                    'emailid' => $user->emailid,
+                    'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+                    'last_submission_date' => $user->last_submission_date,
+                    'rejoining_date' => $user->rejoining_date ?? 'N/A',
+                ];
+            }),
+        );
+
+        // 8. Send Email
+        Mail::send('emails.timesheetnotfilledlastweekreminder', $emailData, function ($msg) use ($emailData, $excelFileName) {
+            $msg->to('shahidraza@capitall.io');
+            // $msg->to('itsupport_delhi@vsa.co.in');
+            // $msg->cc('Admin_delhi@vsa.co.in');
+            $msg->attach(storage_path('app/' . $excelFileName), [
+                'as' => $excelFileName,
+                'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
+            $msg->subject($emailData['subject']);
+        });
+
+        return back()->with('success', 'We have sent the Excel file successfully on mail');
+    } else {
+        Log::info('No data available for Excel generation.');
+        return back()->with('info', 'No members found who haven\'t filled timesheet.');
+    }
+}
+
+/**
+ * Get rejoining date for a member
+ * Checks both teamrolehistory and rejoiningsamepost tables
+ */
+private function getRejoiningDate($memberId)
+{
+    // 1. Latest rejoining date from teamrolehistory
+    $latestTeamRoleHistory = DB::table('teamrolehistory as trh')
+        ->select('trh.rejoiningdate')
+        ->where('trh.teammember_id', $memberId)
+        ->whereRaw('trh.id = (SELECT MAX(id) FROM teamrolehistory WHERE teammember_id = trh.teammember_id)')
+        ->first();
+
+    // 2. Latest rejoining date from rejoiningsamepost
+    $latestRejoiningSamePost = DB::table('rejoiningsamepost as rsp')
+        ->select('rsp.rejoiningdate as samepostrejoiningdate')
+        ->where('rsp.teammember_id', $memberId)
+        ->whereRaw('rsp.id = (SELECT MAX(id) FROM rejoiningsamepost WHERE teammember_id = rsp.teammember_id)')
+        ->first();
+
+    $date1 = $latestTeamRoleHistory->rejoiningdate ?? null;
+    $date2 = $latestRejoiningSamePost->samepostrejoiningdate ?? null;
+
+    // Return the maximum (latest) date
+    if ($date1 && $date2) {
+        return max($date1, $date2);
+    }
+
+    return $date1 ?? $date2;
+}
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+
+  public function timesheetnotfilledlastweek(Request $request)
+  {
+    $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
+      ->select('teamrolehistorydata.teammember_id', 'teamrolehistorydata.newstaff_code')
+      ->whereRaw('teamrolehistorydata.id = (SELECT MAX(teamrolehistorylatest.id) FROM teamrolehistory as teamrolehistorylatest WHERE teamrolehistorylatest.teammember_id = teamrolehistorydata.teammember_id)');
+
+    $teammember = DB::table('teammembers')
+      ->leftJoin('timesheetusers', 'timesheetusers.createdby', 'teammembers.id')
+      ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+        $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+      })
+      ->where('teammembers.status', 1)
+      ->where('timesheetusers.date', '<=', now()->subWeeks(1)->endOfWeek())
+      ->select(
+        'teammembers.emailid',
+        'teammembers.team_member',
+        'teammembers.id',
+        'teammembers.staffcode',
+        'latestrecord.newstaff_code'
+      )
+      ->distinct()
+      ->orderBy('teammembers.id', 'asc')
+      ->get();
+
+    foreach ($teammember as $user) {
+      $lastSubmissionDate = DB::table('timesheetusers')
+        ->where('createdby', $user->id)
+        ->where('date', '<=', now()->subWeeks(1)->endOfWeek())
+        ->where('status', '!=', 0)
+        ->where(function ($query) {
+          $query->whereRaw('DAYOFWEEK(date) = 1') // Sunday
+            ->orWhereRaw('DAYOFWEEK(date) = 7'); // Saturday
+        })
+        ->max('date');
+
+      $lastSubmissionDate = $lastSubmissionDate ? Carbon::parse($lastSubmissionDate)->format('d-m-Y') : '';
+      $user->last_submission_date = $lastSubmissionDate;
+    }
+
+    $excelData = $teammember->filter(function ($user) {
+      return !empty($user->last_submission_date);
+    })->map(function ($user) {
+      return [
+        'team_member' => $user->team_member,
+        'emailid' => $user->emailid,
+        'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+        'last_submission_date' => $user->last_submission_date,
+      ];
+    })->toArray();
+
+    $export = new TimesheetLastWeekExport(collect($excelData));
+    $excelFileName = 'Timesheet_last_week.xlsx';
+    Excel::store($export, $excelFileName);
+
+    // Modify the data for the email (excluding 'id')
+    $emailData = array(
+      'subject' => "Timesheet Not filled Last Week",
+      'teammember' => $teammember->map(function ($user) {
+        return (object) [
+          'team_member' => $user->team_member,
+          'emailid' => $user->emailid,
+          'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+          'last_submission_date' => $user->last_submission_date,
+        ];
+      }),
+    );
+
+
+    Mail::send('emails.timesheetnotfilledlastweekreminder', $emailData, function ($msg) use ($emailData, $excelFileName) {
+      $msg->to(auth()->user()->email);
+      // $msg->to('itsupport_delhi@vsa.co.in');
+      // $msg->to('shahidraza@capitall.io');
+      // Attach the Excel file to the email
+      $msg->attach(storage_path('app/' . $excelFileName), [
+        'as' => $excelFileName,
+        'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      ]);
+      $msg->subject($emailData['subject']);
+    });
+
+    $output = array('msg' => 'We have sent the Excel file successfully on mail');
+    return back()->with('success', $output);
+  }
+
+//   public function timesheetnotfilledlastweek(Request $request)
+// {
+//     // 1. Previous week ka start aur end date calculate karo
+//     $previousWeekStart = now()->subWeeks(1)->startOfWeek(); // Monday
+//     $previousWeekEnd = now()->subWeeks(1)->endOfWeek();     // Sunday
+
+//     // 2. Latest team role history fetch karo
+//     $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
+//         ->select('teamrolehistorydata.teammember_id', 'teamrolehistorydata.newstaff_code')
+//         ->whereRaw('teamrolehistorydata.id = (SELECT MAX(teamrolehistorylatest.id) FROM teamrolehistory as teamrolehistorylatest WHERE teamrolehistorylatest.teammember_id = teamrolehistorydata.teammember_id)');
+
+//     // 3. Sabhi active members fetch karo
+//     $allMembers = DB::table('teammembers')
+//         ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+//             $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+//         })
+//         ->where('teammembers.status', 1)
+//         ->select(
+//             'teammembers.id',
+//             'teammembers.emailid',
+//             'teammembers.team_member',
+//             'teammembers.staffcode',
+//             'latestrecord.newstaff_code'
+//         )
+//         ->get();
+
+//     // 4. Har member ke liye check karo ki previous week ki timesheet bhari hai ya nahi
+//     foreach ($allMembers as $user) {
+//         // Previous week ki timesheet check karo (Monday to Sunday)
+//         $hasSubmitted = DB::table('timesheetusers')
+//             ->where('createdby', $user->id)
+//             ->whereBetween('date', [$previousWeekStart, $previousWeekEnd])
+//             ->where('status', '!=', 0)
+//             ->exists(); // Agar koi entry hai toh true
+
+//         // Agar submit nahi ki toh last submission date show karo (optional)
+//         if (!$hasSubmitted) {
+//             // Last submission date (overall) fetch karo
+//             $lastSubmission = DB::table('timesheetusers')
+//                 ->where('createdby', $user->id)
+//                 ->where('status', '!=', 0)
+//                 ->max('date');
+            
+//             $user->last_submission_date = $lastSubmission 
+//                 ? Carbon::parse($lastSubmission)->format('d-m-Y') 
+//                 : 'Never';
+//             $user->has_submitted = false;
+//         } else {
+//             $user->last_submission_date = '';
+//             $user->has_submitted = true;
+//         }
+//     }
+
+//     // 5. Sirf un members ko filter karo jinhone submit nahi ki
+//     $excelData = $allMembers->filter(function ($user) {
+//         return !$user->has_submitted;
+//     })->map(function ($user) {
+//         return [
+//             'team_member' => $user->team_member,
+//             'emailid' => $user->emailid,
+//             'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+//             'last_submission_date' => $user->last_submission_date,
+//         ];
+//     })->toArray();
+
+//     // 6. Excel Export
+//     $export = new TimesheetLastWeekExport(collect($excelData));
+//     $excelFileName = 'Timesheet_not_filled_last_week.xlsx';
+//     Excel::store($export, $excelFileName);
+
+//     // 7. Email Data
+//     $emailData = array(
+//         'subject' => "Timesheet Not Filled Last Week",
+//         'teammember' => $allMembers->filter(function ($user) {
+//             return !$user->has_submitted;
+//         })->map(function ($user) {
+//             return (object) [
+//                 'team_member' => $user->team_member,
+//                 'emailid' => $user->emailid,
+//                 'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+//                 'last_submission_date' => $user->last_submission_date,
+//             ];
+//         }),
+//     );
+
+//     // 8. Send Email
+//     Mail::send('emails.timesheetnotfilledlastweekreminder', $emailData, function ($msg) use ($emailData, $excelFileName) {
+//         $msg->to(auth()->user()->email);
+//         // $msg->to('itsupport_delhi@vsa.co.in');
+//         // $msg->to('shahidraza@capitall.io');
+//         $msg->attach(storage_path('app/' . $excelFileName), [
+//             'as' => $excelFileName,
+//             'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+//         ]);
+//         $msg->subject($emailData['subject']);
+//     });
+
+//     return back()->with('success', 'We have sent the Excel file successfully on mail');
+// }
+
+public function timesheetnotfilledlastweek(Request $request)
+{
+
+    $previousWeekStart = now()->subWeeks(1)->startOfWeek(); // Monday
+    $previousWeekEnd = now()->subWeeks(1)->endOfWeek();     // Sunday
+
+    $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
+        ->select('teamrolehistorydata.teammember_id', 'teamrolehistorydata.newstaff_code')
+        ->whereRaw('teamrolehistorydata.id = (SELECT MAX(teamrolehistorylatest.id) FROM teamrolehistory as teamrolehistorylatest WHERE teamrolehistorylatest.teammember_id = teamrolehistorydata.teammember_id)');
+
+
+    $allMembers = DB::table('teammembers')
+        ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+            $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+        })
+        ->where('teammembers.status', 1)
+        ->select(
+            'teammembers.id',
+            'teammembers.emailid',
+            'teammembers.team_member',
+            'teammembers.staffcode',
+            'latestrecord.newstaff_code'
+        )
+        ->get();
+
+    foreach ($allMembers as $user) {
+        // Previous week timeshhet
+        $hasSubmitted = DB::table('timesheetusers')
+            ->where('createdby', $user->id)
+            ->whereBetween('date', [$previousWeekStart, $previousWeekEnd])
+            ->where('status', '!=', 0)
+            ->exists();
+
+        if (!$hasSubmitted) {
+            // Last overall submission date fetch 
+            $lastSubmission = DB::table('timesheetusers')
+                ->where('createdby', $user->id)
+                ->where('status', '!=', 0)
+                ->max('date');
+            
+            $user->last_submission_date = $lastSubmission 
+                ? Carbon::parse($lastSubmission)->format('d-m-Y') 
+                : 'Never';
+            $user->has_submitted = false;
+        } else {
+            $user->last_submission_date = '';
+            $user->has_submitted = true;
+        }
+    }
+
+    $excelData = $allMembers->filter(function ($user) {
+        return !$user->has_submitted && $user->last_submission_date !== 'Never';
+    })->map(function ($user) {
+        return [
+            'team_member' => $user->team_member,
+            'emailid' => $user->emailid,
+            'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+            'last_submission_date' => $user->last_submission_date,
+        ];
+    })->toArray();
+
+  
+    $export = new TimesheetLastWeekExport(collect($excelData));
+    $excelFileName = 'Timesheet_not_filled_last_week.xlsx';
+    Excel::store($export, $excelFileName);
+
+
+    $emailData = array(
+        'subject' => "Timesheet Not Filled Last Week",
+        'teammember' => $allMembers->filter(function ($user) {
+            return !$user->has_submitted && $user->last_submission_date !== 'Never';
+        })->map(function ($user) {
+            return (object) [
+                'team_member' => $user->team_member,
+                'emailid' => $user->emailid,
+                'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+                'last_submission_date' => $user->last_submission_date,
+            ];
+        }),
+    );
+
+    // 8. Send Email
+    Mail::send('emails.timesheetnotfilledlastweekreminder', $emailData, function ($msg) use ($emailData, $excelFileName) {
+        // $msg->to(auth()->user()->email);
+        $msg->to('shahidraza@capitall.io');
+        // $msg->to('shahidraza@capitall.io');
+        $msg->attach(storage_path('app/' . $excelFileName), [
+            'as' => $excelFileName,
+            'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
+        $msg->subject($emailData['subject']);
+    });
+
+    return back()->with('success', 'We have sent the Excel file successfully on mail');
+}
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+
+--- a/app/Http/Controllers/Admin/Dashboard/AtrdashboardRepository.php
++++ b/app/Http/Controllers/Admin/Dashboard/AtrdashboardRepository.php
+@@ -102,8 +102,7 @@ public function scopeVisibleAtrObservations($query, $user = null)
+                 })
+                 ->orWhereHas('engagement.members', function ($memberQuery) use ($userId) {
+                     $memberQuery->where('user_id', $userId)
+-                        ->where('is_active', true)
+-                        ->where('role_name', 'Audit Owner');
++                        ->where('is_active', true);
+                 });
+         });
+     }
+@@ -133,8 +132,7 @@ public function scopeVisibleAtrSubObservations($query, $user = null)
+                 })
+                 ->orWhereHas('observation.engagement.members', function ($memberQuery) use ($userId) {
+                     $memberQuery->where('user_id', $userId)
+-                        ->where('is_active', true)
+-                        ->where('role_name', 'Audit Owner');
++                        ->where('is_active', true);
+                 });
+         });
+     }
+@@ -877,8 +875,7 @@ private function applyUserScope($query)
+                 $this->scopeVisibleAtrSubObservations($subObservationQuery, $user);
+             })->orWhereHas('members', function ($memberQuery) use ($userId) {
+                 $memberQuery->where('user_id', $userId)
+-                    ->where('is_active', true)
+-                    ->where('role_name', 'Audit Owner');
++                    ->where('is_active', true);
+             });
+         });
+     }
+
+     
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 public function getFileUrl($fileName, $localPath = 'backEnd/image/teammember')
     {
         if (empty($fileName)) {

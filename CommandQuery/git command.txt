@@ -507,7 +507,7 @@ git rebase origin/ajanta-dev
 git add (conflict file path)
 git rebase --continue
 
-git push origin shahid-ajantaV1 --force-with-lease
+git push origin shahid-ajantaV4 --force-with-lease
 
 
 git commit -m "Conflict solved"
@@ -528,16 +528,17 @@ git push origin shahid-ajantaV1 --force-with-lease
 
 every 5 min latest code without any work 
 
-git checkout shahid-ajantaV1
+git checkout shahid-ajantaV4
 git fetch origin
  error then n and enter 
 git merge origin/ajanta-dev
+
 222222222222222222222222222222222222222222222222
-Create new branch and work  on it 
-git checkout ajanta-dev
-git pull origin ajanta-dev
-git checkout -b shahid-ajantaV1
-git push -u origin shahid-ajantaV1
+Create new branch and work on it 
+git checkout vsa-dev
+git pull origin vsa-dev
+git checkout -b shahid-ajantaV4
+git push -u origin shahid-timesheetreminder
 
 now you can work on it 
 
@@ -607,7 +608,14 @@ git config --global --add safe.directory C:/xampp/htdocs/npci-dev
 git config --global --add safe.directory "C:/Shahid Raza/Capitall/VSA project functionality"
 git status
 git branch
+copy .env.example .env
+set database config 
 composer install
+if any error then 
+    create cache folder hare C:\xampp\htdocs\ifchub-npci\bootstrap
+    composer dump-autoload
+php artisan key:generate
+php artisan serve
 php artisan key:generate
 git branch
 git pull origin npci-dev
@@ -617,6 +625,22 @@ git branch
 git pull origin npci-dev
 
 
+
+cd ../../
+
+
+regarding migrate
+1
+php artisan migrate
+php artisan migrate:fresh
+2
+php artisan db:seed
+Ya ek hi command me migration + seeder:
+php artisan migrate --seed
+php artisan migrate:fresh --seed
+
+
+php artisan db:seed --class=RoleSeeder
 
 cd C:\xampp\htdocs
 git clone -b ajanta-dev https://capitall-india-admin@bitbucket.org/capitallio/ifchub.git ajanta-dev
@@ -797,6 +821,10 @@ git merge origin/npci-dev  now you will see conflict and solve it then
 22222222222222222222222222222222222222222222222222222
 git stash push -u -m "temp work"
 
+git stash -u
+git checkout portfolio-demo
+git stash pop
+
 Iska meaning:
 git stash push → current changes stash karega
 -u → untracked files/folders bhi stash karega
@@ -804,6 +832,7 @@ git stash push → current changes stash karega
 
 git status
 git stash pop
+git stash apply stash@{0}
 git stash drop stash@{0}
 
 git stash apply
@@ -895,9 +924,195 @@ regarding laragon / database export is command ke throug laravel se database exp
 mysqldump -u root --default-character-set=utf8mb4 --single-transaction --routines --triggers database_name > backup.sql
 
 222222222222222222222222222222222222
-
+git restore --staged .
 
 
 
 22222222222222222222222222222222
+git log --follow -- <file>
 
+git log -p --follow -- <file>
+
+git show <commit_id> -- <file>
+
+git diff <commit_id> HEAD -- <file>
+
+git blame <file>
+
+example
+git log --follow -- resources/views/dashboard/atr.dashboard.filter.blade.php
+
+Step 1: Tumhari commit ka code dekho
+git show c7da4b6465275f512f3e55c18f3ed40144a8511a -- resources\views\atrdashboard.blade.php
+Isse pata chalega tumne exactly kya add kiya tha.
+
+
+Step 2: Current file se compare karo
+git diff c7da4b6465275f512f3e55c18f3ed40144a8511a HEAD -- resources\views\atrdashboard.blade.php
+Ye batayega ki tumhari commit ke baad kya-kya change hua.
+
+
+Step 3 (Sabse important): Kis commit ne remove kiya?
+Ye command chalao:
+git log -p --follow -- resources\views\atrdashboard.blade.php
+Output me commits newest se oldest aayenge.
+Jab tum scroll karoge to jahan red (-) lines me filter ya quarter section delete hua hoga, us commit ke upar author ka naam hoga. Wahi developer hai jisne remove kiya.
+
+
+Agar tumhe "Quarter" ya "Financial Year" ya "All" ya koi specific text yaad hai
+Aur bhi fast tareeka:
+git log -S "Quarter" --follow -- resources\views\atrdashboard.blade.php
+
+Ya
+
+git log -S "Financial Year" --follow -- resources\views\atrdashboard.blade.php
+
+Ya
+
+git log -S "All" --follow -- resources\views\atrdashboard.blade.php
+
+-S sirf un commits ko dikhata hai jahan woh text add/remove hua.
+
+
+regarding histry file wise 
+
+1. Complete history (authors + commits)
+git log --follow -- resources/views/atrdashboard.blade.php
+
+2. Sirf one-line history (Best)
+git log --oneline --follow -- resources/views/atrdashboard.blade.php
+
+3. Sirf author aur commit message
+git log --follow --pretty=format:"%h | %an | %ad | %s" --date=short -- resources/views/atrdashboard.blade.php
+
+Example output:
+
+a1b2c3d | Amit Kumar Batham | 2026-06-30 | Add All option to ATR dashboard filters
+b2c3d4e | Shahid Raza       | 2026-04-01 | Working on Quarter section
+c3d4e5f | Hemant           | 2026-03-15 | UI changes
+4. Sirf unique developers jinhone file modify ki
+
+CMD:
+
+git log --follow --format="%an" -- resources/views/atrdashboard.blade.php
+
+Agar duplicate names bhi aa rahe hain aur unique chahiye:
+
+Git Bash:
+
+git log --follow --format="%an" -- resources/views/atrdashboard.blade.php | sort -u
+5. Agar dekhna hai kis commit me kya change hua
+git log -p --follow -- resources/views/atrdashboard.blade.php
+
+2222222222222222222222222222222222222222
+git restore multiple file 
+git restore app/Traits/FilterEngine.php resources\views\atrdashboard.blade.php resources/views/dashboard-components/audit-dashboard-filters.blade.php resources/views/dashboard-components/overview-dashboard-filters.blade.php tests/Unit/FilterEngineFinancialYearDefaultTest.php
+
+
+
+222222222222222222222222
+
+git log --oneline
+
+git diff OLD NEW
+
+git diff --name-only OLD NEW
+
+git show COMMIT
+
+git blame file.php
+
+git log -p -- file.php
+
+example
+git log --oneline --follow -- resources\views\dashboard-components\audit-dashboard-filters.blade.php
+
+git log --follow --pretty=format:"%h | %an | %ad | %s" --date=short -- resources\views\dashboard-components\audit-dashboard-filters.blade.php
+
+git diff 6d385b96 4510ed60 -- resources\views\dashboard-components\audit-dashboard-filters.blade.php
+
+git diff --name-only 6d385b96 4510ed60
+
+git show 4510ed60 -- resources\views\dashboard-components\audit-dashboard-filters.blade.php
+
+git blame resources\views\dashboard-components\audit-dashboard-filters.blade.php
+
+git log -p --follow -- resources\views\dashboard-components\audit-dashboard-filters.blade.php
+
+git log -S "Target Date" --follow -- resources\views\dashboard-components\audit-dashboard-filters.blade.php
+
+
+222222222222222222222222222222222222222222222222222222222
+refarding backup
+1
+git branch
+git log --oneline -5
+git branch backup-before-reset
+git reset --hard 57c46531
+git log --oneline -5
+git add .
+git commit -m "Your new changes"
+git push origin shahid-ajantaV4 --force-with-lease
+
+2
+git checkout -b shahid-ajantaV4-new 57c46531
+git push -u origin shahid-ajantaV4-new
+
+
+git reflog
+
+2222222222222222222222222222222222222222222222
+
+Pehle ensure karo vsa-demo updated aur clean hai:
+
+git checkout vsa-demo
+git status
+git pull origin vsa-demo
+
+Phir vsa-dev update karo:
+
+git checkout vsa-dev
+git pull origin vsa-dev
+git merge vsa-demo
+git push origin vsa-dev
+
+Uske baad vsa-qa:
+
+git checkout vsa-qa
+git pull origin vsa-qa
+git merge vsa-demo
+git push origin vsa-qa
+
+Finally verify:
+
+git log --oneline -5
+
+2222222222222222222222222222222222222222222
+regarding remove or delete / regarding delete from server / regarding env file 
+git ls-files .env
+git rm --cached .env
+
+
+
+mkdir storage\framework\views
+mkdir storage\framework\cache
+mkdir storage\framework\sessions
+
+
+2222222222222222222222222222222222222
+
+
+git checkout vsa-demo
+git pull origin vsa-demo
+git cherry-pick 6b8355f
+git push origin vsa-demo
+
+git checkout vsa-dev
+git pull origin vsa-dev
+git cherry-pick 6b8355f
+git push origin vsa-dev
+
+git checkout vsa-qa
+git pull origin vsa-qa
+git cherry-pick 6b8355f
+git push origin vsa-qa

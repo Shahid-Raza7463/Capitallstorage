@@ -1,0 +1,210 @@
+
+01-08
+1.Activity logs need to be implemented in the Profile section for Documents viewand Documents download actions. 
+  3.1 Qualification deleted and upload completed 
+  3.2 All file Viewed Logs completed on profile edit page 
+  3.2 All file Viewed Logs completed on teammember index page
+2 kt wit pooja 
+3.data clean on vsademo 
+4.The staff code is now displayed in the Timesheet Submitted Report (Excel). bugs solved 
+5.meeting with mohit and sumit 
+
+
+02-08
+Sunday 
+
+03-08 
+Casual leave 
+
+
+04-08
+1.Laptop issues
+2.code deployed on vsa and functional testing completed 
+3.The staff code is now displayed in the Timesheet Submitted Report (Excel). new enhancement
+  1.using command 
+  2.Using Timesheet all button 
+
+```````````````````````````
+
+
+05-08
+1.reminder code optimize and functional testing completed
+2.The staff code is now displayed in the Timesheet Submitted Report (Excel). new enhancement
+  1.using command 
+  2.Using Timesheet all button 
+3.Deployed code on vsademo and functional testing completed (The staff code is now displayed in the Timesheet Submitted Report (Excel). new enhancement)
+
+
+06-08-2026
+1.The staff code is now displayed in the Timesheet Submitted Report (Excel). new enhancement deployed on vsa and functional testing completed  
+2.Activity logs need to be implemented in the Profile section for Documents viewand Documents download actions. 
+3.All previous pending task deployed on Vsademo and functional teting completed
+
+
+
+
+07-08-2026
+1.All previous pending task deployed on Vsademo and functional teting completed
+2.Independence confirmation should not be required for the Assignment Viewer.
+  During the implementation, the following related scenarios will also be reviewed to ensure there is no impact on the existing functionality:
+  Assignment Closed scenario.
+  Balance Confirmation module.
+  Other functionalities related to the Independence Confirmation module.
+3.all code push on vsa-demo 
+
+
+
+ 
+
+
+
+08-08-2026
+Sturday
+
+09-08-2026
+Sunday
+
+
+10-08-2026
+1.Independence confirmation should not be required for the Assignment Viewer.
+  During the implementation, the following related scenarios will also be reviewed to ensure there is no impact on the existing functionality:
+  Assignment Closed scenario.
+  Balance Confirmation module.
+  Other functionalities related to the Independence Confirmation module.
+2.meeting with ajit 
+3.git and piplene issue on vsademo 
+
+```````````````````````````````````````
+
+11-08-2026
+1.DEV NARAYAN YADAV – Independence is pending and needs to be submitted.  1018
+2.Nitin Singhal (S1031) – Remove the user from assignment RSW100909 and also remove the associated timesheet hours.  797
+3.Nitin (M1076) – Remove the user from assignment RSW101719 and also remove the associated timesheet hours.  943
+4.All above listed task depployed and testing completed
+
+
+
+
+12-08-2026
+1.Working on error pages 
+2.Error pages completed and deployed on vsademo and functional testing completed
+3.Error pages completed and deployed on vsalive and functional testing completed
+4.Bugs fixed related to logs task 
+
+
+13-08-2026
+1.Migration for all table (246) completed on vsademo 
+2.Migration for all table (246) completed on vsalive  
+3.The staff code should be displayed in the 'Timesheet_Not_Submitted' (Excel)
+optimize ho gya hai test karna hai ok and iske baad work karna hai 
+
+
+
+1.resources\views\errors\internal.blade.php  3 jagah per hai 
+error page me kahi kahi KGS TO VSA aa raha hai use remove karna hai 
+
+14-08-2026
+1.
+
+
+Test Case:
+1.Save but don't submit – Employees who have saved their timesheets but never submitted them.
+2.Never filled – Employees who have never created/filled any timesheet at all.
+3.Rejoining employees – Employees who have rejoined the company (either on the same or different post) but have not submitted their timesheets after rejoining.
+
+
+ 
+15-08-2026
+15 augustt holidays 
+
+
+
+16-08-2026
+Sunday 
+
+
+17-08-2026
+1.VSA task testing on vsademo and inform to mohit 
+2.column lenth fixed on database 
+3.
+
+
+
+
+1.database ka column me lenth sahi hona chahiye  and backennd and front me handle hoga ki agar 200 se jayada lenth hai to kiya hoga 
+2.isme kuch duplicate tables h uska use nhi h toa usko remove krna h  
+3.isme foreign key missing h kaphi jaga 
+4.analyse ki kaha kaha bugs hai isme 
+5.and kaha kaha try cath laga sakte hai 
+6.ek list bnawana hai ki kaha kaha issue hai and kaha kaha validation lagana hai 
+7.
+
+
+18-08-2026
+19-08-2026
+20-08-2026
+21-08-2026
+22-08-2026
+23-08-2026
+24-08-2026
+25-08-2026
+26-08-2026
+27-08-2026
+28-08-2026
+29-08-2026
+30-08-2026
+31-08-2026
+
+
+1.resources\views\errors\internal.blade.php  3 jagah per hai 
+error page me kahi kahi KGS TO VSA aa raha hai use remove karna hai 
+
+
+
+
+
+
+
+DB_DATABASE=vsademotimeheet3
+
+
+
+
+1.DEV NARAYAN YADAV  iska indepenedence pending hai and ise submit karwana hai 
+.independence pending hai 
+
+jis pride ka timesheet submit  hai 
+
+created date assign independence create 
+
+2.nitin RSW100909 nitin single, 1031 0 hour timeshee team  hatana hau 
+3.rsw101719 isme M1076 isko hatana hai is 
+
+``````````````````
+
+Independence confirmation should not be required for the Assignment Viewer.
+  1.report-indepnedence and filter
+  2.viewassignment - independence 
+  3 send remimneder 
+  
+  
+  
+independences table se id 3289 delete 
+
+app\Http\Controllers\IndependenceController.php
+           // ->where('assignmentteammappings.teammember_id', 952)
+		   
+             ->where('assignmentteammappings.viewerteam', null)
+
+
+
+SHR101225
+BAN100901
+
+
+
+```````````````````````````
+
+
+http://127.0.0.1:8000/timesheetnotfillreminder
+

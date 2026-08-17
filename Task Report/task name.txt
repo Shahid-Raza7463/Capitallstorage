@@ -1713,6 +1713,23 @@ Color Coding   in 2nd in audit
 
 
 
+3.in capitall , UI fixed on dashboard 
+1. permission page implemented on all over capitall portal 
+2. active and inactive user on  creating and editing page on all over capitall portal 
+3.checkinreport datatable upload on kgsdemo and functional testing completed
+2.S3 related issues: Working on teammemer edit, store and indexing
+
+
+Permission page has been implemented across the entire Capitall portal.
+Active and inactive user functionality has been implemented on the create and edit pages throughout the Capitall portal.
+Dashboard UI issues have been fixed in Capitall.
+The Check-in Report DataTable has been deployed on KGSDemo, and functional testing has been completed.
+S3-related issues: Currently working on Team Member store, edit, and indexing functionalities.
+
+
+
+
+
 
 
 

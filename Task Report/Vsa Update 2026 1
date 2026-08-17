@@ -7342,41 +7342,15 @@ app\Http\Controllers\PromotionandrejoiningController.php
 
 
 
-04-07-2026
+04-07-2026 timesheet report 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-
-2222222222222222222222222222222222222222
-
-
-resources\views\backEnd\attendance\teamattendance.blade.php
- {{-- <th>Created Date</th> --}}
-
-
-
-                                    {{-- <td>
-                                        {{ $attendanceData->created_at ? date('d-m-Y', strtotime($attendanceData->created_at)) : '......' }}
-                                    </td> --}}
-
-
-resources\views\backEnd\attendance\adminattendance.blade.php
-
-
-
- {{-- <th>Created Date</th> --}}
-
-
-
-                                    {{-- <td>
-                                        {{ $attendanceData->created_at ? date('d-m-Y', strtotime($attendanceData->created_at)) : '......' }}
-                                    </td> --}}
-
-
-
 
 
 222222222222222222222222222222222222222222
 app\Http\Controllers\TimesheetController.php
 
+
+skip it 
   public function timesheetnotfilledlastweek(Request $request)
   {
     $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
@@ -7464,19 +7438,114 @@ app\Http\Controllers\TimesheetController.php
 
 
 
+replace with it 
+ public function timesheetnotfilledlastweek(Request $request)
+{
+ 
+    $previousWeekStart = now()->subWeeks(1)->startOfWeek(); // Monday
+    $previousWeekEnd = now()->subWeeks(1)->endOfWeek();     // Sunday
+ 
+    $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
+        ->select('teamrolehistorydata.teammember_id', 'teamrolehistorydata.newstaff_code')
+        ->whereRaw('teamrolehistorydata.id = (SELECT MAX(teamrolehistorylatest.id) FROM teamrolehistory as teamrolehistorylatest WHERE teamrolehistorylatest.teammember_id = teamrolehistorydata.teammember_id)');
+ 
+ 
+    $allMembers = DB::table('teammembers')
+        ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+            $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+        })
+        ->where('teammembers.status', 1)
+        ->select(
+            'teammembers.id',
+            'teammembers.emailid',
+            'teammembers.team_member',
+            'teammembers.staffcode',
+            'latestrecord.newstaff_code'
+        )
+        ->get();
+ 
+    foreach ($allMembers as $user) {
+        // Previous week timeshhet
+        $hasSubmitted = DB::table('timesheetusers')
+            ->where('createdby', $user->id)
+            ->whereBetween('date', [$previousWeekStart, $previousWeekEnd])
+            ->where('status', '!=', 0)
+            ->exists();
+ 
+        if (!$hasSubmitted) {
+            // Last overall submission date fetch
+            $lastSubmission = DB::table('timesheetusers')
+                ->where('createdby', $user->id)
+                ->where('status', '!=', 0)
+                ->max('date');
+           
+            $user->last_submission_date = $lastSubmission
+                ? Carbon::parse($lastSubmission)->format('d-m-Y')
+                : 'Never';
+            $user->has_submitted = false;
+        } else {
+            $user->last_submission_date = '';
+            $user->has_submitted = true;
+        }
+    }
+ 
+    $excelData = $allMembers->filter(function ($user) {
+        return !$user->has_submitted && $user->last_submission_date !== 'Never';
+    })->map(function ($user) {
+        return [
+            'team_member' => $user->team_member,
+            'emailid' => $user->emailid,
+            'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+            'last_submission_date' => $user->last_submission_date,
+        ];
+    })->toArray();
+ 
+ 
+    $export = new TimesheetLastWeekExport(collect($excelData));
+    $excelFileName = 'Timesheet_not_filled_last_week.xlsx';
+    Excel::store($export, $excelFileName);
+ 
+ 
+    $emailData = array(
+        'subject' => "Timesheet Not Filled Last Week",
+        'teammember' => $allMembers->filter(function ($user) {
+            return !$user->has_submitted && $user->last_submission_date !== 'Never';
+        })->map(function ($user) {
+            return (object) [
+                'team_member' => $user->team_member,
+                'emailid' => $user->emailid,
+                'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
+                'last_submission_date' => $user->last_submission_date,
+            ];
+        }),
+    );
+ 
+    // 8. Send Email
+    Mail::send('emails.timesheetnotfilledlastweekreminder', $emailData, function ($msg) use ($emailData, $excelFileName) {
+        // $msg->to(auth()->user()->email);
+        $msg->to('shahidraza@capitall.io');
+        // $msg->to('shahidraza@capitall.io');
+        $msg->attach(storage_path('app/' . $excelFileName), [
+            'as' => $excelFileName,
+            'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
+        $msg->subject($emailData['subject']);
+    });
+ 
+    return back()->with('success', 'We have sent the Excel file successfully on mail');
+}
+
+
+
 22222222222222222222222222222222222222222222
 app\Exports\TimesheetLastWeekExport.php
 
-    public function headings(): array
-    {
-        // Customize the headings based on your data structure
         return [
             'Name',
             'Email ID',
             'Staff Code',
             'Last Submission Date',
         ];
-    }
 	
 	
 
@@ -7484,6 +7553,7 @@ app\Exports\TimesheetLastWeekExport.php
 
 
 app\Console\Commands\TimesheetnotfilllastweekReminder.php
+
 
 
                 // Get all active team member 
@@ -7512,16 +7582,21 @@ app\Console\Commands\TimesheetnotfilllastweekReminder.php
 					
 					
 					
-					                   return [
+                $excelData = $teammember->filter(function ($user) {
+                    return !empty($user->last_submission_date);
+                })->map(function ($user) {
+                    return [
                         'team_member' => $user->team_member,
                         'emailid' => $user->emailid,
                         'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
                         'last_submission_date' => $user->last_submission_date,
                     ];
+                })->toArray();
 					
 					
 					
-					     'subject' => "Timesheet Not filled Last Week",
+                    $emailData = [
+                        'subject' => "Timesheet Not filled Last Week",
                         'teammember' => $teammember->map(function ($user) {
                             return (object) [
                                 'team_member' => $user->team_member,
@@ -7529,87 +7604,1262 @@ app\Console\Commands\TimesheetnotfilllastweekReminder.php
                                 'staffcode' => $user->newstaff_code ?? ($user->staffcode ?? ''),
                                 'last_submission_date' => $user->last_submission_date,
                             ];
+                        }),
+                    ];
 							
-							
+	
+
+	
 end hare 04-07-2026
 
 
 
 
+05-08-2026
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+app\Console\Commands\TimesheetnotfilllastweekReminder.php
+
+use App\Exports\TimesheetLastWeekExport;
+use Illuminate\Console\Command;
+use DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
+
+
+
+
+    protected $signature = 'command:timesheetnotfilllastweekreminder {--force}';
+
+
+
+
+// Test Cases
+// Log in as an Admin.
+// Navigate to Timesheet → Submitted Timesheet and click Timesheet All.
+// Verify that the Excel report contains only active users who have submitted their timesheets.
+// Verify that a user whose latest submitted timesheet date is not later than the latest rejoining date is excluded from the Excel report.
+// Verify that a user whose latest submitted timesheet date is later than the latest rejoining date is included in the Excel report.
+// verify staffcode
+
+
+
+
+    public function handle()
+    {
+        // dd($this->option());
+        if ($this->option('force') || now()->format('H:i') === '18:00') {
+            if ($this->option('force') || 'Wednesday' == date('l', time()) || 'Saturday' == date('l', time())) {
+                $lastWeekEnd = now()->subWeeks(1)->endOfWeek();
+
+                $lastSubmissions = DB::table('timesheetusers')
+                    ->select('createdby', DB::raw('MAX(date) as last_submission_date'))
+                    ->where('date', '<=', $lastWeekEnd)
+                    ->where('status', '!=', 0)
+                    ->where(function ($query) {
+                        $query->whereRaw('DAYOFWEEK(date) = 1') // Sunday
+                            ->orWhereRaw('DAYOFWEEK(date) = 7'); // Saturday
+                    })
+                    ->groupBy('createdby');
+
+
+
+                $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
+                    ->select('teamrolehistorydata.teammember_id', 'teamrolehistorydata.newstaff_code')
+                    ->whereRaw('teamrolehistorydata.id = (SELECT MAX(teamrolehistorylatest.id) FROM teamrolehistory as teamrolehistorylatest WHERE teamrolehistorylatest.teammember_id = teamrolehistorydata.teammember_id)');
+
+                // Get all active team member 
+                $teammember = DB::table('teammembers')
+                    ->leftJoin('timesheetusers', 'timesheetusers.createdby', 'teammembers.id')
+                        ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+                        $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+                    })
+                    ->leftJoinSub($lastSubmissions, 'last_submissions', function ($join) {
+                        $join->on('last_submissions.createdby', '=', 'teammembers.id');
+                    })
+                    ->where('teammembers.status', 1)
+                    // ->whereIn('teammembers.id', [780])
+                    ->where('timesheetusers.date', '<=', $lastWeekEnd)
+                    ->select('teammembers.emailid', 'teammembers.team_member', 'teammembers.id', 'last_submissions.last_submission_date','teammembers.staffcode','latestrecord.newstaff_code')
+                    ->distinct('timesheetusers.createdby')
+                    ->get();
+
+                $latestTeamRoleHistory = DB::table('teamrolehistory as trh')
+                    ->select('trh.teammember_id', 'trh.rejoiningdate')
+                    ->whereRaw('trh.id = (SELECT MAX(id) FROM teamrolehistory WHERE teammember_id = trh.teammember_id)');
+
+                $latestRejoiningSamePost = DB::table('rejoiningsamepost as rsp')
+                    ->select('rsp.teammember_id', 'rsp.rejoiningdate as samepostrejoiningdate')
+                    ->whereRaw('rsp.id = (SELECT MAX(id) FROM rejoiningsamepost WHERE teammember_id = rsp.teammember_id)');
+
+                $rejoiningData = DB::table('teammembers as tm')
+                    ->leftJoinSub($latestTeamRoleHistory, 'latest_trh', function ($join) {
+                        $join->on('latest_trh.teammember_id', '=', 'tm.id');
+                    })
+                    ->leftJoinSub($latestRejoiningSamePost, 'latest_rsp', function ($join) {
+                        $join->on('latest_rsp.teammember_id', '=', 'tm.id');
+                    })
+                    ->whereIn('tm.id', $teammember->pluck('id')->toArray())
+                    ->select(
+                        'tm.id',
+                        'latest_trh.rejoiningdate',
+                        'latest_rsp.samepostrejoiningdate'
+                    )
+                    ->get()
+                    ->keyBy('id');
+
+                // Get the last submission date for each user only sunday and suterday
+                foreach ($teammember as $user) {
+                    $lastSubmissionDate = $user->last_submission_date;
+
+                    $user->last_submission_date = $lastSubmissionDate ? Carbon::parse($lastSubmissionDate)->format('d-m-Y') : '';
+                    $user->staffcode = $user->newstaff_code ?: ($user->staffcode ?? '');
+
+                    // Check for rejoining users
+                    $rejoiningDataall = $rejoiningData->get($user->id);
+
+                    if ($rejoiningDataall) {
+                        $date1 = $rejoiningDataall->rejoiningdate;
+                        $date2 = $rejoiningDataall->samepostrejoiningdate;
+
+                        if ($date1 && $date2) {
+                            $rejoiningDatestore = max($date1, $date2);
+                        } else {
+                            $rejoiningDatestore = $date1 ?? $date2;
+                        }
+
+                        // $rejoiningDatestore = $rejoiningDataall->samepostrejoiningdate ?? $rejoiningDataall->rejoiningdate;
+                        if ($rejoiningDatestore) {
+                            $rejoiningDateCarbon = Carbon::parse($rejoiningDatestore);
+
+                            if ($lastSubmissionDate) {
+                                $lastSubmissionCarbon = Carbon::parse($lastSubmissionDate);
+
+                                if (!$lastSubmissionCarbon->greaterThan($rejoiningDateCarbon)) {
+                                    $user->last_submission_date = ''; // Skip user
+                                }
+                            } else {
+                                $user->last_submission_date = ''; // Skip user
+                            }
+                        }
+                    }
+                    // Check for rejoining users  end hare
+                }
+
+                // Prepare Excel data
+                $excelData = $teammember->filter(function ($user) {
+                    return !empty($user->last_submission_date);
+                })->map(function ($user) {
+                    return [
+                        'team_member' => $user->team_member,
+                        'emailid' => $user->emailid,
+                        'staffcode' => $user->staffcode,
+                        'last_submission_date' => $user->last_submission_date,
+                    ];
+                })->toArray();
+
+                if (!empty($excelData)) {
+                    $export = new TimesheetLastWeekExport(collect($excelData));
+                    $excelFileName = 'Timesheet_last_week.xlsx';
+                    Excel::store($export, $excelFileName);
+
+                    // Send Email
+                    $emailData = [
+                        'subject' => "Timesheet Not filled Last Week",
+                        'teammember' => $teammember->map(function ($user) {
+                            return (object) [
+                                'team_member' => $user->team_member,
+                                'emailid' => $user->emailid,
+                                'staffcode' => $user->staffcode,
+                                'last_submission_date' => $user->last_submission_date,
+                            ];
+                        }),
+                    ];
+
+                    Mail::send('emails.timesheetnotfilledlastweekreminder', $emailData, function ($msg) use ($emailData, $excelFileName) {
+                        $msg->to('itsupport_delhi@vsa.co.in');
+                        // $msg->to('shahidraza@capitall.io');
+                        $msg->attach(storage_path('app/' . $excelFileName), [
+                            'as' => $excelFileName,
+                            'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        ]);
+                        $msg->subject($emailData['subject']);
+                    });
+                } else {
+                    // display log message
+                    Log::info('No data available for Excel generation.');
+                }
+            }
+        }
+    }
+
+
+
+
+
+
 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+app\Http\Controllers\TimesheetController.php
+use Illuminate\Support\Facades\Artisan;
+
+
+  public function timesheetnotfilledlastweek(Request $request)
+  {
+    Artisan::call('command:timesheetnotfilllastweekreminder', ['--force' => true]);
+    $output = array('msg' => 'We have sent the Excel file successfully on mail');
+    return back()->with('success', $output);
+  }
 
 
 
+
+
+
+05-08-2026
+
+06-08-2026  logs related tasks 
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+web .php 
+
+
+  Route::get('/teammember/document/{id}/{document}/{action}', [TeammemberController::class, 'teammemberDocument']);
+  Route::get('/teammember/qualification-document/{id}/{documentId}/{action}', [TeammemberController::class, 'teammemberQualificationDocument']);
+  
+  
+  
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+app/Helpers/HelperFunctions.php
+
+        if ($action === 'create') {
+            $moduleName = ucwords(str_replace('_', ' ', $module));
+            $changes['message_details'] = [
+                'old' => null,
+                'new' => $moduleName . ' has been created'
+            ];
+        } elseif ($module === 'teammember' && $action === 'viewed') {
+            $changes['message_details'] = [
+                'old' => null,
+                'new' => 'Viewed details has been created'
+            ];
+        } else {
+
+
+
+
+
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+app/Http/Controllers/ActivitylogsController.php
+
+
+            'teammember_id' => 'Team Member',
+            'teamember_name' => 'Employee Name',
+			            'originalcancelcheque' => 'Unique Bank Proof',
+            'cancelcheque' => 'Bank Proof',
+
+
+            'qualification' => 'Qualification',
+            'document_file' => 'Unique File Name',
+            'original_file' => 'Document File',
+			
+			
+
+
+
+      $moduleHideFields = [
+            'teammember' => ['mentor_id', 'title_id', 'employment_status', 'department', 'profilepic', 'aadharupload', 'panupload', 'addressupload', 'originalappointment_letter', 'originalnda', 'originalpanupload', 'originaladdressupload', 'originalaadharupload', 'teamlead', 'appointment_letter', 'nda', 'rejoining_date', 'reasonofleaving', 'dateofresign', 'created_by', 'linkedin', 'about', 'verify', 'relievingstatus', 'category', 'cost_hour', 'salary_range', 'monthly_gross_salary', 'pf_applicable', 'timesheet_applicable', 'taxtds', 'taxgrosssalary', 'taxpf', 'rejoiningsamepost', 'change_type', 'staffcodenumber'],
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+resources/views/backEnd/teammember/activitylogs.blade.php
+
+                                            @elseif($log->action == 'update') bg-warning
+                                              @elseif($log->action == 'viewed') bg-success text-white
+
+
+
+
+
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+ resources/views/backEnd/teammember/form.blade.php
+ 
+                 <a href="{{ url('teammember/document/' . $teammember->id . '/addressupload/view') }}" target="blank" data-toggle="tooltip"
+                    title="{{ $teammember->originaladdressupload ?? '' }}" class="btn btn-success-soft ml-2 teammember-document-view"><i
+                        class="fas fa-file"></i> View</a>
+						
+					
+
+					
+
+
+
+                    <a href="{{ url('teammember/document/' . $teammember->id . '/aadharupload/view') }}"
+                        target="blank" data-toggle="tooltip" title="{{ $teammember->originalaadharupload ?? '' }}"
+                        class="btn btn-success-soft ml-2 teammember-document-view"><i class="fas fa-file"></i> View</a>
+                        
+					
+
+					
+						
+						
+
+                    <a href="{{ url('teammember/document/' . $teammember->id . '/panupload/view') }}" target="blank" data-toggle="tooltip"
+                        title="{{ $teammember->originalpanupload ?? '' }}" class="btn btn-success-soft ml-2 teammember-document-view"><i
+                            class="fas fa-file"></i> View</a>
+
+
+
+
+
+                    <a href="{{ url('teammember/document/' . $teammember->id . '/appointment_letter/view') }}"
+                        target="blank" data-toggle="tooltip"
+                        title="{{ $teammember->originalappointment_letter ?? '' }}"
+                        class="btn btn-success-soft ml-2 teammember-document-view"><i class="fas fa-file"></i> View</a>							
+
+
+
+
+
+
+                    <a href="{{ url('teammember/document/' . $teammember->id . '/cancelcheque/view') }}"
+                        target="blank" data-toggle="tooltip" title="{{ $teammember->originalcancelcheque ?? '' }}"
+                        class="btn btn-success-soft ml-2 teammember-document-view"><i class="fas fa-file"></i> View</a>
+						
+						
+						
+						
+						
+						
+						
+<a target="blank" target="blank" data-toggle="tooltip"
+                                        title="{{ $teamqualificationData->document_file }}"
+                                        href="{{ url('teammember/qualification-document/' . $teammember->id . '/' . $teamqualificationData->id . '/view') }}"
+                                        class="teammember-document-view">
+                                        {{ $teamqualificationData->original_file ?? '' }}</a>						
+						
+						
+						
+						
+						
+
+
+
+
+        $(document).on('click', '.remove_row', function() {
+            var row_id = $(this).attr("id");
+            $('#row_id_' + row_id).remove();
+            count--;
+        });
+
+        $(document).on('click', '.teammember-document-view', function() {
+            var viewUrl = new URL(this.href, window.location.origin);
+            viewUrl.searchParams.set('_view', Date.now());
+            this.href = viewUrl.toString();
+        });
+	
+
+	
+		
+		
+		
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+resources/views/backEnd/teammember/index.blade.php
+
+                            @foreach ($teammemberDatas as $teammemberData)
+                                @php
+                                    $profilePicFile = $teammemberData->getRawOriginal('profilepic');
+                                    $addressUploadFile = $teammemberData->getRawOriginal('addressupload');
+                                    $aadharUploadFile = $teammemberData->getRawOriginal('aadharupload');
+                                    $panUploadFile = $teammemberData->getRawOriginal('panupload');
+                                    $appointmentLetterFile = $teammemberData->getRawOriginal('appointment_letter');
+                                    $ndaFile = $teammemberData->getRawOriginal('nda');
+                                    $cancelChequeFile = $teammemberData->getRawOriginal('cancelcheque');
+                                    $qualificationDocuments = ($teamQualificationDocuments ?? collect())->get($teammemberData->id, collect());
+                                @endphp
+
+
+
+
+
+
+
+                                        @if ($profilePicFile != null)
+                                            @if (Auth::user()->role_id == 11)
+                                                <a target="_blank"
+                                                    href="{{ url('teammember/document/' . $teammemberData->id . '/profilepic/view') }}"
+                                                    class="teammember-document-view" data-toggle="tooltip"
+                                                    title="{{ $profilePicFile }}">{{ $profilePicFile }}</a>
+                                            @else
+                                                <a target="blank" href="{{ $teammemberData->profilepic }}"
+                                                    class="avatar avatar-xs" data-toggle="tooltip"
+                                                    title="{{ $teammemberData->team_member }}">
+                                                    <img src="{{ $teammemberData->profilepic }}"
+                                                        class="avatar-img rounded-circle" alt="...">
+                                                </a>
+                                            @endif
+                                        @endif
+										
+							
+
+							
+
+
+
+
+
+                                        @if ($addressUploadFile != null)
+                                            @if (Auth::user()->role_id == 11)
+                                                <a target="_blank"
+                                                    href="{{ url('teammember/document/' . $teammemberData->id . '/addressupload/view') }}"
+                                                    class="teammember-document-view">{{ $teammemberData->originaladdressupload ?: $addressUploadFile }}</a>
+                                            @else
+                                                <a
+                                                    href="{{ $teammemberData->addressupload }}">{{ $teammemberData->addressupload ?? '' }}</a>
+                                            @endif
+                                        @endif
+										
+
+
+
+
+
+
+
+                                        @if ($aadharUploadFile != null)
+                                            @if (Auth::user()->role_id == 11)
+                                                <a target="_blank"
+                                                    href="{{ url('teammember/document/' . $teammemberData->id . '/aadharupload/view') }}"
+                                                    class="teammember-document-view">{{ $teammemberData->originalaadharupload ?: $aadharUploadFile }}</a>
+                                            @else
+                                                <a
+                                                    href="{{ url('backEnd/image/teammember/aadharupload/', $teammemberData->aadharupload) }}">{{ $teammemberData->aadharupload ?? '' }}</a>
+                                            @endif
+                                        @endif
+
+
+
+		
+
+
+
+                                        @if ($panUploadFile != null)
+                                            @if (Auth::user()->role_id == 11)
+                                                <a target="_blank"
+                                                    href="{{ url('teammember/document/' . $teammemberData->id . '/panupload/view') }}"
+                                                    class="teammember-document-view">{{ $teammemberData->originalpanupload ?: $panUploadFile }}</a>
+                                            @else
+                                                <a
+                                                    href="{{ $teammemberData->panupload ?? '' }}">{{ $teammemberData->panupload ?? '' }}</a>
+                                            @endif
+                                        @endif
+
+									
+
+									
+
+
+
+
+                                        @if ($cancelChequeFile != null)
+                                            @if (Auth::user()->role_id == 11)
+                                                <a target="_blank"
+                                                    href="{{ url('teammember/document/' . $teammemberData->id . '/cancelcheque/view') }}"
+                                                    class="teammember-document-view">{{ $teammemberData->originalcancelcheque ?: $cancelChequeFile }}</a>
+                                            @else
+                                                <a
+                                                    href="{{ asset('backEnd/image/teammember/cancelcheque/' . $teammemberData->cancelcheque) }}">{{ $teammemberData->cancelcheque ?? '' }}</a>
+                                            @endif
+                                        @endif
+										
+									
+
+									
+										
+										
+
+        $('#examplee').DataTable({
+            "pageLength": 130,
+            dom: 'Bfrtip',
+            "order": [
+                [0, "desc"]
+            ],
+
+            columnDefs: [{
+                targets: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+                    20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33
+                ],
+                orderable: false
+            }],
+            buttons: [{
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, ':visible']
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    filename: filename,
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 5]
+                    }
+                },
+                'colvis'
+            ]
+        });
+
+        $(document).on('click', '.teammember-document-view', function() {
+            var viewUrl = new URL(this.href, window.location.origin);
+            viewUrl.searchParams.set('_view', Date.now());
+            this.href = viewUrl.toString();
+        });
+
+
+
+
+
+
+
+		
+										
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+app\Http\Controllers\TeammemberController.php
+
+public function teamstatus(Request $request)
+
++            $teamQualificationDocuments = DB::table('teammember_document_files')
++                ->whereIn('teamember_id', $teammemberDatas->pluck('id'))
++                ->get()
++                ->groupBy('teamember_id');
+ 
+ 
+
+ return view('backEnd.teammember.index', compact('teammemberDatas', 'teamQualificationDocuments'));
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  public function index()
+  
+  
+  
+  +            $teamQualificationDocuments = DB::table('teammember_document_files')
++                ->whereIn('teamember_id', $teammemberDatas->pluck('id'))
++                ->get()
++                ->groupBy('teamember_id');
++
++            return view('backEnd.teammember.index', compact('teammemberDatas', 'teamQualificationDocuments'));
+  
+ 
+ 
+ 
+ 
+ 
+ 
+verify care fully 
+     public function deletequalification(Request $request, $id)
+    {
+        try {
+
+            $filedetaails = DB::table('teammember_document_files')->where(['id' => $id])->first();
+            if ($filedetaails->document_file) {
+                // public\backEnd\image\teammember
+                // $destinationPath = storage_path('backEnd/image/teammember/document_file');
+                $destinationPath = public_path('backEnd/image/teammember/document_file');
+                // Delete the existing file if it exists
+                $existingFilePath = $destinationPath . '/' . $filedetaails->document_file;
+                if (file_exists($existingFilePath)) {
+                    unlink($existingFilePath);
+                }
+                // else {
+                //     $output = ['msg' => "File name {$filedetaails->document_file} does not exist"];
+                //     return back()->with('statuss', $output);
+                // }
+            }
+            DB::table('teammember_document_files')->where(['id' => $id])->delete();
+
+            $teammemberName = DB::table('teammembers')
+                ->where('id', $filedetaails->teamember_id)
+                ->value('team_member');
+
+            $oldQualificationData = [
+                'teamember_name' => $teammemberName,
+                'qualification' => $filedetaails->qualification,
+                'document_file' => $filedetaails->document_file,
+                'original_file' => $filedetaails->original_file,
+            ];
+            $newQualificationData = [
+                'teamember_name' => $teammemberName,
+                'qualification' => null,
+                'document_file' => null,
+                'original_file' => null,
+            ];
+
+            HelperFunctions::activityLogsDetails(
+                'teammember',
+                'update',
+                $id,
+                $filedetaails->teamember_id,
+                $oldQualificationData,
+                $newQualificationData
+            );
+            
+            $output = array('msg' => 'Deleted Successfully');
+            return back()->with('success', $output);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            report($e);
+            $output = array('msg' => $e->getMessage());
+            return back()->withErrors($output)->withInput();
+        }
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+after this function add below fun     public function deletequalification(Request $request, $id)
+
+
+    public function teammemberDocument($id, $document, $action)
+    {
+        $documents = [
+            'profilepic' => ['path' => 'backEnd/image/teammember/profilepic', 'original' => null, 'label' => 'Profile Pic'],
+            'addressupload' => ['path' => 'backEnd/image/teammember/addressupload', 'original' => 'originaladdressupload', 'label' => 'Address Proof'],
+            'aadharupload' => ['path' => 'backEnd/image/teammember/aadharupload', 'original' => 'originalaadharupload', 'label' => 'Aadhaar Card'],
+            'panupload' => ['path' => 'backEnd/image/teammember/panupload', 'original' => 'originalpanupload', 'label' => 'PAN Card'],
+            'appointment_letter' => ['path' => 'backEnd/image/teammember/appointmentletter', 'original' => 'originalappointment_letter', 'label' => 'Appointment Letter'],
+            'nda' => ['path' => 'backEnd/image/teammember/nda', 'original' => 'originalnda', 'label' => 'NDA'],
+            'cancelcheque' => ['path' => 'backEnd/image/teammember/cancelcheque', 'original' => 'originalcancelcheque', 'label' => 'Bank Proof'],
+        ];
+
+        if (!isset($documents[$document]) || !in_array($action, ['view', 'download'])) {
+            abort(404);
+        }
+
+        $teammember = Teammember::findOrFail($id);
+        $fileName = $teammember->getRawOriginal($document);
+        $filePath = public_path($documents[$document]['path'] . '/' . basename($fileName));
+
+        if (!$fileName || !file_exists($filePath)) {
+            abort(404);
+        }
+
+        $originalFileName = $documents[$document]['original'] ? $teammember->getRawOriginal($documents[$document]['original']) : null;
+
+        $documentLogData = [
+            'document_type' => $documents[$document]['label'],
+            'document_file' => $originalFileName ?: $fileName,
+        ];
+
+        if ($action === 'view') {
+            $documentLogData = [
+                'teamember_name' => $teammember->team_member,
+                'qualification' => $documents[$document]['label'],
+                'document_file' => $fileName,
+                'original_file' => $originalFileName ?: $fileName,
+            ];
+        }
+
+        $this->logTeammemberDocumentAction($action, $id, $id, $documentLogData);
+
+        if ($action === 'download') {
+            return response()->download($filePath, $originalFileName ?: $fileName);
+        }
+
+        return response()->file($filePath, [
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
+    }
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+    public function teammemberQualificationDocument($id, $documentId, $action)
+    {
+        if (!in_array($action, ['view', 'download'])) {
+            abort(404);
+        }
+
+        $document = DB::table('teammember_document_files')
+            ->where('id', $documentId)
+            ->where('teamember_id', $id)
+            ->first();
+
+        if (!$document) {
+            abort(404);
+        }
+
+        $filePath = public_path('backEnd/image/teammember/document_file/' . basename($document->document_file));
+
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        $documentLogData = [
+            'document_type' => 'Qualification',
+            'qualification' => $document->qualification,
+            'document_file' => $document->original_file ?: $document->document_file,
+        ];
+
+        if ($action === 'view') {
+            $teammemberName = Teammember::where('id', $id)->value('team_member');
+
+            $documentLogData = [
+                'teamember_name' => $teammemberName,
+                'qualification' => $document->qualification,
+                'document_file' => $document->document_file,
+                'original_file' => $document->original_file,
+            ];
+        }
+
+        $this->logTeammemberDocumentAction($action, $documentId, $id, $documentLogData);
+
+        if ($action === 'download') {
+            return response()->download($filePath, $document->original_file ?: $document->document_file);
+        }
+
+        return response()->file($filePath, [
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    private function logTeammemberDocumentAction($action, $recordId, $teammemberId, $documentData)
+    {
+        if (auth()->user()->role_id == 11) {
+            HelperFunctions::activityLogsDetails(
+                'teammember',
+                $action === 'view' ? 'viewed' : 'downloaded',
+                $recordId,
+                $teammemberId,
+                null,
+                $documentData
+            );
+        }
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+store function me 
+
+
+                $data['appointment_letter'] = $filename;
+                $data['originalappointment_letter'] = $avatar->getClientOriginalName();
+				
+	
+	
+	
+	
+	                $data['panupload'] = $name;
+                $data['originalpanupload'] = $file->getClientOriginalName();
+				
+				
+				
+				
+
+
+
+                $data['aadharupload'] = $name;
+                $data['originalaadharupload'] = $file->getClientOriginalName();
+		
+
+
+                $data['addressupload'] = $name;
+                $data['originaladdressupload'] = $file->getClientOriginalName();
+				
+				
+				
+	
+                $data['cancelcheque'] = $name;
+                $data['originalcancelcheque'] = $file->getClientOriginalName();
+
+
+
+ $data['appointment_letter'] = $filename;
+                $data['originalappointment_letter'] = $file->getClientOriginalName();
+
+
+
+
+                $data['nda'] = $filename;
+                $data['originalnda'] = $file->getClientOriginalName();
+
+
+
+                $data['panupload'] = $name;
+                $data['originalpanupload'] = $file->getClientOriginalName();
+
+
+
+                $data['addressupload'] = $name;
+                $data['originaladdressupload'] = $file->getClientOriginalName();
+
+
+	
+	
+
+                $data['aadharupload'] = $name;
+                $data['originalaadharupload'] = $file->getClientOriginalName();
+
+
+	
+
+
+
+
+
+
+
+            } else {
+                Teammember::find($id)->update($data);
+
+                $newData = DB::table('teammembers')->where('id', $id)->first();
+                $newDataArray = $newData ? (array)$newData : [];
+            }
+
+            $uploadedQualifications = [];
+            $uploadedDocumentFiles = [];
+            $uploadedOriginalFiles = [];
+
+            if ($request->document_file != null) {
+                $qualifications = $request->qualification;
+                $documentFiles = $request->document_file;
+
+                for ($i = 0; $i < count($qualifications); $i++) {
+                    // Process each qualification and document file entry
+                    $documentFile = $documentFiles[$i];
+                    if ($documentFile) {
+                        $original_file = $documentFile->getClientOriginalName();
+                        $documentFileName = time() . $documentFile->getClientOriginalName();
+                        $documentFilePath = 'backEnd/image/teammember/document_file';
+                        $documentFile->move($documentFilePath, $documentFileName);
+
+                        $qualificationData = [
+                            'teamember_id' => $id,
+                            'qualification' => $qualifications[$i],
+                            'document_file' => $documentFileName,
+                            'original_file' => $original_file,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+
+                        $qualificationData['id'] = DB::table('teammember_document_files')->insertGetId($qualificationData);
+
+                        $uploadedQualifications[] = $qualificationData['qualification'];
+                        $uploadedDocumentFiles[] = $qualificationData['document_file'];
+                        $uploadedOriginalFiles[] = $qualificationData['original_file'];
+                    }
+                }
+            }
+
+            DB::table('users')->where('teammember_id', $id)->update([
+                'role_id'         =>  $request->role_id,
+                'email'         =>  $request->emailid,
+            ]);
+
+
+
+
+
+
+
+
+                if (!empty($uploadedQualifications)) {
+                    $oldDataArray['qualification'] = null;
+                    $oldDataArray['document_file'] = null;
+                    $oldDataArray['original_file'] = null;
+                    $newDataArray['qualification'] = implode(', ', $uploadedQualifications);
+                    $newDataArray['document_file'] = implode(', ', $uploadedDocumentFiles);
+                    $newDataArray['original_file'] = implode(', ', $uploadedOriginalFiles);
+                }
+
+                HelperFunctions::activityLogsDetails(
+                    'teammember',
+                    $actionType,
+                    $id,
+                    $id,
+                    $oldDataArray,
+                    $newDataArray
+                );
+				
+	
+
+	
+	
+        $fields = [
+            'balanceconfirmationstatus' => 'Confirmation',
+            'status' => 'Status',
+            'rejoiniedexitdate' => 'Rejoining Exit Date',
+            'rejoiningdate' => 'Rejoining Date',
+            'emergencycontactnumber' => 'Emergency Contact Number',
+            'team_member' => 'Team Member Name',
+            'mobile_no' => 'Mobile Number',
+            'dateofbirth' => 'Date Of Birth',
+            'pancardno' => 'PAN Card Number',
+            'adharcardnumber' => 'Aadhar Number',
+            'role_id' => 'Role Name',
+            'staffcodenumber' => 'Staff Code Number',
+            'staffcode' => 'Staff Code',
+            'rejectedby' => 'Rejected By',
+            'updatedby' => 'Updated By',
+            'otherpartner' => 'Other Partner',
+            'leadpartner' => 'Lead Partner',
+            'stdcost' => 'Std cost',
+            'emailid' => 'Email Id',
+            'personalemail' => 'Personal Email',
+            'address_proof' => 'Address Proof',
+            'mothername' => 'Mother Name',
+            'mothernumber' => 'Mother contact Number',
+            'fathername' => 'Father Name',
+            'fathernumber' => 'Father contact Number',
+            'leavingdate' => 'Leaving Date',
+            'created_by' => 'Created By',
+            'assignmentgenerate_id' => 'Assignment Id',
+            'partner' => 'Partner Name',
+            'date' => 'Date',
+            'workitem' => 'Work Item',
+            'location' => 'Location',
+            'hour' => 'Hour',
+            'createdby' => 'Created By',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'title' => 'Title',
+            'has_attachment' => 'Has Attachment',
+            'teammember_id' => 'Team Member',
+            'teamember_name' => 'Employee Name',
+            'addressupload' => 'Unique Address Document',
+            'originaladdressupload' => 'Address Document',
+            'profilepic' => 'Profile Picture',
+            'aadharupload' => 'Unique Aadhar Document',
+            'originalaadharupload' => 'Aadhar Document',
+            'originalcancelcheque' => 'Bank Document',
+            'cancelcheque' => 'Unique Bank Document',
+            'originalpanupload' => 'Pan Card Document',
+            'panupload' => 'Unique Pan Card Document',
+            'originalappointment_letter' => 'Appointment Letter Document',
+            'appointment_letter' => 'Unique Appointment Letter Document',
+            'entity' => 'Entity',
+            'nameasperbank' => 'Name As Per Bank',
+            'nameofbank' => 'Bank Name',
+            'bankaccountnumber' => 'Bank Account Number',
+            'ifsccode' => 'IFSC Code',
+              'qualification' => 'Qualification',
+            'document_file' => 'Unique File Name',
+            'original_file' => 'Document File',
+            'permanentaddress' => 'Permanent Address',
+            'communicationaddress' => 'Communication Address',
+            'joining_date' => 'Joining Date',
+            'timesheet_access' => 'Timesheet Access',
+            'gender' => 'Gender',
+            'designation' => 'Designation',
+            'email' => 'Email',
+            // client
+            'client_name' => 'Client Name',
+            'name' => 'Name',
+            'client_code' => 'Client Code',
+            'c_address' => 'Client Address',
+            'mobileno' => 'Mobile No',
+            'panno' => 'PAN No',
+            'tanno' => 'TAN No',
+            'gstno' => 'GST No',
+            'legalstatus' => 'Legal Status',
+            'otherclassification' => 'Other Classification',
+            'targettype' => 'Target Type',
+            'reasonleave' => 'Reason for Leave',
+            'assignmentmapping_id' => 'Assignment Id',
+        ];
+		
+		
+
+
+
+
+
+        // Module-wise fields to hide
+        $moduleHideFields = [
+            'teammember' => ['mentor_id', 'title_id', 'employment_status', 'department', 'originalnda', 'teamlead', 'nda', 'rejoining_date', 'reasonofleaving', 'dateofresign', 'created_by', 'linkedin', 'about', 'verify', 'relievingstatus', 'category', 'cost_hour', 'salary_range', 'monthly_gross_salary', 'pf_applicable', 'timesheet_applicable', 'taxtds', 'taxgrosssalary', 'taxpf', 'rejoiningsamepost', 'change_type', 'staffcodenumber'],		
+	
+
+06-08-2026	
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 resources\views\emails\assignmentclosed.blade.php
 
 
 
 
+07-08-2026  indepenedence 
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+resources\views\backEnd\independence\indexlist.blade.php
+952
+
+
+
+
+14-08-2026
 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+DB_DATABASE=vsalivemigrate
 
 
+app/Exports/TeammemberExport.php
 
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-resources\views\emails\assignmentclosed.blade.php
-
-
-
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
-
-
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-resources\views\emails\assignmentclosed.blade.php
+        return [
+            'Name',
+            'Staff Code',
+            'Email ID',
+        ];
+		
+		
 
 
 
 
 
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
+app\Console\Commands\TimesheetnotfillReminder.php
+
+    public function handle()
+    {
+        if (now()->format('H:i') === '18:01') {
+            if ('Wednesday' == date('l', time()) || 'Saturday' == date('l', time())) {
+                // Get distinct createdby values
+                $createdby = DB::table('timesheetusers')->distinct()->pluck('createdby')->toArray();
+
+                $latestHistory = DB::table('teamrolehistory as teamrolehistorydata')
+                    ->select('teamrolehistorydata.teammember_id', 'teamrolehistorydata.newstaff_code')
+                    ->whereRaw('teamrolehistorydata.id = (SELECT MAX(teamrolehistorylatest.id) FROM teamrolehistory as teamrolehistorylatest WHERE teamrolehistorylatest.teammember_id = teamrolehistorydata.teammember_id)');
+
+                // Team members who have saved timesheets but not submitted
+                $teammemberOnlySave = DB::table('teammembers')
+                    ->leftJoin('timesheets', 'timesheets.created_by', 'teammembers.id')
+                    ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+                        $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+                    })
+                    ->where('teammembers.status', 1)
+                    ->whereIn('timesheets.created_by', $createdby)
+                    ->select('teammembers.team_member', 'teammembers.emailid', 'teammembers.id', 'teammembers.staffcode', 'latestrecord.newstaff_code')
+                    ->groupBy('teammembers.team_member', 'teammembers.emailid', 'teammembers.id', 'teammembers.staffcode', 'latestrecord.newstaff_code')
+                    // The total number of distinct timesheet records (COUNT(DISTINCT timesheets.id)) is equal to the number of timesheets that have status = 0
+                    ->havingRaw('COUNT(DISTINCT timesheets.id) = COUNT(CASE WHEN timesheets.status = 0 THEN 1 ELSE NULL END)')
+                    ->get();
+
+                // Team members who have never filled a timesheet
+                $teammemberNeverFilled = DB::table('teammembers')
+                    ->leftJoin('timesheetusers', 'timesheetusers.createdby', 'teammembers.id')
+                    ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+                        $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+                    })
+                    ->whereNull('timesheetusers.createdby')
+                    ->where('teammembers.status', 1)
+                    ->whereIn('teammembers.role_id', [14, 15, 13, 11])
+                    ->select('teammembers.team_member', 'teammembers.emailid', 'teammembers.id', 'teammembers.staffcode', 'latestrecord.newstaff_code')
+                    ->get();
+
+                // Team members rejoining on different or same posts
+                $rejoiningUsers = DB::table('teamrolehistory')
+                    ->leftJoin('teammembers', 'teammembers.id', '=', 'teamrolehistory.teammember_id')
+                    ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+                        $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+                    })
+                    ->select('teamrolehistory.id', 'teamrolehistory.teammember_id', 'teammembers.team_member', 'teammembers.emailid', 'teammembers.staffcode', 'latestrecord.newstaff_code')
+                    ->distinct()
+                    ->get()
+                    ->merge(
+                        DB::table('rejoiningsamepost')
+                            ->leftJoin('teammembers', 'teammembers.id', '=', 'rejoiningsamepost.teammember_id')
+                            ->leftJoinSub($latestHistory, 'latestrecord', function ($join) {
+                                $join->on('latestrecord.teammember_id', '=', 'teammembers.id');
+                            })
+                            ->select('rejoiningsamepost.id', 'rejoiningsamepost.teammember_id', 'teammembers.team_member', 'teammembers.emailid', 'teammembers.staffcode', 'latestrecord.newstaff_code')
+                            ->distinct()
+                            ->get()
+                    );
+
+                $rejoiningUserIds = $rejoiningUsers->pluck('teammember_id')->unique()->toArray();
+                $lastWeekEnd = now()->subWeeks(1)->endOfWeek();
+
+                $lastSubmissionDates = DB::table('timesheetusers')
+                    ->select('createdby', DB::raw('MAX(date) as last_submission_date'))
+                    ->whereIn('createdby', $rejoiningUserIds)
+                    ->where('date', '<=', $lastWeekEnd)
+                    ->where('status', '!=', 0)
+                    ->where(function ($query) {
+                        $query->whereRaw('DAYOFWEEK(date) = 1') // Sunday
+                            ->orWhereRaw('DAYOFWEEK(date) = 7'); // Saturday
+                    })
+                    ->groupBy('createdby')
+                    ->pluck('last_submission_date', 'createdby');
+
+                // Check rejoining users
+                $latestTeamRoleHistory = DB::table('teamrolehistory as trh')
+                    ->select('trh.teammember_id', 'trh.rejoiningdate')
+                    ->whereRaw('trh.id = (SELECT MAX(id) FROM teamrolehistory WHERE teammember_id = trh.teammember_id)');
+
+                $latestRejoiningSamePost = DB::table('rejoiningsamepost as rsp')
+                    ->select('rsp.teammember_id', 'rsp.rejoiningdate as samepostrejoiningdate')
+                    ->whereRaw('rsp.id = (SELECT MAX(id) FROM rejoiningsamepost WHERE teammember_id = rsp.teammember_id)');
+
+                $rejoiningData = DB::table('teammembers as tm')
+                    ->leftJoinSub($latestTeamRoleHistory, 'latest_trh', function ($join) {
+                        $join->on('latest_trh.teammember_id', '=', 'tm.id');
+                    })
+                    ->leftJoinSub($latestRejoiningSamePost, 'latest_rsp', function ($join) {
+                        $join->on('latest_rsp.teammember_id', '=', 'tm.id');
+                    })
+                    ->whereIn('tm.id', $rejoiningUserIds)
+                    ->select(
+                        'tm.id',
+                        'latest_trh.rejoiningdate',
+                        'latest_rsp.samepostrejoiningdate'
+                    )
+                    ->get()
+                    ->keyBy('id');
+
+                $promotionDates = DB::table('teamrolehistory as trh')
+                    ->select('trh.teammember_id', 'trh.promotion_date as rejoiningdate')
+                    ->whereIn('trh.teammember_id', $rejoiningUserIds)
+                    ->whereRaw('trh.id = (SELECT MAX(id) FROM teamrolehistory WHERE teammember_id = trh.teammember_id)')
+                    ->get()
+                    ->keyBy('teammember_id');
+
+                foreach ($rejoiningUsers as $user) {
+                    $lastSubmissionDate = $lastSubmissionDates->get($user->teammember_id);
+
+                    $user->last_submission_date = $lastSubmissionDate ? Carbon::parse($lastSubmissionDate)->format('d-m-Y') : '';
+                    $user->staffcode = $user->newstaff_code ?: ($user->staffcode ?? '');
+
+                    // check promotion user
+                    $rejoiningUserData = $rejoiningData->get($user->teammember_id);
+
+                    if ($rejoiningUserData && $rejoiningUserData->rejoiningdate == null && $rejoiningUserData->samepostrejoiningdate == null) {
+                        $rejoiningUserData = $promotionDates->get($user->teammember_id);
+                    }
+
+                    if ($rejoiningUserData) {
+                        $rejoiningDate = $rejoiningUserData->samepostrejoiningdate ?? $rejoiningUserData->rejoiningdate;
+
+                        if ($rejoiningDate) {
+                            $rejoiningDateCarbon = Carbon::parse($rejoiningDate);
+                            if ($lastSubmissionDate) {
+                                $lastSubmissionCarbon = Carbon::parse($lastSubmissionDate);
+                                if (!$lastSubmissionCarbon->lessThan($rejoiningDateCarbon)) {
+                                    $user->last_submission_date = ''; // Skip user
+                                }
+                            } else {
+                                $user->last_submission_date = ''; // Skip user
+                            }
+                        }
+                    }
+                }
+
+                // Prepare Excel data
+                $excelData = $rejoiningUsers->filter(function ($user) {
+                    return !empty($user->last_submission_date);
+                })->map(function ($user) {
+                    return [
+                        'team_member' => $user->team_member,
+                        'staffcode' => $user->staffcode,
+                        'emailid' => $user->emailid,
+                    ];
+                })->merge($teammemberOnlySave->map(function ($user) {
+                    return [
+                        'team_member' => $user->team_member,
+                        'staffcode' => $user->newstaff_code ?: ($user->staffcode ?? ''),
+                        'emailid' => $user->emailid,
+                    ];
+                }))->merge($teammemberNeverFilled->map(function ($user) {
+                    return [
+                        'team_member' => $user->team_member,
+                        'staffcode' => $user->newstaff_code ?: ($user->staffcode ?? ''),
+                        'emailid' => $user->emailid,
+                    ];
+                }))
+                    ->unique('emailid')
+                    ->values()
+                    ->toArray();
+
+                // Store Excel file
+                $export = new TeammemberExport(collect($excelData));
+                $excelFileName = 'Timesheet_Not_Submitted.xlsx';
+                Excel::store($export, $excelFileName);
+
+                $emailData = array(
+                    'subject' => "Timesheet not filled till date",
+                    'teammemberOnlySave' => $teammemberOnlySave->map(function ($user) {
+                        return (object) [
+                            'team_member' => $user->team_member,
+                            'emailid' => $user->emailid,
+                        ];
+                    }),
+                );
 
 
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-resources\views\emails\assignmentclosed.blade.php
-
-
-
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
-
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-resources\views\emails\assignmentclosed.blade.php
-
-
-
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-app\Http\Controllers\ApplyleaveController.php
-
-
-
-22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-resources\views\emails\assignmentclosed.blade.php
-
-
-
-
-
+                Mail::send('emails.timesheetnotfilledremidner', $emailData, function ($msg) use ($emailData, $excelFileName) {
+                    // $msg->to('itsupport_delhi@vsa.co.in');
+                    $msg->to('shahidraza@capitall.io');
+                    // Attach the Excel file to the email
+                    $msg->attach(storage_path('app/' . $excelFileName), [
+                        'as' => $excelFileName,
+                        'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    ]);
+                    $msg->subject($emailData['subject']);
+                });
+            }
+        }
+    }
+	
+	
+14-08-2026 staff code 
 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 app\Http\Controllers\ApplyleaveController.php
 

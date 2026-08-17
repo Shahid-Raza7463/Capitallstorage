@@ -10,13 +10,18 @@ Vsa all task created hare
 
 
 2-07-2026
-1.test 4 dashboard tab 
+1.Testing on Ajanta pharma dashboard tab 
+ 1.Overview
+ 2.ATR tab 
+ 3.auditee dashboard
+ 4.Internal Audit
+
+
 
 03-07-2026
 Assignee Dashboard — Action Items Tab bug list
 KPI Tiles 
 1.KPI: Open Observations / High Risk Observations : remove Department column from right side pannel after click on this KPI.
-
 
 
 Card 1 — Observation by Status 
@@ -63,39 +68,226 @@ Card 4 — High Risk Observations
 Sunday
 
 06-07-2026
-The staff code should be display in timesheet submitted report in excel
-If timesheet rejected then first fill timeshett, (I have checked and this is already runnig on portal)
-Remove created date column from attendence tab
+1.The staff code should be display in timesheet submitted report in excel
+2.If timesheet rejected then first fill timeshett, (I have checked and this is already runnig on portal)
+3.Remove created date column from attendence tab
+4.vsa issue checked and fixed it (login issue)
+all above task deployed on cron 
 
 
-1.vsa issue checked (login issue)
 
-
-attendence issue 31 days in all month
 
 07-07-2026
+1.Starting testing on partner dashboard all section 
+2.UI created for partner dashboard
+
+
+08-07-2026
+1.Starting testing on partner dashboard all section completed
+2.New Ui created on partner dashboard 
+
+
+
 09-07-2026
+1.New Ui created on partner dashboard completed
+2.After NEFT generation, page gets navigated but it is not showing current month data bugs completed
+
+
+
 10-07-2026
+1.kgs bug deployed on cron and functional testing completed 
+2.partner dashboard deployed on cron
+3.VSA user name swastik: apply leave data removed from backend
+
+
 11-07-2026
+Starday 
+
 12-07-2026
-13-07-2026
+Sunday 
+
+13-07-2026  03:32 Pm 
+1.The Independence form should be sent after adding a team member to an assignment. only left testing 
+
+
+
 14-07-2026
-15-07-2026
+1.The Independence form should be sent after adding a team member to an assignment. and functional testing also completed 
+2.deployed on cron and testing completed 
+3.Payroll & Attendance Edit Control with Scheduler Protection deployed on kgslive
+4.Dynamic Article Payroll Management with Excel Import & NEFT Conversion deployed on kgslive
+
+
+15-07-2026  11.50 
+1.Timesheet submission should be blocked after 48 hours if the user has not submitted the Independence form and functional testing completed 
+2.Deployed completed on cron and testing completed 
+
+
+18-07-2026 10:47 Am 
+
 16-07-2026
+1.Partner Dashboard, After print some section should be hide completed
+is din task nahi mila 
+
 17-07-2026
+1.KGS OMS - Conveyance Module; Conveyance Form not showing validation for mandatory fields properly
+2.KGS OMS - Conveyance Module; Column in conveyance form not showing properly
+
+
+
 18-07-2026
+Lead Module - Task Completed 
+ 1.Added new fields on the Create and Edit Lead pages.
+ 2.Added validations for creating and editing leads.
+ 3.Implemented notifications when a lead is created.
+ 4.Created a command for the next follow-up date.
+ 5.Fixed the UI of the Lead Show page.
+ 6.Completed functional testing for all sections.
+Lead Module - Task Completed and deployed on cron 
+
+
+
 19-07-2026
+Sunday 
+
 20-07-2026
+casual laeve 
+
+
 21-07-2026
+Lead Module - Task Completed 
+ 1.Added new fields on the Create and Edit Lead pages.
+ 2.Added reqaured filed for creating and editing leads.
+ 3.Implemented notifications when a lead is created.
+ 4.Created a command for the next follow-up date.
+ 5.Fixed the UI of the Lead Show page.
+ 6.Completed functional testing for all sections.
+Lead Module - Task Completed and deployed on cron 
+
+
+
+
+
+
 22-07-2026
+1.deployed previous tasks  lead module on cron 
+2.setup completed kgs-report-template-work project 
+3.Recommendation - Character limit on ajanta 
+
 23-07-2026
+1.AP_UAT_Bug_Dashboard: The Default View Must Be Of Current FY
+- overviewdashboard
+- atrdashboard
+- auditengagement
+
+
 24-07-2026
+testing completed 
+2.AP_UAT_Bug_Dashboard: Observation Overdue Logic Issue
+3.AP_UAT_Bug_Dashboard: Observation Overdue Logic Issue
+4.both bugs testing completed 
+
+
+
 25-07-2026
+Sturday 
+
 26-07-2026
+Sunday 
+
 27-07-2026
+1.Financial year issue on internal audit dashboard
+2.total 4 bugs completed (Bugs recieved on chat from prashant)
+3 I have faced database issue from my side
+
+`````````````````````````
+
 28-07-2026
+1.functional testing on ajanta 
+2.AP_UAT_Bug_Dashboard: Different Count Of Observations in ATR & Dashboard > ATR
+3.AP_UAT_Bug_Dashboard: Audit Unable to see ATR > Actionable by Status Card
+4.AP_UAT_Bug_Dashboard: Newly Created Admin is not able to see Internal Audit Projects on Dashboard > Internal Audit
+5.hyperlink remove from Audit Requirement on All role 
+6.total audit count on admin dashbord issue fixed
+7.Filter implitation on auditee dashboard 
+
+
 29-07-2026
+1.total audit count on admin dashbord issue fixed
+2.Filter implitation on auditee dashboard 
+
+
+
 30-07-2026
+
+
+````````````````````````````````````
+
 31-07-2026
+1.fixed id column on ajanta on all role
+2.KT for QA testing 
+3.Activity logs need to be implemented in the Profile section for Documents viewand Documents download actions. 
+  3.1 Qualification deleted and upload completed 
+  3.2 All file Viewed Logs completed on profile edit page 
+  3.2 All file Viewed Logs completed on teammember index page
+
+
+01-08
+1.Activity logs need to be implemented in the Profile section for Documents viewand Documents download actions. 
+  3.1 Qualification deleted and upload completed 
+  3.2 All file Viewed Logs completed on profile edit page 
+  3.2 All file Viewed Logs completed on teammember index page
+2 kt wit pooja 
+3.data clean on vsademo 
+4.The staff code is now displayed in the Timesheet Submitted Report (Excel). bugs solved 
+5.meeting with mohit and sumit 
+
+
+02-08
+Sunday 
+
+03-08 
+Casual leave 
+
+
+04-08
+1.Laptop issues
+2.code deployed on vsa and functional testing completed 
+3.The staff code is now displayed in the Timesheet Submitted Report (Excel). new enhancement
+  1.using command 
+  2.Using Timesheet all button 
+
+```````````````````````````
+
+
+05-08
+1.reminder code optimize and functional testing completed
+2.The staff code is now displayed in the Timesheet Submitted Report (Excel). new enhancement
+  1.using command 
+  2.Using Timesheet all button 
+3.Deployed code on vsademo and functional testing completed (The staff code is now displayed in the Timesheet Submitted Report (Excel). new enhancement)
+4.
+
+
+
+
+DB_DATABASE=vsademotimeheet3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -2,7 +2,31 @@
 28 march
 29 march  3 leave 
 
+
+30-07-2026 chatgpt subscreption
+
+febrary se PF
+
+
+ $allTickets = $ticketDatas->merge($hrTickets);
+
+
+   $allTickets = collect($ticketDatas)->merge(collect($hrTickets));
+
+
+
+regarding claud
+cloaud and click plus icon and new terminal and  paste below code 
+
 ollama launch claude --model minimax-m2.5:cloud
+
+free ollama claude
+ollama launch claude --model gemma4:cloud
+ollama launch claude --model gpt-oss:20b-cloud
+ollama launch claude --model gpt-oss:120b-cloud
+ollama launch claude --model minimax-m3:cloud
+ollama launch claude --model nemotron-3-super:cloud
+
 
 
 https://vsademo.capitall.io/home
@@ -46,8 +70,9 @@ PS C:\xampp\htdocs\kgslive> taskkill /IM php.exe /F
 cd C:\xampp\mysql\bin
 folder me cmd open kare using adminstrate
 {{-- 1.mysql -u root vsalive1 < "C:\xampp\htdocs\database\vsalive2.sql"  --}}
-{{-- 1.mysql -u root vsalive2 < "C:\xampp\htdocs\database\vsalive2.sql"  --}}
+{{-- 1.mysql -u root kgscron < "C:\xampp\htdocs\database\kgscron.sql"  --}}
 
+php artisan backup:list
 
 https://bitbucket.org/capitallio/workspace/overview/
 https://bitbucket.org/capitallio/workspace/projects/
@@ -217,6 +242,7 @@ Azaz~123
 office_1966
 
 sukhbahadur1993@gmail.com
+Sukh@202608
 Sukh@202508
 
 you are laravel and javascript expert
@@ -544,7 +570,7 @@ crone
 UPDATE users
 SET
     password = '$2y$10$0qJ0fYiNHT8cLnr9J3dipOimWzumTVYSsFU8IgdocNZXHYL31.Rye',
-    password_changed_at = '2026-05-01 21:27:58';
+    password_changed_at = '2026-07-01 21:27:58';
 
 
         DB::table('users')
@@ -1470,7 +1496,7 @@ with time increase
 
 
 
-withot time increate 
+without time increase
 
         $usersAssignments = [
             940 => [
@@ -1529,7 +1555,56 @@ withot time increate
         dd('completed');
 
 
+Agar same user ke 2 assignments hain aur dono ka alag created_at chahiye, to aise karo:
 
+
+$usersAssignments = [
+    [
+        'user_id' => 1018,
+        'date' => '2026-01-02 10:11:00',
+        'assignments' => [
+            'RSW101336',
+        ],
+    ],
+    [
+        'user_id' => 1018,
+        'date' => '2026-01-02 12:11:00',
+        'assignments' => [
+            'RSW101333',
+        ],
+    ],
+];
+
+$data = [];
+
+foreach ($usersAssignments as $info) {
+    $dateTime = Carbon::parse($info['date']);
+
+    foreach ($info['assignments'] as $index => $assignmentId) {
+        $newDate = $dateTime->copy()->addMinutes($index);
+
+        $data[] = [
+            'assignmentgenerate_id' => $assignmentId,
+            'createdby' => $info['user_id'],
+            'created_at' => $newDate,
+            'updated_at' => $newDate,
+        ];
+    }
+}
+
+
+converted verison in sql
+
+INSERT INTO independences
+    (assignmentgenerate_id, createdby, created_at, updated_at)
+VALUES
+    ('RSW101336', 1018, '2026-01-02 10:11:00', '2026-01-02 10:11:00'),
+    ('RSW101333', 1018, '2026-01-02 12:11:00', '2026-01-02 12:11:00');
+
+
+DB::table('independences')->insert($data);
+
+dd('completed');
 
 
 
@@ -1564,155 +1639,6 @@ http://127.0.0.1:8000/independencereport
 
 
 
-2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-regarding AI Prompt 
-
-
-regarding datatable using billpending 
-
-Mode: UI_REFACTOR
-Scope: timesheetreportsection datatable migration
-
-Reference Module:
-Route::get('/billspending', [DashboardReport::class, 'billspending']);
-
-
-Target Module:
-1.
- Route::get('/timesheetreportsection',  [TimesheetController::class, 'TimesheetReportsection']);
- Route::get('/timesheetfiltersection',  [TimesheetController::class, 'timesheetfiltersection']);
-
-
-Task:
-- Analyze billspending module completely
-- Implement same Saarni datatable pattern, ajax flow, blade structure, pagination, sorting, search, and reusable structure
-- Do not change any existing business logic
-- Do not change any functionality
-- Do not change existing queries/output
-- Keep existing filter UI/design unchanged
-- Keep existing filter logic unchanged
-- Existing data flow and results should remain exactly same
-- Create separate datatable blade/files/folders if required following same pattern
-- Only migrate listing/table section into Saarni datatable pattern
-
-Follow AGENTS.md
-
-
-222222222222222222222222222222222222222222
-
-Mode: BUG_FIX
-
- Route::get('/timesheetreportsection',  [TimesheetController::class, 'TimesheetReportsection']);
- Route::get('/timesheetfiltersection',  [TimesheetController::class, 'timesheetfiltersection']);
-
-Fix default loading :
-
-- abhi kiya ho raha hai ki jab mai timesheetreportsection url per aa raha hu to datatable implement to ho gya hai but loading kafi der tak ho raha hai jab tak is page ko closed na kar du tab tak means almost 2 hour se loading hi aa raha ahi 
-
-
-Keep current datatable implementation and functionality unchanged.
-
-Follow AGENTS.md
-
-
-
-regarding NPCI 
-222222222222222222222222222222222222222222222222
-
-Mode: BUG_FIX
-
-Route:
-1
-Route::get('/vendor-creation', [VendorManagementController::class, 'vendorCreationIndex'])->name('vendor-creation.index');
-Route::post('/vendor-creation', [VendorManagementController::class, 'vendorCreationStore'])->name('vendor-creation.store');
-
-Fix issue for KYC Documents:
-
-- in KYC document section following file format should be available for upload
-docx, .txt, .pdf, .pptx, .xlsx, .csv, .jpeg, .jpg, .png, .svg
-
-
-Follow AGENTS.md
-
-
-
-222222222222222222222222222
-
-
-Mode: BUG_FIX
-
-Route:
-1
-Route::get('/vendor-creation', [VendorManagementController::class, 'vendorCreationIndex'])->name('vendor-creation.index');
-
-Add GSTIN filed in form :
-
-- GSTIN Format validation: The system validates the 15-character format with Regex 
-- Must be unique, Show error if GSTIN already exists. Must be exactly 15 characters 
-
-Regex - ^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$
-
-without breaking existing flow.  
-
-
-Follow AGENTS.md
-
-2222222222222222222222222222222222222222
-Login : npcidev 
- 
-Password: npci_dev_123 
- 
-Dev ka 
- 
-Login: npciqa
- 
-Password : npci_qa_123
- 
-
-
- 22222222222222222222222222222222222
-
-
- Design a modern mobile app UI.
-App Concept:
-Service Provider Directory App
-Home Screen:
-- Show category cards in a clean grid layout.
-- Categories:
-  1. Doctor 👨‍⚕️
-  2. 4 Wheeler Driver 🚗
-  3. Auto Driver 🛺
-  4. Majdoor 👷
-Behavior:
-- On tapping a category card, navigate to a listing screen.
-Listing Screen:
-- Search bar at top.
-- Filter button.
-- Provider cards with:
-  - Profile photo
-  - Name
-  - Profession
-  - Location
-  - Experience
-  - Rating
-  - Call button
-  - View Profile button
-Design Style:
-- Modern
-- Professional
-- Clean
-- Mobile-first
-- Material Design inspired
-- Attractive icons and illustrations
-- Rounded cards
-- Soft shadows
-- Responsive layout
-Output:
-- Home Screen UI
-- Listing Screen UI
-- Light theme
-- High-quality mobile app mockup
-
 222222222222222222222222
 
    return response()->json([
@@ -1736,3 +1662,48 @@ https://capitallio.sharepoint.com/:w:/s/NPCI-ImportantFiles/IQB7oQfc6nLbTbzHp0Db
 https://capitallio-my.sharepoint.com/:x:/r/personal/prashant_capitall_io/_layouts/15/Doc.aspx?sourcedoc=%7B4CC923BF-E940-4472-88F7-7454E1BEB361%7D&file=UAT%20Bugs.xlsx&fromShare=true&action=default&mobileredirect=true
 
 https://capitalldemo2.grc.capitall.io/admin/actionable/b189df4e-2498-4759-932d-1f8b17df91f8
+
+Kgs  dashboard 
+https://lovable.dev/share-preview/9845c50f-26cd-4b23-86a3-0eb8b371d6e6#preview_url=https%3A%2F%2Fid-preview--9845c50f-26cd-4b23-86a3-0eb8b371d6e6.lovable.app%2F%3F__lovable_token%3DeyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9%252EeyJ1c2VyX2lkIjoiZWNKT0FTNDFOdE83MjVRcE5XQ2lySncwUkdoMiIsInByb2plY3RfaWQiOiI5ODQ1YzUwZi0yNmNkLTRiMjMtODZhMy0wZWI4YjM3MWQ2ZTYiLCJhY2Nlc3NfdHlwZSI6InByb2plY3QiLCJpc3MiOiJsb3ZhYmxlLWFwaSIsInN1YiI6Ijk4NDVjNTBmLTI2Y2QtNGIyMy04NmEzLTBlYjhiMzcxZDZlNiIsImF1ZCI6WyJsb3ZhYmxlLWFwcCJdLCJleHAiOjE3ODQxMTQwMDksIm5iZiI6MTc4MzUwOTIwOSwiaWF0IjoxNzgzNTA5MjA5fQ%252EXWE8uWg8PDlE4UCkBfbg2PAIIb_IVoosNMAJwYeYXMeNiU6StlDKJlYYjZQFsMWuSSFS_b3hy1TCgKOv5SyvxRIdQSSg9cpudtCaxiZfregBj1C2GufqFAcaXJjQuiipI14b79GTej6wtAQX-yFKS5v1Ynx0cFW4IrM-x91Nj1K03EzXlF3Im9oPii0uPmgp8ke2n89whdShtI7vluAWvY9yhFFdeemRO-n0nK9gGY3fDQcfZqUv1U_bHcR3YAHztyKUFdwAz60HAzdsLzPxPQ41w1iR56jS-v74zkziZVfwy4ZU7cFVbipWUQl1Gl-KxLYxQusIGB0Y7pB4GCnBHBla7Iv_CqLc1Xo0zOLvYWzYd-j0pP1Y4Wtf0cPNnez4h27FMcvBdV1TP_fsrl4X11Mxyc3YCDiRgOy05HG4X6mPexHDqBKq5GK1ZLTdiODWyW0DGza8BUA2caY21Odq0IwcThDnOQOJKLK28KVh7IleawiiAW_DWdM9gmsUpfOo6Ia_hj1uWo4oOdXop3rMUh0uW3_hshuxeNMl0a7j1Z9rXk0FKeJAKo9nwQEstwRhiqWWY4huN6apo-QCCNT-ecC6VVrLYspJ5Mg1hPNViwRPQiKvUle-znMQJujCPY9ewRmACXXVW_Jf-G7fB_BYdsya06CKnrR8rc0vqqOS_RU
+
+Ajanta doc
+https://capitallio-my.sharepoint.com/:w:/g/personal/sukhbahadur_capitall_io/IQCnljsf7LWLQL_eEmZg1vKBAaJjBeySRxxZG-JncSl2AEo?rtime=x-KnNJTa3kg
+
+
+open project 
+https://openserver.capitall.io/
+
+
+
+
+credentials
+credential 
+https://vsademo.capitall.io/home
+
+Admin
+sukhbahadur1993@gmail.com
+password  Sukh@202608
+
+partner 
+shahidraza@capitall.io
+pass Vinita@54321
+
+manager 
+Poojakumari@capitall.io
+pass Vinita@54321
+
+staff 
+Guneet@capitall.io
+pass Vinita@54321
+
+222222222222222222222222222
+
+Dear Mohit Sir,
+
+All the tasks mentioned in the below email thread have been completed and deployed on VSA.
+Kindly consider this as a completion update for the same.
+
+Thank you
+
+Regards,
+Md Shahid Raza

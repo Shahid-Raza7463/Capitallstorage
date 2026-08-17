@@ -1196,12 +1196,14 @@ cd C:\Users\KGS-429\AppData\Local\Android\Sdk\platform-tools
 adb devices
 
 cd C:\ReactNativeApp\FriendsList
-npx react-native run-android --device 43f1f2550505
+npx react-native run-android --device 43f1f2550505 ya
+npx react-native run-android
 
 
 if error then 
 adb uninstall com.friendslist
-npx react-native run-android --device 43f1f2550505
+npx react-native run-android --device 43f1f2550505 ya 
+npx react-native run-android
 
 
 cd C:\Users\KGS-429\AppData\Local\Android\Sdk\platform-tools

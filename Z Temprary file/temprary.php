@@ -13,6 +13,92 @@ class temprary extends Controller
   public function timesheetnotfilledlastweek(Request $request)
   {
 
+  
+    $tables = [
+      // Core tables
+      'users',
+      'teammembers',
+
+      // Assignment related
+      'assignmentmappings',
+      'assignmentbudgetings',
+      'assignmentplannings',
+      'assignmentteammappings',
+
+      // Invoicing & billing
+      'invoices',
+      'outstandings',
+      'payments',
+
+      // Timesheet
+      'timesheetusers',
+      'timesheets',
+
+      // Client
+      'clients',
+
+      // Expenses
+      'outstationconveyances',
+      'vendorlist',
+
+      // Independence declarations
+      'annual_independence_declarations',
+      'independences',
+
+      // HR/Payroll
+      'employeepayrolls',
+      'tasks',
+      'hrfunctions',
+
+      // IT/Support
+      'assettickets',
+
+      // Budget
+      'budget',
+
+      // Check-in
+      'checkins',
+    ];
+
+
+    foreach ($tables as $table) {
+      if (Schema::hasTable($table)) {
+        Schema::drop($table);
+        echo "'{$table}' deleted.<br>";
+      } else {
+        echo "'{$table}' not found.<br>";
+      }
+    }
+
+    return response('All tables deleted successfully!', 200);
+
+    1.  users
+2.  teammembers
+3.  assignmentmappings
+4.  assignmentbudgetings
+5.  assignmentplannings
+6.  assignmentteammappings
+
+7.  invoices
+8.  outstandings
+9.  payments
+
+10. timesheetusers
+11. timesheets
+
+12. clients
+13. outstationconveyances
+14. vendorlist
+15. annual_independence_declarations
+16. independences
+17. employeepayrolls
+18. tasks
+19. hrfunctions
+20. assettickets
+21. budget
+22. checkins
+23.roles
+
     $teammember = DB::table('teammembers')
       ->leftJoin('timesheetusers', 'timesheetusers.createdby', 'teammembers.id')
       ->where('teammembers.status', 1)

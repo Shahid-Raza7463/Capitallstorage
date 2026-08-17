@@ -7,8 +7,6 @@
 {{--  Start Hare --}}
 {{-- * regarding export error  --}}
 
-
-
 🚀 Ab yeh karo (Step-by-Step)
 "Disable foreign key checks" ko TICK kar de ✅
 
@@ -23,7 +21,87 @@ Ab yeh file import karo - error nahi aayega! 😊
 
 proformance and teammember chhod kar baki sabhi table ka export lele and teammember ka
 SHOW CREATE TABLE teammembers;
-fir create kar lo
+fir create kar lo and after that .sql file se teammember ka insert wala pura copy kare and sql ke through insert kar le
+UI se
+
+
+CREATE TABLE `teammembers` (
+`id` int(10) NOT NULL AUTO_INCREMENT,
+`reportinghead` int(10) DEFAULT NULL,
+`mentor_id` int(10) DEFAULT NULL,
+`title_id` int(10) DEFAULT NULL,
+`team_member` varchar(300) DEFAULT NULL,
+`entity` varchar(400) DEFAULT NULL,
+`employment_status` varchar(300) DEFAULT NULL,
+`mobile_no` varchar(300) DEFAULT NULL,
+`emailid` varchar(100) DEFAULT NULL,
+`department` varchar(300) DEFAULT NULL,
+`personalemail` varchar(300) DEFAULT NULL,
+`profilepic` varchar(100) DEFAULT NULL,
+`fathername` varchar(200) DEFAULT NULL,
+`dateofbirth` date DEFAULT NULL,
+`pancardno` varchar(300) DEFAULT NULL,
+`emergencycontactnumber` varchar(400) DEFAULT NULL,
+`adharcardnumber` varchar(400) DEFAULT NULL,
+`aadharupload` varchar(255) DEFAULT NULL,
+`nameasperbank` varchar(300) DEFAULT NULL,
+`nameofbank` varchar(400) DEFAULT NULL,
+`bankaccountnumber` varchar(400) DEFAULT NULL,
+`ifsccode` varchar(400) DEFAULT NULL,
+`mothername` varchar(400) DEFAULT NULL,
+`mothernumber` varchar(300) DEFAULT NULL,
+`fathernumber` varchar(300) DEFAULT NULL,
+`panupload` varchar(300) DEFAULT NULL,
+`address_proof` text DEFAULT NULL,
+`designation` varchar(400) DEFAULT NULL,
+`addressupload` varchar(300) DEFAULT NULL,
+`role_id` int(10) DEFAULT NULL,
+`teamlead` varchar(100) DEFAULT NULL,
+`qualification` varchar(300) DEFAULT NULL,
+`appointment_letter` varchar(300) DEFAULT NULL,
+`nda` varchar(300) DEFAULT NULL,
+`permanentaddress` text DEFAULT NULL,
+`communicationaddress` text DEFAULT NULL,
+`joining_date` date DEFAULT NULL,
+`leavingdate` varchar(300) DEFAULT NULL,
+`reasonofleaving` text DEFAULT NULL,
+`dateofresign` varchar(200) DEFAULT NULL,
+`created_by` int(10) DEFAULT NULL,
+`updated_by` int(10) DEFAULT NULL,
+`location` varchar(300) DEFAULT NULL,
+`gender` varchar(300) DEFAULT NULL,
+`linkedin` varchar(255) DEFAULT NULL,
+`about` text DEFAULT NULL,
+`status` int(10) DEFAULT 0,
+`verify` int(10) DEFAULT NULL,
+`relievingstatus` int(10) DEFAULT NULL,
+`category` varchar(400) DEFAULT NULL,
+`cost_hour` int(10) DEFAULT NULL,
+`experience` varchar(300) DEFAULT NULL,
+`estrolehour` int(10) DEFAULT NULL,
+`salary_range` varchar(100) DEFAULT '0',
+`monthly_gross_salary` int(10) NOT NULL DEFAULT 0,
+`salary_before_increment` varchar(50) DEFAULT NULL,
+`pf_applicable` varchar(10) DEFAULT NULL,
+`timesheet_applicable` varchar(50) DEFAULT NULL,
+`taxtds` varchar(300) DEFAULT NULL,
+`taxgrosssalary` varchar(300) DEFAULT NULL,
+`taxpf` varchar(300) DEFAULT NULL,
+`passport` varchar(300) DEFAULT NULL,
+`voterid` varchar(300) DEFAULT NULL,
+`drivinglicense` varchar(300) DEFAULT NULL,
+`offerletter_id` bigint(19) DEFAULT NULL,
+`created_at` timestamp NULL DEFAULT NULL,
+`updated_at` timestamp NULL DEFAULT NULL,
+PRIMARY KEY (`id`) USING BTREE,
+KEY `idx_created_by` (`id`) USING BTREE,
+KEY `idx_title_id` (`title_id`) USING BTREE,
+KEY `idx_role_id` (`role_id`) USING BTREE,
+KEY `idx_teammembers_status` (`status`),
+KEY `idx_teammembers_id_role` (`id`,`role_id`),
+KEY `idx_teammembers_cost_hour` (`cost_hour`)
+) ENGINE=InnoDB AUTO_INCREMENT=974 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 {{--  Start Hare --}}
 ALTER TABLE articlepayrolls

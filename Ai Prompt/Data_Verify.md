@@ -77,3 +77,29 @@ FROM engagements
 WHERE organization_id = 1
 AND created_at >= '2025-04-01'
 AND created_at < '2026-04-01';
+
+
+222222222222222222222222222
+
+
+Mode: ANALYSIS
+
+Target:
+OverviewDashboardController@OverviewDashboard
+
+Task:
+For dashboard output below, explain:
+
+- Source method
+- Source table/model
+- Filter applied
+- Simple SQL/query to verify from DB
+
+Outputs:
+
+- riskExposureByLocation
+
+
+No code changes.
+
+Follow AGENTS.md
